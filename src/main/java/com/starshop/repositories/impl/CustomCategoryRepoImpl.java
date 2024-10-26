@@ -21,4 +21,20 @@ public class CustomCategoryRepoImpl implements CustomCategoryRepo {
         query.setParameter("name", "%" + name + "%");
         return query.getResultList();
     }
+
+	@Override
+	public List<Category> findDeleted() {
+		String jpql = "SELECT c FROM Category c WHERE c.is_deleted = isDeleted";
+        TypedQuery<Category> query = entityManager.createQuery(jpql, Category.class);
+        query.setParameter("isDeleted", true);
+        return query.getResultList();
+	}
+
+	@Override
+	public List<Category> findInactive() {
+		String jpql = "SELECT c FROM Category c WHERE c.is_activated = isActivated";
+        TypedQuery<Category> query = entityManager.createQuery(jpql, Category.class);
+        query.setParameter("isActivated", false);
+        return query.getResultList();
+	}
 }
