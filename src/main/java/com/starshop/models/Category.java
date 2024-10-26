@@ -34,4 +34,10 @@ public class Category {
 		this.isActivated = true;
 		this.isDeleted = false;
 	}
+	
+	public Category(String name, boolean isActivated) {
+		this.name = name;
+		this.isActivated = isActivated;
+		this.isDeleted = false;
+	}
 }

@@ -27,11 +27,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @RequestMapping(value="/admin/categories")
-    public String categories(String search, Model model, Principal principal){
-		/*
-		 * if(principal == null){ return "redirect:/login"; }
-		 */
-    	
+    public String categories(String search, Model model){
     	List<Category> categories;
     	if(search != null && !search.isBlank())
     		categories = categoryService.findByName(search);
@@ -40,15 +36,14 @@ public class CategoryController {
         
         model.addAttribute("categories", categories);
         model.addAttribute("count", categories.size());
-        model.addAttribute("categoryNew", new Category());
         
         return "/admin/categories";
     }
 
     @PostMapping("/admin/add-category")
-    public String add(@ModelAttribute("categoryNew") Category category, RedirectAttributes attributes){
+    public String add(String name, boolean isActivated, RedirectAttributes attributes){
         try {
-            categoryService.add(category);
+            categoryService.add(new Category(name, isActivated));
             attributes.addFlashAttribute("success", "Added successfully");
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();

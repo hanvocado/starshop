@@ -13,7 +13,9 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="<c:url value="/admin/category-add"/>">Add category</a>
+              <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#categoryModal">
+                  <i class="tio-user-add mr-1"></i> Add Category
+              </a>
             </div>
           </div>
           <!-- End Row -->
@@ -32,22 +34,6 @@
               </a>
             </span>
 
-            <!-- Nav -->
-            <ul class="nav nav-tabs page-header-tabs" id="pageHeaderTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">All categories</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Enabled</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Deleted</a>
-              </li>
-            </ul>
-            <!-- End Nav -->
           </div>
           <!-- End Nav Scroller -->
         </div>
@@ -66,10 +52,10 @@
                   <i class="tio-delete-outlined"></i> Delete
                 </a>
                 <a class="btn btn-sm btn-white mb-2 mb-sm-0 mr-2" href="javascript:;">
-                  <i class="tio-archive"></i> Disable
+                  <i class="tio-archive"></i> Không công khai
                 </a>
                 <a class="btn btn-sm btn-white mb-2 mb-sm-0 mr-2" href="javascript:;">
-                  <i class="tio-publish"></i> Enable
+                  <i class="tio-publish"></i> Công khai
                 </a>
               </div>
             </div>
@@ -164,8 +150,8 @@
 	                  <td>${cate.name }</td>
 
 	                  <td>
-						<c:if test="${cate.isActivated() }">Hoạt động</c:if>
-						<c:if test="${!cate.isActivated() }">Khóa</c:if>
+						<c:if test="${cate.isActivated() }">Công khai</c:if>
+						<c:if test="${!cate.isActivated() }">Ẩn</c:if>
 					</td>
 	                </tr>
                 </c:forEach>
@@ -173,45 +159,49 @@
             </table>
           </div>
           <!-- End Table -->
-          <!-- Footer -->
-          <div class="card-footer">
-            <!-- Pagination -->
-            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-              <div class="col-sm mb-2 mb-sm-0">
-                <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                  <span class="mr-2">Showing:</span>
 
-                  <!-- Select -->
-                  <select id="datatableEntries" class="js-select2-custom" data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "customClass": "custom-select custom-select-sm custom-select-borderless",
-                            "dropdownAutoWidth": true,
-                            "width": true
-                          }'>
-                    <option value="12" selected="">12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                  <!-- End Select -->
-
-                  <span class="text-secondary mr-2">of</span>
-
-                  <!-- Pagination Quantity -->
-                  <span id="datatableWithPaginationInfoTotalQty"></span>
-                </div>
-              </div>
-
-              <div class="col-sm-auto">
-                <div class="d-flex justify-content-center justify-content-sm-end">
-                  <!-- Pagination -->
-                  <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-                </div>
-              </div>
-            </div>
-            <!-- End Pagination -->
-          </div>
-          <!-- End Footer -->
         </div>
         <!-- End Card -->
+        
+        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <h4 id="inviteUserModalTitle" class="modal-title">Add Category</h4>
+
+                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+                        <i class="tio-clear tio-lg"></i>
+                    </button>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="modal-body">
+                <form action="<c:url value="/admin/add-category"/>" method="post">
+
+	                <input name="name" type="text" class="form-control mb-3" placeholder="Tên" />
+
+				     <!-- Toggle Switch -->
+	                <label class="row toggle-switch" for="availabilitySwitch1">
+	                  <span class="col-8 col-sm-9 toggle-switch-content">
+	                    <span class="text-dark">Công khai</span>
+	                  </span>
+	                  <span class="col-4 col-sm-3">
+	                    <input name="isActivated" type="checkbox" class="toggle-switch-input" id="availabilitySwitch1" value="true" checked>
+	                    <span class="toggle-switch-label ml-auto">
+	                      <span class="toggle-switch-indicator"></span>
+	                    </span>
+	                  </span>
+	                </label>
+	                <!-- End Toggle Switch -->
+	                
+	                <div class="d-flex justify-content-center">
+                  		<button type="submit" class="btn btn-outline-primary">Add</button>	                
+	                </div>
+				 </form>
+                </div>
+                <!-- End Body -->
+            </div>
+        </div>
+    </div>
 </body>

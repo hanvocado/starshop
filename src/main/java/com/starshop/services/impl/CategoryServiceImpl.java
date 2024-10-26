@@ -26,8 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category add(Category category) {
-		Category cate = new Category(category.getName());
-		return repo.save(cate);
+		category.setDeleted(false);
+		return repo.save(category);
 	}
 
 	@Override
