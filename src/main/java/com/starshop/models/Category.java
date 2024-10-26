@@ -22,9 +22,11 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "category_id")
 	private Long id;
-	@Column(columnDefinition = "NVARCHAR(50)", nullable = false)
+	@Column(length=50, nullable = false)
 	private String name;
+	@Column(name = "is_deleted")
 	private boolean isDeleted;
+	@Column(name = "is_activated")
 	private boolean isActivated;
 	
 	public Category(String name) {

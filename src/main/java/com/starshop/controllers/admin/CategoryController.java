@@ -2,6 +2,7 @@ package com.starshop.controllers.admin;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,20 +25,36 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/categories")
+    @GetMapping("/admin/categories")
     public String categories(Model model, Principal principal){
 		/*
 		 * if(principal == null){ return "redirect:/login"; }
 		 */
         List<Category> categories = categoryService.findAll();
+        
+        List<Category> enabledList = categories.stream()
+		                .filter(category -> category.isActivated())
+		                .collect(Collectors.toList());
+        
+        List<Category> deletedList = categories.stream()
+                .filter(category -> category.isDeleted())
+                .collect(Collectors.toList());
+        
+        List<Category> disabledList = categories.stream()
+                .filter(category -> !category.isActivated())
+                .collect(Collectors.toList());
+        
         model.addAttribute("categories", categories);
-        model.addAttribute("size", categories.size());
-        model.addAttribute("title", "Category");
+        model.addAttribute("enabled-categories", enabledList);
+        model.addAttribute("disabled-categories", disabledList);
+        model.addAttribute("deleted-categories", deletedList);
+        model.addAttribute("count", categories.size());
         model.addAttribute("categoryNew", new Category());
-        return "categories";
+        
+        return "/admin/categories";
     }
 
-    @PostMapping("/add-category")
+    @PostMapping("/admin/add-category")
     public String add(@ModelAttribute("categoryNew") Category category, RedirectAttributes attributes){
         try {
             categoryService.add(category);
@@ -50,17 +67,17 @@ public class CategoryController {
             e.printStackTrace();
             attributes.addFlashAttribute("failed", "Error server");
         }
-        return "redirect:/categories";
+        return "redirect:/admin/categories";
 
     }
 
-    @RequestMapping(value = "/findById", method = {RequestMethod.PUT, RequestMethod.GET})
+    @RequestMapping(value = "/admin/findById", method = {RequestMethod.PUT, RequestMethod.GET})
     @ResponseBody
     public Category findById(Long id){
         return categoryService.findById(id);
     }
 
-    @GetMapping("/update-category")
+    @GetMapping("/admin/update-category")
     public String update(Category category, RedirectAttributes attributes){
         try {
             categoryService.update(category);
@@ -72,10 +89,10 @@ public class CategoryController {
             e.printStackTrace();
             attributes.addFlashAttribute("failed", "Error server");
         }
-        return "redirect:/categories";
+        return "redirect:/admin/categories";
     }
 
-    @RequestMapping(value = "/delete-category", method = {RequestMethod.PUT, RequestMethod.GET})
+    @RequestMapping(value = "/admin/delete-category", method = {RequestMethod.PUT, RequestMethod.GET})
     public String delete(Long id, RedirectAttributes attributes){
         try {
             categoryService.deleteById(id);
@@ -84,10 +101,10 @@ public class CategoryController {
             e.printStackTrace();
             attributes.addFlashAttribute("failed", "Failed to deleted");
         }
-        return "redirect:/categories";
+        return "redirect:/admin/categories";
     }
 
-    @RequestMapping(value = "/enable-category", method = {RequestMethod.PUT, RequestMethod.GET})
+    @RequestMapping(value = "/admin/enable-category", method = {RequestMethod.PUT, RequestMethod.GET})
     public String enable(Long id, RedirectAttributes attributes){
         try {
             categoryService.enableById(id);
@@ -96,7 +113,7 @@ public class CategoryController {
             e.printStackTrace();
             attributes.addFlashAttribute("failed", "Failed to enabled");
         }
-        return "redirect:/categories";
+        return "redirect:/admin/categories";
     }
 
 
