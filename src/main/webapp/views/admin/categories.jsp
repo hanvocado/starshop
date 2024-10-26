@@ -13,7 +13,7 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="ecommerce-add-product.html">Add category</a>
+              <a class="btn btn-primary" href="<c:url value="/admin/category-add"/>">Add category</a>
             </div>
           </div>
           <!-- End Row -->
@@ -84,7 +84,7 @@
           <div class="card-header">
             <div class="row justify-content-between align-items-center flex-grow-1">
               <div class="col-md-4 mb-3 mb-md-0">
-                <form>
+                <form action="<c:url value="/admin/categories"/>" method="get">
                   <!-- Search -->
                   <div class="input-group input-group-merge input-group-flush">
                     <div class="input-group-prepend">
@@ -92,7 +92,7 @@
                         <i class="tio-search"></i>
                       </div>
                     </div>
-                    <input id="datatableSearch" type="search" class="form-control" placeholder="Hoa ..." aria-label="Search categories">
+                    <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="Hoa ..." aria-label="Search categories">
                   </div>
                   <!-- End Search -->
                 </form>

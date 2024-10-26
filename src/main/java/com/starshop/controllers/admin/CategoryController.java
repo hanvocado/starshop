@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,29 +26,19 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/admin/categories")
-    public String categories(Model model, Principal principal){
+    @RequestMapping(value="/admin/categories")
+    public String categories(String search, Model model, Principal principal){
 		/*
 		 * if(principal == null){ return "redirect:/login"; }
 		 */
-        List<Category> categories = categoryService.findAll();
-        
-        List<Category> enabledList = categories.stream()
-		                .filter(category -> category.isActivated())
-		                .collect(Collectors.toList());
-        
-        List<Category> deletedList = categories.stream()
-                .filter(category -> category.isDeleted())
-                .collect(Collectors.toList());
-        
-        List<Category> disabledList = categories.stream()
-                .filter(category -> !category.isActivated())
-                .collect(Collectors.toList());
+    	
+    	List<Category> categories;
+    	if(search != null && !search.isBlank())
+    		categories = categoryService.findByName(search);
+		else
+			categories = categoryService.findAll();
         
         model.addAttribute("categories", categories);
-        model.addAttribute("enabled-categories", enabledList);
-        model.addAttribute("disabled-categories", disabledList);
-        model.addAttribute("deleted-categories", deletedList);
         model.addAttribute("count", categories.size());
         model.addAttribute("categoryNew", new Category());
         

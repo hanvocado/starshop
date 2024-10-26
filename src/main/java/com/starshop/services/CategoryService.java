@@ -6,6 +6,7 @@ import com.starshop.models.Category;
 
 public interface CategoryService {
 	List<Category> findAll();
+	List<Category> findByName(String name);
 	Category add(Category category);
 	Category findById(Long id);
 	Category update(Category category);
