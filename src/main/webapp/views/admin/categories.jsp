@@ -13,7 +13,10 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="ecommerce-add-product.html">Add category</a>
+              <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#categoryModal"
+              		onclick="addCategory()">
+                  <i class="tio-user-add mr-1"></i> Add Category
+              </a>
             </div>
           </div>
           <!-- End Row -->
@@ -32,51 +35,11 @@
               </a>
             </span>
 
-            <!-- Nav -->
-            <ul class="nav nav-tabs page-header-tabs" id="pageHeaderTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">All categories</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Enabled</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Deleted</a>
-              </li>
-            </ul>
-            <!-- End Nav -->
           </div>
           <!-- End Nav Scroller -->
         </div>
         <!-- End Page Header -->
         
-        <div class="row justify-content-end mb-3">
-          <div class="col-lg">
-            <!-- Datatable Info -->
-            <div id="datatableCounterInfo" style="display: none;">
-              <div class="d-sm-flex justify-content-lg-end align-items-sm-center">
-                <span class="d-block d-sm-inline-block font-size-sm mr-3 mb-2 mb-sm-0">
-                  <span id="datatableCounter">0</span>
-                  Selected
-                </span>
-                <a class="btn btn-sm btn-outline-danger mb-2 mb-sm-0 mr-2" href="javascript:;">
-                  <i class="tio-delete-outlined"></i> Delete
-                </a>
-                <a class="btn btn-sm btn-white mb-2 mb-sm-0 mr-2" href="javascript:;">
-                  <i class="tio-archive"></i> Disable
-                </a>
-                <a class="btn btn-sm btn-white mb-2 mb-sm-0 mr-2" href="javascript:;">
-                  <i class="tio-publish"></i> Enable
-                </a>
-              </div>
-            </div>
-            <!-- End Datatable Info -->
-          </div>
-        </div>
-        <!-- End Row -->
         
         <!-- Card -->
         <div class="card">
@@ -84,7 +47,7 @@
           <div class="card-header">
             <div class="row justify-content-between align-items-center flex-grow-1">
               <div class="col-md-4 mb-3 mb-md-0">
-                <form>
+                <form action="<c:url value="/admin/categories"/>" method="get">
                   <!-- Search -->
                   <div class="input-group input-group-merge input-group-flush">
                     <div class="input-group-prepend">
@@ -92,29 +55,31 @@
                         <i class="tio-search"></i>
                       </div>
                     </div>
-                    <input id="datatableSearch" type="search" class="form-control" placeholder="Hoa ..." aria-label="Search categories">
+                    <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="Hoa ..." aria-label="Search categories">
                   </div>
                   <!-- End Search -->
                 </form>
               </div>
 
               <div class="col-auto">
-                <!-- Unfold -->
-                <div class="hs-unfold mr-2">
-                  <a class="js-hs-unfold-invoker btn btn-white" href="javascript:;" data-hs-unfold-options='{
-                      "target": "#datatableFilterSidebar",
-                      "type": "css-animation",
-                      "animationIn": "fadeInRight",
-                      "animationOut": "fadeOutRight",
-                      "hasOverlay": true,
-                      "smartPositionOff": true
-                     }'>
-                    <i class="tio-filter-list mr-1"></i> Filters
-                  </a>
-                </div>
-                <!-- End Unfold -->
-
-              </div>
+		            <!-- Dropleft FILTER -->
+					<div class="btn-group dropleft">
+					  <button type="button" id="filter-btn" class="btn btn-white dropdown-toggle" 
+					  		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Lọc
+					  </button>
+					  <div class="dropdown-menu">
+					    <a class="dropdown-item" href="#" onclick="filterTable('Tất cả')">Tất cả</a>
+					    <div class="dropdown-divider"></div>
+					    <a class="dropdown-item" href="#" onclick="filterTable('Công khai')">Công khai</a>
+					    <a class="dropdown-item" href="#" onclick="filterTable('Đã ẩn')">Đã ẩn</a>
+					    <div class="dropdown-divider"></div>
+					    <a class="dropdown-item" href="#" onclick="filterTable('Đã xóa')">Đã xóa</a>
+					  </div>
+					</div>
+					<!-- End Dropleft FILTER -->
+				</div>
+              
             </div>
             <!-- End Row -->
           </div>
@@ -122,7 +87,7 @@
 
           <!-- Table -->
           <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
+            <table id="categoryTable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
                      "columnDefs": [{
                         "targets": [0, 4, 9],
                         "width": "5%",
@@ -141,77 +106,156 @@
                    }'>
               <thead class="thead-light">
                 <tr>
-                  <th scope="col" class="table-column-pr-0">
-                    <div class="custom-control custom-checkbox">
-                      <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
-                      <label class="custom-control-label" for="datatableCheckAll"></label>
-                    </div>
-                  </th>
-                  <th class="table-column-pl-0">Name</th>
-                  <th>Status</th>
+                  <th class="text-center">Tên</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
                 </tr>
               </thead>
 
               <tbody>
                 <c:forEach items="${categories}" var="cate" varStatus="STT">
 	                <tr>
-	                	<th scope="col" class="table-column-pr-0">
-		                   <div class="custom-control custom-checkbox">
-		                     <input id="datatableCheckAll" type="checkbox" class="custom-control-input">
-		                     <label class="custom-control-label" for="datatableCheckAll"></label>
-		                   </div>
-		                 </th>
 	                  <td>${cate.name }</td>
 
 	                  <td>
-						<c:if test="${cate.isActivated() }">Hoạt động</c:if>
-						<c:if test="${!cate.isActivated() }">Khóa</c:if>
-					</td>
+	                  	<c:choose>         
+					       <c:when test = "${cate.isDeleted()}">
+					          <span class="badge badge-danger">Đã xóa</span>
+					       </c:when>
+					       
+					       <c:when test = "${cate.isActivated()}">
+					          <span class="badge badge-info">Công khai</span>
+					       </c:when>
+					       
+					       <c:otherwise>
+					          <span class="badge badge-secondary">Đã ẩn</span>
+					       </c:otherwise>
+					    </c:choose>
+						</td>
+						<!-- End Status -->
+						
+						<td>
+							<c:choose>         
+						       <c:when test = "${cate.isDeleted()}">
+						          <a class="btn btn-soft-success btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
+						          		<i class="tio-restore"></i> Khôi phục</a>
+						       </c:when>
+						       
+						       <c:when test = "${cate.isActivated()}">
+							       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
+							          	<i class="tio-delete-outlined"></i> Xóa</a>
+						          <a class="btn btn-soft-secondary btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
+						          	<i class="tio-archive"></i> Ẩn</a> 
+						          
+						       </c:when>
+						       
+						       <c:otherwise>
+						          <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
+						          	<i class="tio-delete-outlined"></i> Xóa</a>
+						          <a class="btn btn-soft-warning btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
+						          	<i class="tio-publish"></i> Công khai</a> 
+						          
+						       </c:otherwise>
+						    </c:choose>
+			            </td>
+						
 	                </tr>
                 </c:forEach>
               </tbody>
             </table>
           </div>
           <!-- End Table -->
-          <!-- Footer -->
-          <div class="card-footer">
-            <!-- Pagination -->
-            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-              <div class="col-sm mb-2 mb-sm-0">
-                <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                  <span class="mr-2">Showing:</span>
 
-                  <!-- Select -->
-                  <select id="datatableEntries" class="js-select2-custom" data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "customClass": "custom-select custom-select-sm custom-select-borderless",
-                            "dropdownAutoWidth": true,
-                            "width": true
-                          }'>
-                    <option value="12" selected="">12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                  </select>
-                  <!-- End Select -->
-
-                  <span class="text-secondary mr-2">of</span>
-
-                  <!-- Pagination Quantity -->
-                  <span id="datatableWithPaginationInfoTotalQty"></span>
-                </div>
-              </div>
-
-              <div class="col-sm-auto">
-                <div class="d-flex justify-content-center justify-content-sm-end">
-                  <!-- Pagination -->
-                  <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-                </div>
-              </div>
-            </div>
-            <!-- End Pagination -->
-          </div>
-          <!-- End Footer -->
         </div>
         <!-- End Card -->
+        
+        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered" role="document">
+	            <div class="modal-content">
+	                <!-- Header -->
+	                <div class="modal-header">
+	                    <h4 id="inviteUserModalTitle" class="modal-title">Category</h4>
+	
+	                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+	                        <i class="tio-clear tio-lg"></i>
+	                    </button>
+	                </div>
+	                <!-- End Header -->
+	                <!-- Body -->
+	                <div class="modal-body">
+	                <form id="categoryForm" action="<c:url value="/admin/add-category"/>" method="post">
+						<input name="id" id="categoryId" type="hidden" />
+		                <input name="name" id="categoryName" type="text" class="form-control mb-3" placeholder="Tên" />
+						<div id="cate-modal-text"></div>
+					     <!-- Toggle Switch -->
+					     <div id="switchContainer">
+			                <label class="row toggle-switch" for="categorySwitch">
+			                  <span class="col-8 col-sm-9 toggle-switch-content">
+			                    <span class="text-dark">Công khai</span>
+			                  </span>
+			                  <span class="col-4 col-sm-3">
+			                    <input name="isActivated" type="checkbox" class="toggle-switch-input" id="categorySwitch" value="true" checked>
+			                    <span class="toggle-switch-label ml-auto">
+			                      <span class="toggle-switch-indicator"></span>
+			                    </span>
+			                  </span>
+			                </label>
+					     </div>
+		                <!-- End Toggle Switch -->
+		                
+		                <div class="d-flex justify-content-center">
+	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Add</button>	                
+		                </div>
+					 </form>
+	                </div>
+	                <!-- End Body -->
+	            </div>
+	        </div>
+	    </div>
+	    <!-- End Modal -->
+    
+    	
+    <script>
+	  function filterTable(status) {
+	    var rows = document.querySelectorAll("#categoryTable tbody tr");
+	    document.getElementById('filter-btn').innerText = status;
+	    rows.forEach(function(row) {
+	      var statusText = row.cells[1].innerText.trim();
+	      if (status === 'Tất cả' || statusText === status) {
+	        row.style.display = '';
+	      } else {
+	        row.style.display = 'none';
+	      }
+	    });
+	  }
+	  
+	  function addCategory() {
+	        document.getElementById('modalSubmitButton').innerText = 'Tạo';
+	        document.getElementById('categoryName').style.display = '';
+	        document.getElementById('modalSubmitButton').className = 'btn btn-outline-primary';
+	  }
+	  
+	  function editCategory(id, name, isActivated) {
+	        document.getElementById('categoryForm').action = '/admin/update-category';
+	        document.getElementById('categoryName').style.display = '';
+	        document.getElementById('switchContainer').style.display = '';
+	        document.getElementById('cate-modal-text').innerText = '';
+	        document.getElementById('categoryId').value = id;
+	        document.getElementById('categoryName').value = name;
+	        document.getElementById('categorySwitch').checked = isActivated;
+	        document.getElementById('modalSubmitButton').innerText = 'Cập nhật';
+	        document.getElementById('modalSubmitButton').className = 'btn btn-soft-primary';
+	    }
+
+	    function deleteCategory(id) {
+	        document.getElementById('categoryForm').action = '/admin/delete-category';
+	        document.getElementById('categoryId').value = id;
+	        document.getElementById('categoryName').style.display = 'none';
+	        document.getElementById('switchContainer').style.display = 'none';
+	        document.getElementById('cate-modal-text').innerText = 'Bạn chắn chắn muốn xóa?';
+	        document.getElementById('modalSubmitButton').innerText = 'Xóa';
+	        document.getElementById('modalSubmitButton').className = 'btn btn-danger';
+	    }
+	</script>
+    
 </body>

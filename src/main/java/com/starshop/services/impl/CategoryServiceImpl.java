@@ -1,8 +1,6 @@
 package com.starshop.services.impl;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +18,16 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> findAll() {
 		return repo.findAll();
 	}
+	
+	@Override
+	public List<Category> findByName(String name) {
+		return repo.findByName(name);
+	}
 
 	@Override
 	public Category add(Category category) {
-		Category cate = new Category(category.getName());
-		return repo.save(cate);
+		category.setDeleted(false);
+		return repo.save(category);
 	}
 
 	@Override
