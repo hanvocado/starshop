@@ -35,8 +35,7 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#productModal"
-              		onclick="addCategory()">
+              <a class="btn btn-primary" href="<c:url value="/admin/add-product"/>">
                   <i class="tio-add mr-1"></i> Tạo mới
               </a>
             </div>

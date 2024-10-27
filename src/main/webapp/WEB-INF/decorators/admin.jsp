@@ -143,8 +143,7 @@
             $('.js-select2-custom').each(function () {
                 var select2 = $.HSCore.components.HSSelect2.init($(this));
             });
-
-
+         
             // INITIALIZATION OF CHARTJS
             // =======================================================
             Chart.plugins.unregister(ChartDataLabels);
@@ -327,6 +326,32 @@
             // =======================================================
             $('.js-clipboard').each(function () {
                 var clipboard = $.HSCore.components.HSClipboard.init(this);
+            });
+            
+         // INITIALIZATION OF ADD INPUT FILED
+            // =======================================================
+            $('.js-add-field').each(function () {
+              new HSAddField($(this), {
+                addedField: function() {
+                  $('.js-add-field .js-select2-custom-dynamic').each(function () {
+                    var select2dynamic = $.HSCore.components.HSSelect2.init($(this));
+                  });
+                }
+              }).init();
+            });
+
+            
+            // INITIALIZATION OF TAGIFY
+            // =======================================================
+            $('.js-tagify').each(function () {
+              var tagify = $.HSCore.components.HSTagify.init($(this));
+            });
+
+            
+            // INITIALIZATION OF DROPZONE FILE ATTACH MODULE
+            // =======================================================
+            $('.js-dropzone').each(function () {
+              var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
             });
         });
     </script>

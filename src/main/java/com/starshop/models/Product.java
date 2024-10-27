@@ -33,6 +33,8 @@ public class Product {
 	
 	private String description;
 	
+	private float weight;
+	
 	@Column(name = "cost_price")
 	private double costPrice;
 	
