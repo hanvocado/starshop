@@ -36,14 +36,15 @@ public class CategoryController {
         
         model.addAttribute("categories", categories);
         model.addAttribute("count", categories.size());
+        model.addAttribute("search", search);
         
         return "/admin/categories";
     }
 
     @PostMapping("/admin/add-category")
-    public String add(String name, boolean isActivated, RedirectAttributes attributes){
+    public String add(String name, boolean isPublished, RedirectAttributes attributes){
         try {
-            categoryService.add(new Category(name, isActivated));
+            categoryService.add(new Category(name, isPublished));
             attributes.addFlashAttribute("success", "Added successfully");
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
@@ -57,10 +58,10 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/admin/update-category")
-    public String update(Category category, RedirectAttributes attributes){
+    @PostMapping("/admin/update-category")
+    public String update(Long id, String name, boolean isPublished, RedirectAttributes attributes){
         try {
-            categoryService.update(category);
+            categoryService.update(new Category(id, name, isPublished));
             attributes.addFlashAttribute("success","Updated successfully");
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
@@ -72,7 +73,7 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
 
-    @RequestMapping(value = "/admin/delete-category", method = {RequestMethod.PUT, RequestMethod.GET})
+    @PostMapping("/admin/delete-category")
     public String delete(Long id, RedirectAttributes attributes){
         try {
             categoryService.deleteById(id);
@@ -84,10 +85,10 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
 
-    @RequestMapping(value = "/admin/enable-category", method = {RequestMethod.PUT, RequestMethod.GET})
+    @RequestMapping(value = "/admin/publish-category", method = {RequestMethod.PUT, RequestMethod.GET})
     public String enable(Long id, RedirectAttributes attributes){
         try {
-            categoryService.enableById(id);
+            categoryService.publishById(id);
             attributes.addFlashAttribute("success", "Enabled successfully");
         }catch (Exception e){
             e.printStackTrace();

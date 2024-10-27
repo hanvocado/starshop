@@ -26,7 +26,6 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category add(Category category) {
-		category.setDeleted(false);
 		return repo.save(category);
 	}
 
@@ -37,29 +36,30 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category update(Category category) {
-		Category cate = new Category();
-		cate.setName(category.getName());
-		cate.setActivated(category.isActivated());
-		cate.setDeleted(category.isDeleted());
-		return repo.save(cate);
+		return repo.save(category);
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		Category cate = repo.findById(id).orElse(null);
 		if (cate != null) {
-			cate.setDeleted(true);
-			cate.setActivated(false);
-			repo.save(cate);
+			repo.delete(cate);
 		}
 	}
 
 	@Override
-	public void enableById(Long id) {
+	public void publishById(Long id) {
 		Category cate = repo.findById(id).orElse(null);
 		if (cate != null) {
-			cate.setDeleted(false);
-			cate.setActivated(true);
+			cate.setPublished(true);
+			repo.save(cate);
+		}
+	}
+	
+	public void archiveById(Long id) {
+		Category cate = repo.findById(id).orElse(null);
+		if (cate != null) {
+			cate.setPublished(false);
 			repo.save(cate);
 		}
 	}

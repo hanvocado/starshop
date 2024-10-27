@@ -11,5 +11,6 @@ public interface CategoryService {
 	Category findById(Long id);
 	Category update(Category category);
 	void deleteById(Long id);
-	void enableById(Long id);
+	void publishById(Long id);
+	void archiveById(Long id);
 }

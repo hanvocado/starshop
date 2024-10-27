@@ -26,22 +26,31 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
 	private Long id;
+	
 	@Column(length=50, nullable = false)
 	private String name;
+	
 	private String description;
+	
 	@Column(name = "cost_price")
 	private double costPrice;
+	
 	@Column(name = "sale_Price")
 	private double salePrice;
+	
 	@Column(name = "current_quantity")
 	private int currentQuantity;
+	
 	@Lob
 	private String image;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
+	
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = true)
 	private Category category;
+	
+	@Column(name = "is_published")
+	private boolean isPublished;
+	
 	@Column(name = "is_deleted")
-	private boolean isDeleted;
-	@Column(name = "is_activated")
-	private boolean isActivated;
+	private boolean isDeleted;	
 }

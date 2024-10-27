@@ -22,22 +22,20 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "category_id")
 	private Long id;
+	
 	@Column(length=50, nullable = false)
 	private String name;
-	@Column(name = "is_deleted")
-	private boolean isDeleted;
-	@Column(name = "is_activated")
-	private boolean isActivated;
+	
+	@Column(name = "is_published")
+	private boolean isPublished;
 	
 	public Category(String name) {
 		this.name = name;
-		this.isActivated = true;
-		this.isDeleted = false;
+		this.isPublished = true;
 	}
 	
 	public Category(String name, boolean isActivated) {
 		this.name = name;
-		this.isActivated = isActivated;
-		this.isDeleted = false;
+		this.isPublished = isActivated;
 	}
 }

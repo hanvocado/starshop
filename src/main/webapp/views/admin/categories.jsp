@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
-<title>Categories</title>
+<title>Quản lý danh mục</title>
 
 <body>
 	<!-- Page Header -->
@@ -15,7 +15,7 @@
             <div class="col-sm-auto">
               <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#categoryModal"
               		onclick="addCategory()">
-                  <i class="tio-user-add mr-1"></i> Add Category
+                  <i class="tio-add mr-1"></i> Tạo mới
               </a>
             </div>
           </div>
@@ -55,7 +55,7 @@
                         <i class="tio-search"></i>
                       </div>
                     </div>
-                    <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="Hoa ..." aria-label="Search categories">
+                    <input id="datatableSearch" value='${search}' name="search" type="search" class="form-control" placeholder="Tìm bằng tên" aria-label="Search categories">
                   </div>
                   <!-- End Search -->
                 </form>
@@ -73,8 +73,6 @@
 					    <div class="dropdown-divider"></div>
 					    <a class="dropdown-item" href="#" onclick="filterTable('Công khai')">Công khai</a>
 					    <a class="dropdown-item" href="#" onclick="filterTable('Đã ẩn')">Đã ẩn</a>
-					    <div class="dropdown-divider"></div>
-					    <a class="dropdown-item" href="#" onclick="filterTable('Đã xóa')">Đã xóa</a>
 					  </div>
 					</div>
 					<!-- End Dropleft FILTER -->
@@ -119,11 +117,7 @@
 
 	                  <td>
 	                  	<c:choose>         
-					       <c:when test = "${cate.isDeleted()}">
-					          <span class="badge badge-danger">Đã xóa</span>
-					       </c:when>
-					       
-					       <c:when test = "${cate.isActivated()}">
+					       <c:when test = "${cate.isPublished()}">
 					          <span class="badge badge-info">Công khai</span>
 					       </c:when>
 					       
@@ -135,28 +129,11 @@
 						<!-- End Status -->
 						
 						<td>
-							<c:choose>         
-						       <c:when test = "${cate.isDeleted()}">
-						          <a class="btn btn-soft-success btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
-						          		<i class="tio-restore"></i> Khôi phục</a>
-						       </c:when>
-						       
-						       <c:when test = "${cate.isActivated()}">
-							       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
-							          	<i class="tio-delete-outlined"></i> Xóa</a>
-						          <a class="btn btn-soft-secondary btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
-						          	<i class="tio-archive"></i> Ẩn</a> 
-						          
-						       </c:when>
-						       
-						       <c:otherwise>
-						          <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
-						          	<i class="tio-delete-outlined"></i> Xóa</a>
-						          <a class="btn btn-soft-warning btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isActivated()})">
-						          	<i class="tio-publish"></i> Công khai</a> 
-						          
-						       </c:otherwise>
-						    </c:choose>
+					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
+					          	<i class="tio-delete-outlined"></i> Xóa</a>
+					       <a class="btn btn-soft-warning btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isPublished()})">
+						          	<i class="tio-archive"></i> Sửa</a> 
+					          
 			            </td>
 						
 	                </tr>
@@ -174,7 +151,7 @@
 	            <div class="modal-content">
 	                <!-- Header -->
 	                <div class="modal-header">
-	                    <h4 id="inviteUserModalTitle" class="modal-title">Category</h4>
+	                    <h4 id="inviteUserModalTitle" class="modal-title">Danh mục</h4>
 	
 	                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
 	                        <i class="tio-clear tio-lg"></i>
@@ -194,7 +171,7 @@
 			                    <span class="text-dark">Công khai</span>
 			                  </span>
 			                  <span class="col-4 col-sm-3">
-			                    <input name="isActivated" type="checkbox" class="toggle-switch-input" id="categorySwitch" value="true" checked>
+			                    <input name="isPublished" type="checkbox" class="toggle-switch-input" id="categorySwitch" value="true" checked>
 			                    <span class="toggle-switch-label ml-auto">
 			                      <span class="toggle-switch-indicator"></span>
 			                    </span>
@@ -204,7 +181,7 @@
 		                <!-- End Toggle Switch -->
 		                
 		                <div class="d-flex justify-content-center">
-	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Add</button>	                
+	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Submit</button>	                
 		                </div>
 					 </form>
 	                </div>
@@ -235,14 +212,14 @@
 	        document.getElementById('modalSubmitButton').className = 'btn btn-outline-primary';
 	  }
 	  
-	  function editCategory(id, name, isActivated) {
+	  function editCategory(id, name, isPublished) {
 	        document.getElementById('categoryForm').action = '/admin/update-category';
 	        document.getElementById('categoryName').style.display = '';
 	        document.getElementById('switchContainer').style.display = '';
 	        document.getElementById('cate-modal-text').innerText = '';
 	        document.getElementById('categoryId').value = id;
 	        document.getElementById('categoryName').value = name;
-	        document.getElementById('categorySwitch').checked = isActivated;
+	        document.getElementById('categorySwitch').checked = isPublished;
 	        document.getElementById('modalSubmitButton').innerText = 'Cập nhật';
 	        document.getElementById('modalSubmitButton').className = 'btn btn-soft-primary';
 	    }
