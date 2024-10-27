@@ -74,7 +74,7 @@ public class CategoryController {
     public String delete(Long id, RedirectAttributes attributes){
         try {
             categoryService.deleteById(id);
-            new ViewMessage("success", Constants.deleteSuccess);
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.deleteSuccess));
         }catch (Exception e){
             e.printStackTrace();
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));

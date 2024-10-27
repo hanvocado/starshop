@@ -35,9 +35,12 @@ public class Product {
 	@Column(name = "cost_price")
 	private double costPrice;
 	
-	@Column(name = "sale_Price")
+	@Column(name = "sale_price")
 	private double salePrice;
 	
+	@Column(name = "discount_percent")
+	private int discountPercent;
+		
 	@Column(name = "current_quantity")
 	private int currentQuantity;
 	
