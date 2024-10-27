@@ -55,9 +55,6 @@ public class Product {
 	@Column(name = "is_published")
 	private boolean isPublished;
 	
-	@Column(name = "is_deleted")
-	private boolean isDeleted;
-	
 	@Transient	
 	public double getDisplayPrice() {
 		return (salePrice - salePrice * discountPercent / 100);
