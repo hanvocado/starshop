@@ -4,7 +4,28 @@
 
 <title>Quản lý danh mục</title>
 
-<body>
+<body>	
+	<!-- Display Flash Messages -->
+	<c:if test="${not empty message }">
+	
+		<c:if test="${message.type == 'success'}">	
+		    <c:set var="icon_class" value="tio-checkmark-circle-outlined" />
+		</c:if>
+		<c:if test="${message.type == 'danger'}">
+		    <c:set var="icon_class" value="tio-message-failed-outlined" />
+		</c:if>
+		
+		<!-- ALERT -->
+		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:20px; right:60px; z-index:9999;">
+			  <i class="${icon_class }"></i>
+		  <strong>${message.content }</strong> 
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <i class="tio-clear tio-lg"></i>
+		  </button>
+		</div>
+
+	</c:if>
+	
 	<!-- Page Header -->
         <div class="page-header">
           <div class="row align-items-center mb-3">
@@ -132,7 +153,7 @@
 					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="deleteCategory(${cate.id})">
 					          	<i class="tio-delete-outlined"></i> Xóa</a>
 					       <a class="btn btn-soft-warning btn-xs" data-toggle="modal" data-target="#categoryModal" onclick="editCategory(${cate.id}, '${cate.name}', ${cate.isPublished()})">
-						          	<i class="tio-archive"></i> Sửa</a> 
+						          	<i class="tio-archive"></i> Cập nhật</a> 
 					          
 			            </td>
 						
@@ -233,6 +254,10 @@
 	        document.getElementById('modalSubmitButton').innerText = 'Xóa';
 	        document.getElementById('modalSubmitButton').className = 'btn btn-danger';
 	    }
+	    
+	    setTimeout(function() {
+	        document.getElementById('message-alert').style.display = 'none';
+	      }, 6000);
 	</script>
     
 </body>

@@ -1,23 +1,18 @@
 package com.starshop.controllers.admin;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.services.CategoryService;
+import com.starshop.utils.Constants;
+import com.starshop.utils.ViewMessage;
 import com.starshop.models.Category;
 
 @Controller
@@ -38,6 +33,9 @@ public class CategoryController {
         model.addAttribute("count", categories.size());
         model.addAttribute("search", search);
         
+        ViewMessage message  = (ViewMessage) model.asMap().get("result");
+        model.addAttribute("message", message);
+        
         return "/admin/categories";
     }
 
@@ -45,30 +43,29 @@ public class CategoryController {
     public String add(String name, boolean isPublished, RedirectAttributes attributes){
         try {
             categoryService.add(new Category(name, isPublished));
-            attributes.addFlashAttribute("success", "Added successfully");
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.createSuccess));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Failed to add because duplicate name");
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));
         }
         catch (Exception e){
             e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Error server");
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
         }
         return "redirect:/admin/categories";
-
     }
 
     @PostMapping("/admin/update-category")
     public String update(Long id, String name, boolean isPublished, RedirectAttributes attributes){
         try {
             categoryService.update(new Category(id, name, isPublished));
-            attributes.addFlashAttribute("success","Updated successfully");
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.updateSuccess));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Failed to update because duplicate name");
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));
         }catch (Exception e){
             e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Error server");
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
         }
         return "redirect:/admin/categories";
     }
@@ -77,28 +74,11 @@ public class CategoryController {
     public String delete(Long id, RedirectAttributes attributes){
         try {
             categoryService.deleteById(id);
-            attributes.addFlashAttribute("success", "Deleted successfully");
+            new ViewMessage("success", Constants.deleteSuccess);
         }catch (Exception e){
             e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Failed to deleted");
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
         }
         return "redirect:/admin/categories";
     }
-
-    @RequestMapping(value = "/admin/publish-category", method = {RequestMethod.PUT, RequestMethod.GET})
-    public String enable(Long id, RedirectAttributes attributes){
-        try {
-            categoryService.publishById(id);
-            attributes.addFlashAttribute("success", "Enabled successfully");
-        }catch (Exception e){
-            e.printStackTrace();
-            attributes.addFlashAttribute("failed", "Failed to enabled");
-        }
-        return "redirect:/admin/categories";
-    }
-
-
-
-
-
 }
