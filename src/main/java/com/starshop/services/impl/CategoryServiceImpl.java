@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	public List<Category> findByName(String name) {
-		return repo.findByName(name);
+		return repo.findByNameContainingIgnoreCase(name);
 	}
 
 	@Override

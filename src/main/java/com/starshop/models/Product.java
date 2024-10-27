@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,5 +56,15 @@ public class Product {
 	private boolean isPublished;
 	
 	@Column(name = "is_deleted")
-	private boolean isDeleted;	
+	private boolean isDeleted;
+	
+	@Transient	
+	public double getDisplayPrice() {
+		return (salePrice - salePrice * discountPercent / 100);
+	}
+	
+	@Transient	
+	public double getProfit() {
+		return salePrice - getDisplayPrice();
+	}
 }
