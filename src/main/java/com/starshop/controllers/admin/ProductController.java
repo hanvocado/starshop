@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,7 +29,7 @@ import com.starshop.utils.ViewMessage;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/product")
 public class ProductController {
 	@Autowired
 	private ProductService productService;
@@ -38,12 +37,12 @@ public class ProductController {
 	@Autowired
 	private CategoryService categoryService;
 	
-	@GetMapping("/products")
+	@GetMapping("")
 	public String products(Model model, String status, String search, Integer pageNo, Integer pageSize) {
 		
 		Page<Product> page = null;
 		if (pageNo == null) pageNo = 0;
-		if (pageSize == null) pageSize = 2;
+		if (pageSize == null) pageSize = 6;
 		if (status == null || status.isBlank() || status.contentEquals("all")) {
 			page = productService.getProductsPagination(pageNo, pageSize, search);
 		} else if (status.contentEquals("published")) {
@@ -62,14 +61,14 @@ public class ProductController {
 		return "/admin/products";
 	}
 	
-	@GetMapping("/add-product")
+	@GetMapping("/add")
 	public String addProduct(Model model) {
 		List<Category> categories = categoryService.findAll();
 		model.addAttribute("categories", categories);
 		return "/admin/add-product";		
 	}
 	
-	@PostMapping("/add-product")
+	@PostMapping("/add")
 	public String saveProduct(@Valid Product product, boolean isPublished, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
 		try {
 			
@@ -101,5 +100,17 @@ public class ProductController {
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
         }
         return "redirect:/admin/products";
+	}
+	
+	@GetMapping("/update")
+	public String updateProduct(Model model, Long id) {
+		Product product = productService.getById(id);
+		if (product == null)
+	        return "redirect:/admin/products";
+
+		List<Category> categories = categoryService.findAll();
+		model.addAttribute("categories", categories);
+		model.addAttribute("product", product);
+		return "/admin/update-product";		
 	}
 }

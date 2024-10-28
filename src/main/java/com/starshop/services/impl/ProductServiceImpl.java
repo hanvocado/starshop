@@ -34,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product getById(Long id) {
+		if (id == null)
+			return null;
 		return repo.findById(id).orElse(null);
 	}
 
