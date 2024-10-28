@@ -42,7 +42,7 @@ public class Product {
 	@Column(name = "sale_price", nullable = false)
 	private double salePrice;
 	
-	@Column(name = "discount_percent")
+	@Column(name = "discount_percent", columnDefinition = "default 0")
 	private int discountPercent;
 		
 	@Column(name = "current_quantity")

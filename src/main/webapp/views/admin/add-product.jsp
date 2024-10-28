@@ -22,8 +22,15 @@
       <!-- End Row -->
     </div>
     <!-- End Page Header -->
+    <div class="dz-preview dz-file-preview">
+	  <div class="dz-details">
+	    <div class="dz-filename"><span data-dz-name></span></div>
+	    <div class="dz-size" data-dz-size></div>
+	    <img data-dz-thumbnail />
+	  </div>
+	  </div>
 	
-	  <form action="<c:url value="/admin/add-product"/>" method="post">
+	  <form action="<c:url value="/admin/add-product"/>" method="post" enctype="multipart/form-data">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -95,11 +102,11 @@
               <!-- Body -->
               <div class="card-body">
                 <!-- Dropzone -->
-                <div id="attachFilesNewProjectLabel" class="js-dropzone dropzone-custom custom-file-boxed">
+                <div id="attachFilesNewProjectLabel" class="dropzone-custom custom-file-boxed">
                   <div class="dz-message custom-file-boxed-label">
                     <img class="avatar avatar-xl avatar-4by3 mb-3" src="/exec/svg/illustrations/browse.svg" alt="Image Description">
-                    <h5 class="mb-1">Chọn file ảnh để tải lên</h5>
-                    <span class="btn btn-sm btn-primary">Browse files</span>
+<!--                     <span class="btn btn-sm btn-primary">Browse files</span>
+ -->                    <input type="file" name="file" class="form-control form-control-borderless form-control-flush">
                   </div>
                 </div>
                 <!-- End Dropzone -->

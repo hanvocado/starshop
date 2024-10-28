@@ -126,7 +126,9 @@
                    }'>
               <thead class="thead-light">
                 <tr>
-                  <th class="text-center">Tên</th>
+
+                  <th class="table-column-pr-0">Sản phẩm</th>
+                  <th>Giá bán</th>
                   <th>Trạng thái</th>
                   <th>Hành động</th>
                 </tr>
@@ -135,6 +137,20 @@
               <tbody>
                 <c:forEach items="${products}" var="product" varStatus="STT">
 	                <tr>
+	                  <c:if test="${product.image.substring(0,5)=='https'}">
+						<c:url value="${product.image }" var="imgUrl"></c:url>
+					</c:if>
+					<c:if test="${product.image.substring(0,5)!='https'}">
+						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
+					</c:if>
+	                  <td class="table-column-pr-0">
+	                    <a class="media align-items-center" href="ecommerce-product-details.html">
+	                      <img class="avatar avatar-lg mr-3" src="${imgUrl }" alt="Image ${product.name }">
+	                      <div class="media-body">
+	                        <h5 class="text-hover-primary mb-0">${product.name }</h5>
+	                      </div>
+	                    </a>
+	                  </td>
 	                  <td>${product.name }</td>
 
 	                  <td>

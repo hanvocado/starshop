@@ -1,8 +1,14 @@
 package com.starshop.controllers.admin;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -11,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.models.Category;
@@ -63,8 +70,24 @@ public class ProductController {
 	}
 	
 	@PostMapping("/add-product")
-	public String saveProduct(@Valid Product product, boolean isPublished, Long categoryId, RedirectAttributes attributes) {
+	public String saveProduct(@Valid Product product, boolean isPublished, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
 		try {
+			
+			if (!file.isEmpty()) {	
+				String imageName = file.getOriginalFilename();
+				File saveFile = new ClassPathResource("static/").getFile();
+				
+				String uploadPath = saveFile.getAbsolutePath() + File.separator + "img_product";
+				File uploadDir = new File(uploadPath);
+				if (!uploadDir.exists())
+					uploadDir.mkdir();
+				Path path = Paths.get(uploadPath + File.separator + file.getOriginalFilename());				
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				product.setImage(imageName);
+			} else {
+				product.setImage(Constants.productImgDefault);
+			}
+			
 			product.setPublished(isPublished);
 			product.setCategory(categoryService.findById(categoryId));
             productService.add(product);
