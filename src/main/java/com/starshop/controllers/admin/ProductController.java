@@ -25,17 +25,18 @@ public class ProductController {
 	private CategoryService categoryService;
 	
 	@GetMapping("/products")
-	public String products(Model model, String search, Integer pageNo, Integer pageSize) {
+	public String products(Model model, String status, String search, Integer pageNo, Integer pageSize) {
 		
 		Page<Product> page = null;
 		if (pageNo == null) pageNo = 0;
 		if (pageSize == null) pageSize = 2;
-		if (search != null && search.length() > 0) {
-			page = productService.searchProductPagination(pageNo, pageSize, search);
-		} else {
-			page = productService.getAllProductsPagination(pageNo, pageSize);
-		}
-		
+		if (status == null || status.contentEquals("all")) {
+			page = productService.getProductsPagination(pageNo, pageSize, search);
+		} else if (status.contentEquals("published")) {
+			page = productService.getPublishedProductsPagination(pageNo, pageSize, search);
+		} else
+			page = productService.getUnpublishedProductsPagination(pageNo, pageSize, search);
+	
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());
 		model.addAttribute("pageSize", pageSize);
@@ -43,6 +44,7 @@ public class ProductController {
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
+		model.addAttribute("status", status);
 		return "/admin/products";
 	}
 	

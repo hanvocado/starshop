@@ -13,6 +13,9 @@ public interface ProductService {
 	Product getById(Long id);
 	Product update(Product product);
 	void deleteById(Long id);
-	Page<Product> getAllProductsPagination(Integer pageNo, Integer pageSize);
-	Page<Product> searchProductPagination(Integer pageNo, Integer pageSize, String search);
+	Page<Product> getProductsPagination(Integer pageNo, Integer pageSize, String search);
+
+	Page<Product> getPublishedProductsPagination(Integer pageNo, Integer pageSize, String search);
+	
+	Page<Product> getUnpublishedProductsPagination(Integer pageNo, Integer pageSize, String search);
 }

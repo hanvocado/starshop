@@ -31,7 +31,8 @@
         <div class="page-header">
           <div class="row align-items-center mb-3">
             <div class="col-sm mb-2 mb-sm-0">
-              <h1 class="page-header-title">Products <span class="badge badge-soft-dark ml-2">${count }</span></h1>
+              <h1 class="page-header-title">Products </h1>
+              <span>${status }<span class="badge badge-soft-dark ml-2">${count }</span></span>
             </div>
 
             <div class="col-sm-auto">
@@ -87,13 +88,13 @@
 					<div class="btn-group dropleft">
 					  <button type="button" id="filter-btn" class="btn btn-white dropdown-toggle" 
 					  		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    Lọc
+					    ${status }
 					  </button>
 					  <div class="dropdown-menu">
-					    <a class="dropdown-item" href="#" onclick="filterTable('Tất cả')">Tất cả</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=all"/>">Tất cả</a>
 					    <div class="dropdown-divider"></div>
-					    <a class="dropdown-item" href="#" onclick="filterTable('Công khai')">Công khai</a>
-					    <a class="dropdown-item" href="#" onclick="filterTable('Đã ẩn')">Đã ẩn</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=published"/>">Công khai</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=unpublished"/>">Đã ẩn</a>
 					  </div>
 					</div>
 					<!-- End Dropleft FILTER -->
@@ -170,7 +171,7 @@
             <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
               <div class="col-sm mb-2 mb-sm-0">
                 <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                  <span class="mr-2">Page size: ${pageSize } of </span>
+                  <span class="mr-2">Page size: </span>
                   <!-- Select -->
                   <form id="pageSizeForm" action="<c:url value="/admin/products"/>" method="get">
 					    <select name="pageSize" onchange="document.getElementById('pageSizeForm').submit();"
@@ -201,14 +202,14 @@
 					    <c:if test="${!isFirst }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo-1}"/>" aria-label="Previous">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
 					        <span aria-hidden="true">«</span>
 					        <span class="sr-only">Previous</span>
 					      </a>
 					    </li>
 					    
 					    <c:forEach var="i" begin="1" end="${totalPages}">
-       						<li class="page-item"><a class="page-link" href="<c:url value="/admin/products?pageNo=${i-1}"/>">${i}</a></li>
+       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/products?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
     					</c:forEach>
 					    
 					    <c:if test="${isLast }">
@@ -217,7 +218,7 @@
 					    <c:if test="${!isLast }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo+1}"/>" aria-label="Next">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
 					        <span aria-hidden="true">»</span>
 					        <span class="sr-only">Next</span>
 					      </a>
