@@ -33,12 +33,13 @@ public class Product {
 	
 	private String description;
 	
+	@Column(nullable = false)
 	private float weight;
 	
-	@Column(name = "cost_price")
+	@Column(name = "cost_price", nullable = false)
 	private double costPrice;
 	
-	@Column(name = "sale_price")
+	@Column(name = "sale_price", nullable = false)
 	private double salePrice;
 	
 	@Column(name = "discount_percent")
@@ -54,7 +55,7 @@ public class Product {
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = true)
 	private Category category;
 	
-	@Column(name = "is_published")
+	@Column(name = "is_published", columnDefinition = "default true")
 	private boolean isPublished;
 	
 	@Transient	

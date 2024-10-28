@@ -6,23 +6,24 @@
 
 <body>
 	<!-- Page Header -->
-        <div class="page-header">
-          <div class="row align-items-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-no-gutter">
-                  <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/products"/>">Products</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Add product</li>
-                </ol>
-              </nav>
+    <div class="page-header">
+      <div class="row align-items-center">
+        <div class="col-sm mb-2 mb-sm-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-no-gutter">
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/products"/>">Products</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Add product</li>
+            </ol>
+          </nav>
 
-              <h1 class="page-header-title">Thêm sản phẩm</h1>
-            </div>
-          </div>
-          <!-- End Row -->
+          <h1 class="page-header-title">Thêm sản phẩm</h1>
         </div>
-        <!-- End Page Header -->
-        
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Page Header -->
+	
+	  <form action="<c:url value="/admin/add-product"/>" method="post">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -37,6 +38,7 @@
               <div class="card-body">
                 <!-- Form Group -->
                 <div class="form-group">
+                	<label for="productNameLabel" class="input-label">Tên</label>
                   <input type="text" class="form-control" name="name" id="productNameLabel" placeholder="" required>
                 </div>
                 <!-- End Form Group -->
@@ -217,10 +219,10 @@
             <div class="card-body">
               <div class="row justify-content-center justify-content-sm-between">
                 <div class="col">
-                  <button type="button" class="btn btn-primary">Save</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-auto">
-                  <button type="button" class="btn btn-ghost-light mr-2">Discard</button>
+                  <a type="button" href="<c:url value="/admin/products"/>" class="btn btn-ghost-light mr-2">Discard</a>
                 </div>
               </div>
               <!-- End Row -->
@@ -259,5 +261,6 @@
       </div>
     </div>
     <!-- End Add Image from URL Modal -->
-        
+    
+    </form>  
 </body>
