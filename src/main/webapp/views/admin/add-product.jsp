@@ -30,7 +30,7 @@
 	  </div>
 	  </div>
 	
-	  <form action="<c:url value="/admin/product/add"/>" method="post" enctype="multipart/form-data">
+	  <form action="<c:url value="/admin/products/add"/>" method="post" enctype="multipart/form-data">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -173,7 +173,7 @@
                     <span class="text-dark">Công khai</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="isPublished" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="Published" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>

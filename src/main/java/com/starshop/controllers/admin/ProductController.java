@@ -24,12 +24,13 @@ import com.starshop.models.Product;
 import com.starshop.services.CategoryService;
 import com.starshop.services.ProductService;
 import com.starshop.utils.Constants;
+import com.starshop.utils.FileHandler;
 import com.starshop.utils.ViewMessage;
 
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/products")
 public class ProductController {
 	@Autowired
 	private ProductService productService;
@@ -62,32 +63,23 @@ public class ProductController {
 	}
 	
 	@GetMapping("/add")
-	public String addProduct(Model model) {
+	public String add(Model model) {
 		List<Category> categories = categoryService.findAll();
 		model.addAttribute("categories", categories);
 		return "/admin/add-product";		
 	}
 	
 	@PostMapping("/add")
-	public String saveProduct(@Valid Product product, boolean isPublished, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
+	public String add(@Valid Product product, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
 		try {
 			
 			if (!file.isEmpty()) {	
-				String imageName = file.getOriginalFilename();
-				File saveFile = new ClassPathResource("static/").getFile();
-				
-				String uploadPath = saveFile.getAbsolutePath() + File.separator + "img_product";
-				File uploadDir = new File(uploadPath);
-				if (!uploadDir.exists())
-					uploadDir.mkdir();
-				Path path = Paths.get(uploadPath + File.separator + file.getOriginalFilename());				
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				String imageName = FileHandler.save(file);
 				product.setImage(imageName);
 			} else {
 				product.setImage(Constants.productImgDefault);
 			}
 			
-			product.setPublished(isPublished);
 			product.setCategory(categoryService.findById(categoryId));
             productService.add(product);
             attributes.addFlashAttribute("result", new ViewMessage("success", Constants.createSuccess));
@@ -103,7 +95,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/update")
-	public String updateProduct(Model model, Long id) {
+	public String update(Model model, Long id) {
 		Product product = productService.getById(id);
 		if (product == null)
 	        return "redirect:/admin/products";
@@ -113,4 +105,5 @@ public class ProductController {
 		model.addAttribute("product", product);
 		return "/admin/update-product";		
 	}
+	
 }

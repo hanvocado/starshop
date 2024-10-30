@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="<c:url value="/admin/product/add"/>">
+              <a class="btn btn-primary" href="<c:url value="/admin/products/add"/>">
                   <i class="tio-add mr-1"></i> Tạo mới
               </a>
             </div>
@@ -91,10 +91,10 @@
 					    ${status }
 					  </button>
 					  <div class="dropdown-menu">
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=all"/>">Tất cả</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=all"/>">Tất cả</a>
 					    <div class="dropdown-divider"></div>
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=published"/>">Công khai</a>
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=unpublished"/>">Đã ẩn</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=published"/>">Công khai</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=unpublished"/>">Đã ẩn</a>
 					  </div>
 					</div>
 					<!-- End Dropleft FILTER -->
@@ -169,7 +169,7 @@
 						<td>
 					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteCategory(${product.id})">
 					          	<i class="tio-delete-outlined"></i> Xóa</a>
-					       <a href="<c:url value="/admin/product/update?id=${product.id }"/>" class="btn btn-soft-warning btn-xs">
+					       <a href="<c:url value="/admin/products/update?id=${product.id }"/>" class="btn btn-soft-warning btn-xs">
 						          	<i class="tio-archive"></i> Cập nhật</a> 
 					          
 			            </td>
@@ -218,14 +218,14 @@
 					    <c:if test="${!isFirst }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/product?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
 					        <span aria-hidden="true">«</span>
 					        <span class="sr-only">Previous</span>
 					      </a>
 					    </li>
 					    
 					    <c:forEach var="i" begin="1" end="${totalPages}">
-       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/product?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
+       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/products?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
     					</c:forEach>
 					    
 					    <c:if test="${isLast }">
@@ -234,7 +234,7 @@
 					    <c:if test="${!isLast }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/product?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
 					        <span aria-hidden="true">»</span>
 					        <span class="sr-only">Next</span>
 					      </a>
@@ -266,7 +266,7 @@
 	                <!-- End Header -->
 	                <!-- Body -->
 	                <div class="modal-body">
-	                <form id="productForm" action="<c:url value="/admin/product/add"/>" method="post">
+	                <form id="productForm" action="<c:url value="/admin/products/add"/>" method="post">
 						<input name="id" id="productId" type="hidden" />
 		                <input name="name" id="productName" type="text" class="form-control mb-3" placeholder="Tên" />
 						<div id="product-modal-text"></div>
