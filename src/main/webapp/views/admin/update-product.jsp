@@ -173,7 +173,7 @@
                     <span class="text-dark">Công khai</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="isPublished" value="true" <c:if test="${product.isPublished() }">checked</c:if> type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="published" value="true" <c:if test="${product.isPublished() }">checked</c:if> type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>

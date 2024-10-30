@@ -36,27 +36,21 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	@Transactional
-    public void save(Product product, List<Long> categoryIds) {
-		if (product.getId() == null)
+    public void save(Product product, List<Long> categoryIds) {	
+		if (product != null) {
 			productRepo.save(product);
-		else {
-			product = productRepo.findById(product.getId()).orElse(null);
-			if (product != null) {
-				// Clear current categories
-				product.getCategories().clear();
+			product.getCategories().clear();
+			if (categoryIds != null) {
+				for (Long categoryId : categoryIds) {
+					Category category = categoryRepo.findById(categoryId).orElse(null);
+					if (category != null) {
+						product.addCategory(category);	        
+					}
+				}        
+				productRepo.save(product);	
+				
 			}
-		}
-		
-		if (categoryIds != null) {
-			for (Long categoryId : categoryIds) {
-				Category category = categoryRepo.findById(categoryId).orElse(null);
-				if (category != null) {
-					product.addCategory(category);	        
-				}
-			}        
-			productRepo.save(product);	
-			
-		}
+		}		
     }
 
 	@Override
@@ -73,9 +67,14 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public void deleteById(Long id) {
-		Product p = productRepo.findById(id).orElse(null);
-		if (p != null) {
-			productRepo.delete(p);
+		Product product = productRepo.findById(id).orElse(null);
+		if (product != null) {
+			for (Category category : product.getCategories()) {
+	            category.getProducts().remove(product);
+	            categoryRepo.save(category);
+	        }
+			
+			productRepo.delete(product);
 		}
 	}
 

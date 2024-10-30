@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 
 import com.starshop.models.Product;
 
-import jakarta.transaction.Transactional;
-
 public interface ProductService {
 	List<Product> getAll();
 	List<Product> getPublishedOnesByName(String name);

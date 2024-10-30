@@ -16,7 +16,7 @@
 		</c:if>
 		
 		<!-- ALERT -->
-		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:20px; right:60px; z-index:9999;">
+		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:50px; right:70px; z-index:9999;">
 			  <i class="${icon_class }"></i>
 		  <strong>${message.content }</strong> 
 		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">

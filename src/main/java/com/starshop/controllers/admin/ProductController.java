@@ -1,23 +1,13 @@
 package com.starshop.controllers.admin;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -25,9 +15,7 @@ import com.starshop.models.Category;
 import com.starshop.models.Product;
 import com.starshop.services.CategoryService;
 import com.starshop.services.ProductService;
-import com.starshop.utils.Constants;
-import com.starshop.utils.FileHandler;
-import com.starshop.utils.ViewMessage;
+import com.starshop.utils.*;
 
 import jakarta.validation.Valid;
 
@@ -61,6 +49,9 @@ public class ProductController {
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
 		model.addAttribute("status", status);
+		
+		ViewMessage message  = (ViewMessage) model.asMap().get("result");
+        model.addAttribute("message", message);
 		return "/admin/products";
 	}
 	
@@ -88,7 +79,7 @@ public class ProductController {
 			}
 			
             productService.save(product, categoryIds);
-            attributes.addFlashAttribute("result", new ViewMessage("success", product.getId() == null ? Constants.createSuccess : Constants.updateSuccess));
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.success));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));
@@ -112,4 +103,15 @@ public class ProductController {
 		return "/admin/update-product";		
 	}
 	
+	@RequestMapping("/delete/{id}")
+	public String delete(Model model, @PathVariable("id") Long id, RedirectAttributes attributes) {
+		try {
+			productService.deleteById(id);
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.deleteSuccess));
+		} catch (Exception e){
+            e.printStackTrace();
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
+        }
+        return "redirect:/admin/products";
+	}
 }
