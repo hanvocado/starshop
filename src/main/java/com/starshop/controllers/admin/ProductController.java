@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -71,7 +72,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("/save")
-	public String save(@Valid Product product, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
+	public String save(@Valid Product product, @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds, MultipartFile file, RedirectAttributes attributes) {
 		try {			
 			if (!file.isEmpty()) {	
 				String imageName = FileHandler.save(file);
@@ -82,12 +83,11 @@ public class ProductController {
 					
 					product.setImage(imageName);
 				}
-			} else if (product.getImage() == null) {
+			} else if (product.getImage() == null || product.getImage().isBlank()) {
 				product.setImage(Constants.productImgDefault);
 			}
 			
-			product.setCategory(categoryService.findById(categoryId));
-            productService.update(product);
+            productService.save(product, categoryIds);
             attributes.addFlashAttribute("result", new ViewMessage("success", product.getId() == null ? Constants.createSuccess : Constants.updateSuccess));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();

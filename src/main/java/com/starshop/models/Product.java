@@ -1,28 +1,22 @@
 package com.starshop.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class Product {
+public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
@@ -48,12 +42,16 @@ public class Product {
 	@Column(name = "current_quantity")
 	private int currentQuantity;
 	
-	@Lob
+	@Column(length = 500)
 	private String image;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
-	@JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = true)
-	private Category category;
+
+	@ManyToMany()
+    @JoinTable(
+        name = "product_categories",
+        joinColumns = @JoinColumn(name = "product_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 	
 	@Column(name = "is_published", columnDefinition = "boolean default true")
 	private boolean isPublished;
@@ -67,4 +65,29 @@ public class Product {
 	public double getProfit() {
 		return salePrice - getDisplayPrice();
 	}
+	
+	public void addCategory(Category category) {
+        categories.add(category);
+        category.getProducts().add(this);
+    }
+
+    public void removeCategory(Category category) {
+        categories.remove(category);
+        category.getProducts().remove(this);
+    }
+    
+ // Avoid referencing `categories` in `hashCode` and `equals`
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name); // use only primary fields
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+               Objects.equals(name, product.name);
+    }
 }

@@ -1,6 +1,8 @@
 package com.starshop.utils;
 
 public class Constants {
+	public static String success = "Thành công";
+	
 	public static String createSuccess = "Tạo thành công";
 	
 	public static String updateSuccess = "Cập nhật thành công";

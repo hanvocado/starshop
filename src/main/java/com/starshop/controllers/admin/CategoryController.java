@@ -47,7 +47,7 @@ public class CategoryController {
     public String save(@Valid Category category, RedirectAttributes attributes){
         try {
             categoryService.update(category);
-            attributes.addFlashAttribute("result", new ViewMessage("success", category.getId() == null ? Constants.createSuccess : Constants.updateSuccess));
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.success));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));

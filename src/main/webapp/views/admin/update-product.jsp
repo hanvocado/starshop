@@ -24,6 +24,7 @@
     <!-- End Page Header -->
 	
 	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="${product.id}" />
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -195,21 +196,28 @@
               <!-- Body -->
               <div class="card-body">
 
-                <!-- Form Group -->
-                <div class="form-group">
-
-                  <!-- Select -->
-                  <select name=categoryId class="js-select2-custom custom-select" size="1" style="opacity: 0;" id="categoryLabel" data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "placeholder": "Select category"
-                          }'>
-                    <c:forEach items="${categories}" var="cate" varStatus="STT">
-                    	<option value="${cate.id }" <c:if test="${product.category.id == cate.id }">selected</c:if> >${cate.name }</option>
-                    </c:forEach>
-                  </select>
-                  <!-- End Select -->
-                </div>
-                <!-- Form Group -->
+                <!-- Form Group --> 
+				<div class="form-group">                  
+				   <c:forEach items="${categories}" var="cate" varStatus="STT">
+				      <!-- Form Check -->
+				      <div class="form-check form-check-inline">
+				         <div class="custom-control custom-checkbox">
+				            <input 
+				               type="checkbox" 
+				               name="categoryIds" 
+				               value="${cate.id}" 
+				               id="customInlineCheck${cate.id}" 
+				               class="custom-control-input"
+				               <c:if test="${product.categories.contains(cate)}">checked</c:if> 
+				            >
+				            <label class="custom-control-label" for="customInlineCheck${cate.id}">${cate.name}</label>
+				         </div>
+				      </div>
+				      <!-- End Form Check -->
+				   </c:forEach>
+				</div>
+				<!-- Form Group -->
+				                
 
               </div>
               <!-- End Body -->
