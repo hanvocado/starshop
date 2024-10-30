@@ -17,7 +17,7 @@
 		</c:if>
 		
 		<!-- ALERT -->
-		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:20px; right:60px; z-index:9999;">
+		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:50px; right:70px; z-index:9999;">
 			  <i class="${icon_class }"></i>
 		  <strong>${message.content }</strong> 
 		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-sm-auto">
-              <a class="btn btn-primary" href="<c:url value="/admin/product/add"/>">
+              <a class="btn btn-primary" href="<c:url value="/admin/products/add"/>">
                   <i class="tio-add mr-1"></i> Tạo mới
               </a>
             </div>
@@ -91,10 +91,10 @@
 					    ${status }
 					  </button>
 					  <div class="dropdown-menu">
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=all"/>">Tất cả</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=all"/>">Tất cả</a>
 					    <div class="dropdown-divider"></div>
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=published"/>">Công khai</a>
-					    <a class="dropdown-item" href="<c:url value="/admin/product?status=unpublished"/>">Đã ẩn</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=published"/>">Công khai</a>
+					    <a class="dropdown-item" href="<c:url value="/admin/products?status=unpublished"/>">Đã ẩn</a>
 					  </div>
 					</div>
 					<!-- End Dropleft FILTER -->
@@ -139,10 +139,10 @@
 	                <tr>
 	                  <c:if test="${product.image.substring(0,5)=='https'}">
 						<c:url value="${product.image }" var="imgUrl"></c:url>
-					</c:if>
-					<c:if test="${product.image.substring(0,5)!='https'}">
+					  </c:if>
+					  <c:if test="${product.image.substring(0,5)!='https'}">
 						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
-					</c:if>
+					  </c:if>
 	                  <td class="table-column-pr-0">
 	                    <a class="media align-items-center" href="ecommerce-product-details.html">
 	                      <img class="avatar avatar-lg mr-3" src="${imgUrl }" alt="Image ${product.name }">
@@ -167,9 +167,9 @@
 						<!-- End Status -->
 						
 						<td>
-					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteCategory(${product.id})">
+					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteProduct(${product.id})">
 					          	<i class="tio-delete-outlined"></i> Xóa</a>
-					       <a href="<c:url value="/admin/product/update?id=${product.id }"/>" class="btn btn-soft-warning btn-xs">
+					       <a href="<c:url value="/admin/products/update/${product.id }"/>" class="btn btn-soft-warning btn-xs">
 						          	<i class="tio-archive"></i> Cập nhật</a> 
 					          
 			            </td>
@@ -218,14 +218,14 @@
 					    <c:if test="${!isFirst }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/product?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
 					        <span aria-hidden="true">«</span>
 					        <span class="sr-only">Previous</span>
 					      </a>
 					    </li>
 					    
 					    <c:forEach var="i" begin="1" end="${totalPages}">
-       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/product?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
+       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/products?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
     					</c:forEach>
 					    
 					    <c:if test="${isLast }">
@@ -234,7 +234,7 @@
 					    <c:if test="${!isLast }">
 					    	<li class="page-item">
 					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/product?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
+					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
 					        <span aria-hidden="true">»</span>
 					        <span class="sr-only">Next</span>
 					      </a>
@@ -257,7 +257,7 @@
 	            <div class="modal-content">
 	                <!-- Header -->
 	                <div class="modal-header">
-	                    <h4 id="inviteUserModalTitle" class="modal-title">Danh mục</h4>
+	                    <h4 id="inviteUserModalTitle" class="modal-title">Sản phẩm</h4>
 	
 	                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
 	                        <i class="tio-clear tio-lg"></i>
@@ -266,14 +266,12 @@
 	                <!-- End Header -->
 	                <!-- Body -->
 	                <div class="modal-body">
-	                <form id="productForm" action="<c:url value="/admin/product/add"/>" method="post">
-						<input name="id" id="productId" type="hidden" />
-		                <input name="name" id="productName" type="text" class="form-control mb-3" placeholder="Tên" />
-						<div id="product-modal-text"></div>
+	                <form id="productForm" action="" method="post">
+						<div id="product-modal-text">Bạn chắc chắn muốn xóa sản phẩm này?</div>
 
 		                
 		                <div class="d-flex justify-content-center">
-	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Submit</button>	                
+	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Xóa</button>	                
 		                </div>
 					 </form>
 	                </div>
@@ -282,4 +280,14 @@
 	        </div>
 	    </div>
 	    <!-- End Modal -->
+	    
+	    <script>
+		    function deleteProduct(id) {
+		        document.getElementById('productForm').action = '<c:url value="/admin/products/delete/' + id + '"/>';
+		    }
+		    
+		    setTimeout(function() {
+		        document.getElementById('message-alert').style.display = 'none';
+		      }, 6000);
+	    </script>
 </body>

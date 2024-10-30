@@ -23,7 +23,8 @@
     </div>
     <!-- End Page Header -->
 	
-	  <form action="<c:url value="/admin/product/update"/>" method="post" enctype="multipart/form-data">
+	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="${product.id}" />
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -97,7 +98,13 @@
                 <!-- Dropzone -->
                 <div id="attachFilesNewProjectLabel" class="dropzone-custom custom-file-boxed">
                   <div class="dz-message custom-file-boxed-label">
-                    <img class="avatar avatar-xl avatar-4by3 mb-3" src="/exec/svg/illustrations/browse.svg" alt="Image Description">
+                  	<c:if test="${product.image.substring(0,5)=='https'}">
+						<c:url value="${product.image }" var="imgUrl"></c:url>
+					  </c:if>
+					  <c:if test="${product.image.substring(0,5)!='https'}">
+						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
+					  </c:if>
+                    <img class="avatar avatar-xl avatar-4by3 mb-3" src="${imgUrl }" alt="Image Description">
 <!--                     <span class="btn btn-sm btn-primary">Browse files</span>
  -->                    <input type="file" name="file"  value="${product.image }" class="form-control form-control-borderless form-control-flush">
                   </div>
@@ -166,7 +173,7 @@
                     <span class="text-dark">Công khai</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="isPublished" value="true" <c:if test="${product.isPublished() }">checked</c:if> type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="published" value="true" <c:if test="${product.isPublished() }">checked</c:if> type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>
@@ -189,21 +196,28 @@
               <!-- Body -->
               <div class="card-body">
 
-                <!-- Form Group -->
-                <div class="form-group">
-
-                  <!-- Select -->
-                  <select name=categoryId class="js-select2-custom custom-select" size="1" style="opacity: 0;" id="categoryLabel" data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "placeholder": "Select category"
-                          }'>
-                    <c:forEach items="${categories}" var="cate" varStatus="STT">
-                    	<option value="${cate.id }" <c:if test="${product.category.id == cate.id }">selected</c:if> >${cate.name }</option>
-                    </c:forEach>
-                  </select>
-                  <!-- End Select -->
-                </div>
-                <!-- Form Group -->
+                <!-- Form Group --> 
+				<div class="form-group">                  
+				   <c:forEach items="${categories}" var="cate" varStatus="STT">
+				      <!-- Form Check -->
+				      <div class="form-check form-check-inline">
+				         <div class="custom-control custom-checkbox">
+				            <input 
+				               type="checkbox" 
+				               name="categoryIds" 
+				               value="${cate.id}" 
+				               id="customInlineCheck${cate.id}" 
+				               class="custom-control-input"
+				               <c:if test="${product.categories.contains(cate)}">checked</c:if> 
+				            >
+				            <label class="custom-control-label" for="customInlineCheck${cate.id}">${cate.name}</label>
+				         </div>
+				      </div>
+				      <!-- End Form Check -->
+				   </c:forEach>
+				</div>
+				<!-- Form Group -->
+				                
 
               </div>
               <!-- End Body -->

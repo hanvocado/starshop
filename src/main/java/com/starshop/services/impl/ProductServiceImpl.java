@@ -8,74 +8,100 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.starshop.models.Category;
 import com.starshop.models.Product;
+import com.starshop.repositories.CategoryRepository;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.services.ProductService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 	@Autowired
-	private ProductRepository repo;
+	private ProductRepository productRepo;
+	
+	@Autowired
+	private CategoryRepository categoryRepo;
 	
 	@Override
 	public List<Product> getAll() {
-		return repo.findAll();
+		return productRepo.findAll();
 	}
 
 	@Override
 	public List<Product> getPublishedOnesByName(String name) {
-		return repo.findByNameContainingIgnoreCaseAndIsPublishedTrue(name);
+		return productRepo.findByNameContainingIgnoreCaseAndIsPublishedTrue(name);
 	}
+	
+	@Override
+	@Transactional
+    public void save(Product product, List<Long> categoryIds) {	
+		if (product != null) {
+			productRepo.save(product);
+			product.getCategories().clear();
+			if (categoryIds != null) {
+				for (Long categoryId : categoryIds) {
+					Category category = categoryRepo.findById(categoryId).orElse(null);
+					if (category != null) {
+						product.addCategory(category);	        
+					}
+				}        
+				productRepo.save(product);	
+				
+			}
+		}		
+    }
 
 	@Override
-	public Product add(Product product) {
-		return repo.save(product);
+	public Product save(Product product) {
+		return productRepo.save(product);
 	}
 
 	@Override
 	public Product getById(Long id) {
 		if (id == null)
 			return null;
-		return repo.findById(id).orElse(null);
+		return productRepo.findById(id).orElse(null);
 	}
-
-	@Override
-	public Product update(Product product) {
-		return repo.save(product);
-	}
-
+	
 	@Override
 	public void deleteById(Long id) {
-		Product p = repo.findById(id).orElse(null);
-		if (p != null) {
-			repo.delete(p);
+		Product product = productRepo.findById(id).orElse(null);
+		if (product != null) {
+			for (Category category : product.getCategories()) {
+	            category.getProducts().remove(product);
+	            categoryRepo.save(category);
+	        }
+			
+			productRepo.delete(product);
 		}
 	}
 
 	@Override
 	public Page<Product> getProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		if (search != null && search.isBlank()) {
-			repo.findByNameContainingIgnoreCase(search, pageable);
+		if (search != null && !search.isBlank()) {
+			productRepo.findByNameContainingIgnoreCase(search, pageable);
 		}
-		return repo.findAll(pageable);
+		return productRepo.findAll(pageable);
 	}
 
 	@Override
 	public Page<Product> getPublishedProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		if (search != null && search.isBlank()) {
-			repo.findByNameContainingIgnoreCaseAndIsPublishedTrue(search, pageable);
+		if (search != null && !search.isBlank()) {
+			productRepo.findByNameContainingIgnoreCaseAndIsPublishedTrue(search, pageable);
 		}
-		return repo.findByIsPublishedTrue(pageable);
+		return productRepo.findByIsPublishedTrue(pageable);
 	}
 
 	@Override
 	public Page<Product> getUnpublishedProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		if (search != null && search.isBlank()) {
-			repo.findByNameContainingIgnoreCaseAndIsPublishedFalse(search, pageable);
+		if (search != null && !search.isBlank()) {
+			productRepo.findByNameContainingIgnoreCaseAndIsPublishedFalse(search, pageable);
 		}
-		return repo.findByIsPublishedFalse(pageable);
+		return productRepo.findByIsPublishedFalse(pageable);
 	}
 }

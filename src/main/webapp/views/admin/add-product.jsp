@@ -30,7 +30,7 @@
 	  </div>
 	  </div>
 	
-	  <form action="<c:url value="/admin/product/add"/>" method="post" enctype="multipart/form-data">
+	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -173,7 +173,7 @@
                     <span class="text-dark">Công khai</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="isPublished" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="Published" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>
@@ -197,18 +197,17 @@
               <div class="card-body">
 
                 <!-- Form Group -->
-                <div class="form-group">
-
-                  <!-- Select -->
-                  <select name=categoryId class="js-select2-custom custom-select" size="1" style="opacity: 0;" id="categoryLabel" data-hs-select2-options='{
-                            "minimumResultsForSearch": "Infinity",
-                            "placeholder": "Select category"
-                          }'>
-                    <c:forEach items="${categories}" var="cate" varStatus="STT">
-                    	<option value="${cate.id }">${cate.name }</option>
-                    </c:forEach>
-                  </select>
-                  <!-- End Select -->
+                <div class="form-group">                  
+                   <c:forEach items="${categories}" var="cate" varStatus="STT">
+                   	<!-- Form Check -->
+					<div class="form-check form-check-inline">
+					  <div class="custom-control custom-checkbox">
+					    <input type="checkbox" name="categoryIds" value="${cate.id}" id="customInlineCheck${cate.id}" class="custom-control-input">
+					    <label class="custom-control-label" for="customInlineCheck${cate.id}">${cate.name }</label>
+					  </div>
+					</div>
+					<!-- End Form Check -->
+                   </c:forEach>
                 </div>
                 <!-- Form Group -->
 

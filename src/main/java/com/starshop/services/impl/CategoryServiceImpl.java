@@ -6,61 +6,73 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.starshop.models.Category;
+import com.starshop.models.Product;
 import com.starshop.repositories.CategoryRepository;
+import com.starshop.repositories.ProductRepository;
 import com.starshop.services.CategoryService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 	@Autowired
-	private CategoryRepository repo;
+	private CategoryRepository categoryRepo;
+	
+	@Autowired
+	private ProductRepository productRepo;
 
 	@Override
 	public List<Category> findAll() {
-		return repo.findAll();
+		return categoryRepo.findAll();
 	}
 	
 	@Override
 	public List<Category> findByName(String name) {
-		return repo.findByNameContainingIgnoreCase(name);
+		return categoryRepo.findByNameContainingIgnoreCase(name);
 	}
 
 	@Override
 	public Category add(Category category) {
-		return repo.save(category);
+		return categoryRepo.save(category);
 	}
 
 	@Override
 	public Category findById(Long id) {
-		return repo.findById(id).orElse(null);
+		return categoryRepo.findById(id).orElse(null);
 	}
 
 	@Override
 	public Category update(Category category) {
-		return repo.save(category);
+		return categoryRepo.save(category);
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long id) {
-		Category cate = repo.findById(id).orElse(null);
+		Category cate = categoryRepo.findById(id).orElse(null);
 		if (cate != null) {
-			repo.delete(cate);
+	        for (Product product : cate.getProducts()) {
+	            product.removeCategory(cate);
+	            productRepo.save(product);
+	        }
+			categoryRepo.delete(cate);
 		}
 	}
 
 	@Override
 	public void publishById(Long id) {
-		Category cate = repo.findById(id).orElse(null);
+		Category cate = categoryRepo.findById(id).orElse(null);
 		if (cate != null) {
 			cate.setPublished(true);
-			repo.save(cate);
+			categoryRepo.save(cate);
 		}
 	}
 	
 	public void archiveById(Long id) {
-		Category cate = repo.findById(id).orElse(null);
+		Category cate = categoryRepo.findById(id).orElse(null);
 		if (cate != null) {
 			cate.setPublished(false);
-			repo.save(cate);
+			categoryRepo.save(cate);
 		}
 	}
 }

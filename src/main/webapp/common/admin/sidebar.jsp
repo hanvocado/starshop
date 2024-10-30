@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="jakarta.tags.core"%>
+
 
 <div id="sidebarMain" class="d-none">
         <aside class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered  ">
@@ -9,7 +11,7 @@
                         <!-- Logo -->
 
 
-                        <a class="navbar-brand" href="index.html" aria-label="Front">
+                        <a class="navbar-brand" href="<c:url value="/admin"/>" aria-label="Front">
                             <img class="navbar-brand-logo" src="/exec/svg/logos/logo.svg" alt="Logo">
                             <img class="navbar-brand-logo-mini" src="/exec/svg/logos/logo-short.svg" alt="Logo">
                         </a>
@@ -33,14 +35,14 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="categories" title="Categories" data-placement="left">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/categories"/>" title="Categories" data-placement="left">
                                     <i class="tio-layers-outlined nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Categories</span>
                                 </a>
                             </li>
 
                             <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="products" title="Products" data-placement="left">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/products"/>" title="Products" data-placement="left">
                                     <i class="tio-pages-outlined nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Products</span>
                                 </a>

@@ -16,11 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findByIsPublishedTrue(Pageable pageable);
 	
 	Page<Product> findByIsPublishedFalse(Pageable pageable);
-	
-	List<Product> findByCategoryIdAndIsPublishedTrue(Long categoryId);
-	
-	Page<Product> findByCategoryIdAndIsPublishedTrue(Long categoryId, Pageable pageable);
-	
+		
 	List<Product> findByNameContainingIgnoreCaseAndIsPublishedTrue(String name);
 	
 	Page<Product> findByNameContainingIgnoreCaseAndIsPublishedTrue(String name, Pageable pageable);

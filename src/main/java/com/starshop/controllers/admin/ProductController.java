@@ -1,21 +1,13 @@
 package com.starshop.controllers.admin;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,13 +15,12 @@ import com.starshop.models.Category;
 import com.starshop.models.Product;
 import com.starshop.services.CategoryService;
 import com.starshop.services.ProductService;
-import com.starshop.utils.Constants;
-import com.starshop.utils.ViewMessage;
+import com.starshop.utils.*;
 
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/products")
 public class ProductController {
 	@Autowired
 	private ProductService productService;
@@ -58,39 +49,37 @@ public class ProductController {
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
 		model.addAttribute("status", status);
+		
+		ViewMessage message  = (ViewMessage) model.asMap().get("result");
+        model.addAttribute("message", message);
 		return "/admin/products";
 	}
 	
 	@GetMapping("/add")
-	public String addProduct(Model model) {
+	public String add(Model model) {
 		List<Category> categories = categoryService.findAll();
 		model.addAttribute("categories", categories);
 		return "/admin/add-product";		
 	}
 	
-	@PostMapping("/add")
-	public String saveProduct(@Valid Product product, boolean isPublished, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
-		try {
-			
+	@PostMapping("/save")
+	public String save(@Valid Product product, @RequestParam(value = "categoryIds", required = false) List<Long> categoryIds, MultipartFile file, RedirectAttributes attributes) {
+		try {			
 			if (!file.isEmpty()) {	
-				String imageName = file.getOriginalFilename();
-				File saveFile = new ClassPathResource("static/").getFile();
-				
-				String uploadPath = saveFile.getAbsolutePath() + File.separator + "img_product";
-				File uploadDir = new File(uploadPath);
-				if (!uploadDir.exists())
-					uploadDir.mkdir();
-				Path path = Paths.get(uploadPath + File.separator + file.getOriginalFilename());				
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-				product.setImage(imageName);
-			} else {
+				String imageName = FileHandler.save(file);
+				String oldImage = product.getImage();
+				if (imageName != null) {
+					if (!oldImage.startsWith("https") && !oldImage.equals(Constants.productImgDefault))
+						FileHandler.delete(oldImage);
+					
+					product.setImage(imageName);
+				}
+			} else if (product.getImage() == null || product.getImage().isBlank()) {
 				product.setImage(Constants.productImgDefault);
 			}
 			
-			product.setPublished(isPublished);
-			product.setCategory(categoryService.findById(categoryId));
-            productService.add(product);
-            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.createSuccess));
+            productService.save(product, categoryIds);
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.success));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));
@@ -102,8 +91,8 @@ public class ProductController {
         return "redirect:/admin/products";
 	}
 	
-	@GetMapping("/update")
-	public String updateProduct(Model model, Long id) {
+	@GetMapping("/update/{id}")
+	public String update(Model model, @PathVariable("id") Long id) {
 		Product product = productService.getById(id);
 		if (product == null)
 	        return "redirect:/admin/products";
@@ -112,5 +101,17 @@ public class ProductController {
 		model.addAttribute("categories", categories);
 		model.addAttribute("product", product);
 		return "/admin/update-product";		
+	}
+	
+	@RequestMapping("/delete/{id}")
+	public String delete(Model model, @PathVariable("id") Long id, RedirectAttributes attributes) {
+		try {
+			productService.deleteById(id);
+            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.deleteSuccess));
+		} catch (Exception e){
+            e.printStackTrace();
+            attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
+        }
+        return "redirect:/admin/products";
 	}
 }

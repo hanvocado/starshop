@@ -16,7 +16,7 @@
 		</c:if>
 		
 		<!-- ALERT -->
-		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:20px; right:60px; z-index:9999;">
+		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:50px; right:70px; z-index:9999;">
 			  <i class="${icon_class }"></i>
 		  <strong>${message.content }</strong> 
 		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -181,7 +181,7 @@
 	                <!-- End Header -->
 	                <!-- Body -->
 	                <div class="modal-body">
-	                <form id="categoryForm" action="<c:url value="/admin/add-category"/>" method="post">
+	                <form id="categoryForm" action="<c:url value="/admin/category/save"/>" method="post">
 						<input name="id" id="categoryId" type="hidden" />
 		                <input name="name" id="categoryName" type="text" class="form-control mb-3" placeholder="Tên" />
 						<div id="cate-modal-text"></div>
@@ -192,7 +192,7 @@
 			                    <span class="text-dark">Công khai</span>
 			                  </span>
 			                  <span class="col-4 col-sm-3">
-			                    <input name="isPublished" type="checkbox" class="toggle-switch-input" id="categorySwitch" value="true" checked>
+			                    <input name="published" type="checkbox" class="toggle-switch-input" id="categorySwitch" value="true" checked>
 			                    <span class="toggle-switch-label ml-auto">
 			                      <span class="toggle-switch-indicator"></span>
 			                    </span>
@@ -228,13 +228,14 @@
 	  }
 	  
 	  function addCategory() {
+	        document.getElementById('categoryForm').action = '/admin/categories/save';
 	        document.getElementById('modalSubmitButton').innerText = 'Tạo';
 	        document.getElementById('categoryName').style.display = '';
 	        document.getElementById('modalSubmitButton').className = 'btn btn-outline-primary';
 	  }
 	  
 	  function editCategory(id, name, isPublished) {
-	        document.getElementById('categoryForm').action = '/admin/update-category';
+	        document.getElementById('categoryForm').action = '/admin/categories/save';
 	        document.getElementById('categoryName').style.display = '';
 	        document.getElementById('switchContainer').style.display = '';
 	        document.getElementById('cate-modal-text').innerText = '';
@@ -246,7 +247,7 @@
 	    }
 
 	    function deleteCategory(id) {
-	        document.getElementById('categoryForm').action = '/admin/delete-category';
+	        document.getElementById('categoryForm').action = '/admin/categories/delete';
 	        document.getElementById('categoryId').value = id;
 	        document.getElementById('categoryName').style.display = 'none';
 	        document.getElementById('switchContainer').style.display = 'none';
