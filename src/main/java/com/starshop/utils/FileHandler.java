@@ -27,4 +27,14 @@ public class FileHandler {
 			return null;
 		}		
 	}
+	
+	public static void delete(String fileName) throws IOException {
+		File saveFile = new ClassPathResource("static/").getFile();
+        String filePath = saveFile.getAbsolutePath() + File.separator + "img" + File.separator + fileName;
+
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+	}
 }

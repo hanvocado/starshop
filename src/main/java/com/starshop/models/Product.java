@@ -42,7 +42,7 @@ public class Product {
 	@Column(name = "sale_price", nullable = false)
 	private double salePrice;
 	
-	@Column(name = "discount_percent", columnDefinition = "default 0")
+	@Column(name = "discount_percent", columnDefinition = "int default 0")
 	private int discountPercent;
 		
 	@Column(name = "current_quantity")
@@ -55,7 +55,7 @@ public class Product {
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = true)
 	private Category category;
 	
-	@Column(name = "is_published", columnDefinition = "default true")
+	@Column(name = "is_published", columnDefinition = "boolean default true")
 	private boolean isPublished;
 	
 	@Transient	

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,20 +70,25 @@ public class ProductController {
 		return "/admin/add-product";		
 	}
 	
-	@PostMapping("/add")
-	public String add(@Valid Product product, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
-		try {
-			
+	@PostMapping("/save")
+	public String save(@Valid Product product, Long categoryId, MultipartFile file, RedirectAttributes attributes) {
+		try {			
 			if (!file.isEmpty()) {	
 				String imageName = FileHandler.save(file);
-				product.setImage(imageName);
-			} else {
+				String oldImage = product.getImage();
+				if (imageName != null) {
+					if (!oldImage.startsWith("https") && !oldImage.equals(Constants.productImgDefault))
+						FileHandler.delete(oldImage);
+					
+					product.setImage(imageName);
+				}
+			} else if (product.getImage() == null) {
 				product.setImage(Constants.productImgDefault);
 			}
 			
 			product.setCategory(categoryService.findById(categoryId));
-            productService.add(product);
-            attributes.addFlashAttribute("result", new ViewMessage("success", Constants.createSuccess));
+            productService.update(product);
+            attributes.addFlashAttribute("result", new ViewMessage("success", product.getId() == null ? Constants.createSuccess : Constants.updateSuccess));
         }catch (DataIntegrityViolationException e){
             e.printStackTrace();
             attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.duplicateName));
@@ -94,8 +100,8 @@ public class ProductController {
         return "redirect:/admin/products";
 	}
 	
-	@GetMapping("/update")
-	public String update(Model model, Long id) {
+	@GetMapping("/update/{id}")
+	public String update(Model model, @PathVariable("id") Long id) {
 		Product product = productService.getById(id);
 		if (product == null)
 	        return "redirect:/admin/products";

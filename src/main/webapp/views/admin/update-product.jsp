@@ -23,7 +23,7 @@
     </div>
     <!-- End Page Header -->
 	
-	  <form action="<c:url value="/admin/products/update"/>" method="post" enctype="multipart/form-data">
+	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
@@ -97,7 +97,13 @@
                 <!-- Dropzone -->
                 <div id="attachFilesNewProjectLabel" class="dropzone-custom custom-file-boxed">
                   <div class="dz-message custom-file-boxed-label">
-                    <img class="avatar avatar-xl avatar-4by3 mb-3" src="/exec/svg/illustrations/browse.svg" alt="Image Description">
+                  	<c:if test="${product.image.substring(0,5)=='https'}">
+						<c:url value="${product.image }" var="imgUrl"></c:url>
+					  </c:if>
+					  <c:if test="${product.image.substring(0,5)!='https'}">
+						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
+					  </c:if>
+                    <img class="avatar avatar-xl avatar-4by3 mb-3" src="${imgUrl }" alt="Image Description">
 <!--                     <span class="btn btn-sm btn-primary">Browse files</span>
  -->                    <input type="file" name="file"  value="${product.image }" class="form-control form-control-borderless form-control-flush">
                   </div>

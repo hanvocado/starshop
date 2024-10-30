@@ -26,7 +26,7 @@ public class Category {
 	@Column(length=50, nullable = false)
 	private String name;
 	
-	@Column(name = "is_published")
+	@Column(name = "is_published", columnDefinition = "boolean default true")
 	private boolean isPublished;
 	
 	public Category(String name) {
@@ -34,8 +34,8 @@ public class Category {
 		this.isPublished = true;
 	}
 	
-	public Category(String name, boolean isActivated) {
+	public Category(String name, boolean isPublished) {
 		this.name = name;
-		this.isPublished = isActivated;
+		this.isPublished = isPublished;
 	}
 }

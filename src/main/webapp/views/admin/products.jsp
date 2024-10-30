@@ -139,10 +139,10 @@
 	                <tr>
 	                  <c:if test="${product.image.substring(0,5)=='https'}">
 						<c:url value="${product.image }" var="imgUrl"></c:url>
-					</c:if>
-					<c:if test="${product.image.substring(0,5)!='https'}">
+					  </c:if>
+					  <c:if test="${product.image.substring(0,5)!='https'}">
 						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
-					</c:if>
+					  </c:if>
 	                  <td class="table-column-pr-0">
 	                    <a class="media align-items-center" href="ecommerce-product-details.html">
 	                      <img class="avatar avatar-lg mr-3" src="${imgUrl }" alt="Image ${product.name }">
@@ -169,7 +169,7 @@
 						<td>
 					       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteCategory(${product.id})">
 					          	<i class="tio-delete-outlined"></i> Xóa</a>
-					       <a href="<c:url value="/admin/products/update?id=${product.id }"/>" class="btn btn-soft-warning btn-xs">
+					       <a href="<c:url value="/admin/products/update/${product.id }"/>" class="btn btn-soft-warning btn-xs">
 						          	<i class="tio-archive"></i> Cập nhật</a> 
 					          
 			            </td>

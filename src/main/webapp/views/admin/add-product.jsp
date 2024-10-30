@@ -30,7 +30,7 @@
 	  </div>
 	  </div>
 	
-	  <form action="<c:url value="/admin/products/add"/>" method="post" enctype="multipart/form-data">
+	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
         <div class="row">
           <div class="col-lg-8">
             <!-- Card -->
