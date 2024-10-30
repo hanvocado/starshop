@@ -1,6 +1,7 @@
 package com.starshop.controllers.users;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.starshop.models.Product;
+import com.starshop.models.User;
 import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 
@@ -27,7 +29,16 @@ public class UserProductController {
 	private UserService userService;
 
 	@GetMapping("")
-	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search) {
+	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
+			@RequestParam(required = false) Long userId) {
+
+		/*
+		 * userId = 1L; Optional<User> user = userService.findById(userId);
+		 * 
+		 * if (user.isPresent()) { System.out.println("User ID: " + user.get().getId());
+		 * System.out.println("User Name: " + user.get().getUsername()); return
+		 * "Thông tin người dùng đã được in ra console."; }
+		 */
 
 		Page<Product> page = null;
 		if (pageNo == null)
@@ -44,19 +55,28 @@ public class UserProductController {
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
+		/*
+		 * if (!user.isEmpty()) { model.addAttribute("user", user); }
+		 */
+		userId = 1L;
+		if (userId != null) {
+	        Optional<User> user = userService.findById(userId);
+	        user.ifPresent(value -> model.addAttribute("user", value));
+	    }
+
 		return "index";
 	}
 
 	@PostMapping("/{userId}/wishlist")
 	public String addToWishlist(@PathVariable Long userId, @RequestParam Long productId) {
 		userService.addProductToWishlist(userId, productId);
-		return "redirect:/users/" + userId + "/wishlist"; 
+		return "redirect:/users/" + userId + "/wishlist";
 	}
 
 	@GetMapping("/{userId}/wishlist")
 	public String getWishlist(@PathVariable Long userId, Model model) {
 		List<Product> wishlist = userService.getWishlist(userId);
 		model.addAttribute("wishlist", wishlist);
-		return "wishlist"; 
+		return "user/wishlist";
 	}
 }

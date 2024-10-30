@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="jakarta.tags.core"%>
 
 <header class="section__header">
     <section class="header_main border_bottom">
@@ -52,12 +53,20 @@
                               
                         </div>
                         <div class="widget__header mr-2">
-                            <a href="{% url 'wishlist-page' %}" class="widget__view text-decoration-none">
+                            <%-- <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
                                 <div class="icon">
                                     <i class="fa fa-heart"></i>
                                 </div>
                                 <small class="text">WishList</small>
-                            </a>
+                            </a> --%>
+                            <c:if test="${not empty user}">
+        <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
+            <div class="icon">
+                <i class="fa fa-heart"></i>
+            </div>
+            <small class="text">WishList</small>
+        </a>
+    </c:if>
                         </div>
                         <div class="widget__header">
                             <a href="{% url 'cart-page' %}" class="widget__view text-decoration-none">
