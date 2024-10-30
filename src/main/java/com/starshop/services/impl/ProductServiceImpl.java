@@ -78,5 +78,4 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return repo.findByIsPublishedFalse(pageable);
 	}
-
 }
