@@ -22,13 +22,6 @@
       <!-- End Row -->
     </div>
     <!-- End Page Header -->
-    <div class="dz-preview dz-file-preview">
-	  <div class="dz-details">
-	    <div class="dz-filename"><span data-dz-name></span></div>
-	    <div class="dz-size" data-dz-size></div>
-	    <img data-dz-thumbnail />
-	  </div>
-	  </div>
 	
 	  <form action="<c:url value="/admin/products/save"/>" method="post" enctype="multipart/form-data">
         <div class="row">
@@ -173,7 +166,7 @@
                     <span class="text-dark">Công khai</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="Published" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="published" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>

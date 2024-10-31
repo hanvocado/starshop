@@ -22,10 +22,9 @@
     <link rel="stylesheet" href="/exec/css/vendor.min.css">
     <link rel="stylesheet" href="/exec/vendor/icon-set/style.css">
 
-
-
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="/exec/css/theme.min.css?v=1.0">
+    
 </head>
 
 <body class="footer-offset">
@@ -355,7 +354,9 @@
             $('.js-dropzone').each(function () {
               var dropzone = $.HSCore.components.HSDropzone.init('#' + $(this).attr('id'));
             });
+           
         });
+        
     </script>
 
     <!-- IE Support -->

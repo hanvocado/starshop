@@ -39,4 +39,9 @@ public class VoucherServiceImpl implements VoucherService {
 		return voucherRepo.findByExpiredAtAfter(pageable, now);
 	}
 
+	@Override
+	public void save(Voucher voucher) {
+		voucherRepo.save(voucher);
+	}
+
 }
