@@ -68,7 +68,7 @@
        <div class="card-header">
          <div class="row justify-content-between align-items-center flex-grow-1">
            <div class="col-md-4 mb-3 mb-md-0">
-             <form action="<c:url value="/admin/product"/>" method="get">
+             <form action="<c:url value="/admin/products"/>" method="get">
                <!-- Search -->
                <div class="input-group input-group-merge input-group-flush">
                  <div class="input-group-prepend">
