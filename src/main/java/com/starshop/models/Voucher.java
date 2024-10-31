@@ -6,6 +6,7 @@ import java.util.Date;
 import com.starshop.utils.Converter;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class Voucher {
 	@Column(name = "is_freeship", columnDefinition = "boolean default false")
 	private boolean isFreeship;
 	
+	@NotNull(message = "Vui lòng điền giá trị đơn hàng tối thiểu.")
 	@Column(name = "min_items_total", columnDefinition = "int default 0")
 	private int minOrderItemsTotal; // Minimum order value required to apply this voucher
 

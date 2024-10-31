@@ -13,4 +13,8 @@ public interface VoucherService {
 	Page<Voucher> getExpired(Integer pageNo, Integer pageSize);
 		
 	void save(Voucher voucher);
+	
+	Voucher findByCode(String code);
+
+	void delete(String code);
 }

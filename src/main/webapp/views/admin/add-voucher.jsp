@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
-<title>Tạo phiếu giả giám</title>
+<title>${type } phiếu giả giám</title>
 
 <body>
 	<!-- Page Header -->
@@ -11,12 +11,12 @@
         <div class="col-sm mb-2 mb-sm-0">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-no-gutter">
-              <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/voucher"/>">Vouchers</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Add voucher</li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/vouchers"/>">Vouchers</a></li>
+              <li class="breadcrumb-item active" aria-current="page">${type } voucher</li>
             </ol>
           </nav>
 
-          <h1 class="page-header-title">Tạo phiếu giảm giá</h1>
+          <h1 class="page-header-title">${type } phiếu giảm giá</h1>
         </div>
       </div>
       <!-- End Row -->
@@ -39,7 +39,7 @@
                 <!-- Form Group -->
                 <div class="form-group">
                 	<label for="voucherNameLabel" class="input-label">Tên</label>
-                  <input type="text" class="form-control" name="name" id="voucherNameLabel" placeholder="" required>
+                  <input type="text" class="form-control" name="name" value="${voucher.name }" id="voucherNameLabel" placeholder="" required>
                 </div>
                 <!-- End Form Group -->
 
@@ -48,7 +48,7 @@
 	                <!-- Form Group -->
 	                <div class="form-group">
 	                	<label for="voucherNameLabel" class="input-label">Code</label>
-	                  <input type="text" class="form-control" name="code" id="voucherNameLabel" placeholder="20102024" required>
+	                  <input type="text" class="form-control" name="code" value="${voucher.code }" id="voucherNameLabel" placeholder="20102024" required>
 	                </div>
 	                <!-- End Form Group -->
 	               </div>
@@ -56,14 +56,14 @@
 	                <!-- Form Group -->
 	                <div class="form-group">
 	                	<label for="voucherNameLabel" class="input-label">Hết hạn vào</label>
-						<input name="expiredAt" type="text" class="form-control" placeholder="31/12/2024 23:59:59" required/>	                
+						<input name="expiredAt" value="${voucher.formattedExpiredAt }" type="text" class="form-control" placeholder="31/12/2024 23:59:59" pattern="\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}" required/>	                
 					</div>
 	                <!-- End Form Group -->
 	               </div>
 	             </div>
                 
                 <label class="input-label">Mô tả <span class="input-label-secondary">(Optional)</span></label>
- 				<textarea class="form-control" name="description" aria-label="With textarea"></textarea>
+ 				<textarea class="form-control" name="description" value="${voucher.description }" aria-label="With textarea"></textarea>
               </div>
               <!-- Body -->
             </div>
@@ -83,7 +83,7 @@
                   <label for="withAppendLabel" class="input-label">Phần trăm giảm giá</label>
   
                   <div class="input-group">
-				   <input name="discountPercent" required type="text" value="5" class="form-control" id="withAppendLabel" placeholder="" aria-describedby="basic-addon2">
+				   <input name="discountPercent" value="${voucher.discountPercent }" required type="number" class="form-control" id="withAppendLabel" placeholder="" aria-describedby="basic-addon2">
 				   <div class="input-group-append">
 				     <span class="input-group-text" id="basic-addon2">%</span>
 				   </div>
@@ -97,7 +97,7 @@
                   <label for="withAppendLabel" class="input-label">Giảm tối đa</label>
   
                   <div class="input-group">
-				   <input name="maxDiscountAmount" required type="number" value="20000" class="form-control" id="withAppendLabel" placeholder="" aria-describedby="basic-addon2">
+				   <input name="maxDiscountAmount" value="${voucher.maxDiscountAmount }" required type="number" value="20000" class="form-control" id="withAppendLabel" placeholder="" aria-describedby="basic-addon2">
 				   <div class="input-group-append">
 				     <span class="input-group-text" id="basic-addon2">VND</span>
 				   </div>
@@ -111,7 +111,7 @@
                   <label for="withAppendLabel" class="input-label">Đơn tối thiểu</label>
   
                   <div class="input-group">
-				   <input name="minOrderItemsTotal" value="0" type="text" class="form-control" id="withAppendLabel" placeholder="10" aria-describedby="basic-addon2">
+				   <input name="minOrderItemsTotal" value="${voucher.minOrderItemsTotal }" required type="number" class="form-control" id="withAppendLabel" placeholder="10" aria-describedby="basic-addon2">
 				   <div class="input-group-append">
 				     <span class="input-group-text" id="basic-addon2">VND</span>
 				   </div>
@@ -127,7 +127,7 @@
                     <span class="text-dark">Là phiếu miễn phí vận chuyển</span>
                   </span>
                   <span class="col-4 col-sm-3">
-                    <input name="freeship" value="true" checked type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
+                    <input name="freeship" value="true" <c:if test="${voucher.isFreeship() }">checked</c:if> type="checkbox" class="toggle-switch-input" id="availabilitySwitch1">
                     <span class="toggle-switch-label ml-auto">
                       <span class="toggle-switch-indicator"></span>
                     </span>
@@ -159,37 +159,6 @@
           </div>
           <!-- End Card -->
         </div>
-        
-	<!-- Add Image from URL Modal -->
-    <div class="modal fade" id="addImageFromURLModal" tabindex="-1" role="dialog" aria-labelledby="addImageFromURLModalTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <!-- Header -->
-          <div class="modal-header">
-            <h4 id="addImageFromURLModalTitle" class="modal-title">Thêm ảnh bằng URL</h4>
-
-            <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
-              <i class="tio-clear tio-lg"></i>
-            </button>
-          </div>
-          <!-- End Header -->
-
-          <!-- Body -->
-          <div class="modal-body">
-            <label for="pasteImageURLNameLabel" class="input-label">Paste image URL</label>
-            <input type="text" class="form-control" name="image" id="pasteImageURLNameLabel" placeholder="https://" aria-label="https://">
-          </div>
-          <!-- End Body -->
-
-          <!-- Footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">OK</button>
-          </div>
-          <!-- End Footer -->
-        </div>
-      </div>
-    </div>
-    <!-- End Add Image from URL Modal -->
     
     </form>  
 </body>

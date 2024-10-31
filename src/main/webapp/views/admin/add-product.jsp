@@ -11,7 +11,7 @@
         <div class="col-sm mb-2 mb-sm-0">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-no-gutter">
-              <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/product"/>">Products</a></li>
+              <li class="breadcrumb-item"><a class="breadcrumb-link" href="<c:url value="/admin/products"/>">Products</a></li>
               <li class="breadcrumb-item active" aria-current="page">Add product</li>
             </ol>
           </nav>

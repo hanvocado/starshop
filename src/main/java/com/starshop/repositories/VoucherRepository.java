@@ -24,7 +24,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Page<Voucher> findByIsFreeshipTrueAndExpiredAtBefore(Pageable pageable, LocalDateTime localDateTime);
 
     Page<Voucher> findByIsFreeshipFalseAndExpiredAtBefore(Pageable pageable, LocalDateTime localDateTime);
-    
+ 
     
     Page<Voucher> findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(Pageable pageable, String name, String code);
+    
+    Voucher findByCode(String code);
 }
