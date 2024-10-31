@@ -63,7 +63,13 @@
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
             <div class="card product-card">
-                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+            	<c:if test="${product.image.substring(0,5)=='https'}">
+					<c:url value="${product.image }" var="imgUrl"></c:url>
+				  </c:if>
+				  <c:if test="${product.image.substring(0,5)!='https'}">
+					<c:url value="/img/${product.image }" var="imgUrl"></c:url>
+				  </c:if>
+                <img src="${imgUrl}" class="card-img-top product-image" alt="${product.name}" height=350>
                 <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
                     

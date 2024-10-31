@@ -141,7 +141,7 @@
 						<c:url value="${product.image }" var="imgUrl"></c:url>
 					  </c:if>
 					  <c:if test="${product.image.substring(0,5)!='https'}">
-						<c:url value="/img_product/${product.image }" var="imgUrl"></c:url>
+						<c:url value="/img/${product.image }" var="imgUrl"></c:url>
 					  </c:if>
 	                  <td class="table-column-pr-0">
 	                    <a class="media align-items-center" href="ecommerce-product-details.html">
