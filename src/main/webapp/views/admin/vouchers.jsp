@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@include file="/common/taglibs.jsp"%>
     
 
 <title>Vouchers</title>
@@ -31,7 +31,7 @@
     <div class="page-header">
       <div class="row align-items-center mb-3">
         <div class="col-sm mb-2 mb-sm-0">
-          <h1 class="page-header-title">Products </h1>
+          <h1 class="page-header-title">Vouchers </h1>
           <span>${status }<span class="badge badge-soft-dark ml-2">${count }</span></span>
         </div>
 
@@ -69,7 +69,7 @@
        <div class="card-header">
          <div class="row justify-content-between align-items-center flex-grow-1">
            <div class="col-md-4 mb-3 mb-md-0">
-             <form action="<c:url value="/admin/voucher"/>" method="get">
+             <form action="<c:url value="/admin/vouchers"/>" method="get">
                <!-- Search -->
                <div class="input-group input-group-merge input-group-flush">
                  <div class="input-group-prepend">
@@ -129,8 +129,9 @@
 
                <th class="table-column-pr-0">Phiếu giảm giá</th>
                <th>Đơn tối thiểu</th>
+               <th>Giá trị giảm</th>
                <th>Giảm tối đa</th>
-               <th>Trạng thái</th>
+               <th>Ngày hết hạn</th>
                <th>Hành động</th>
              </tr>
            </thead>
@@ -144,11 +145,15 @@
                 	</c:if>
                 </td>
                 
-                <td>${voucher.minOrderItemsTotal }</td>
+                <td><fmt:formatNumber value = "${voucher.minOrderItemsTotal }" type = "currency"/></td>
                 
-                <td>${voucher.maxDiscountAmount }</td>
+                <td>${voucher.discountPercent }%</td>
+                
+                <td><fmt:formatNumber value = "${voucher.maxDiscountAmount }" type = "currency"/></td>
+                
 
                 <td>
+                	${voucher.formattedExpiredAt }
                 	<c:choose>         
 				       <c:when test = "${voucher.isExpired()}">
 				          <span class="badge badge-secondary">Hết hạn</span>
@@ -162,7 +167,7 @@
 				<!-- End Status -->
 			
 			<td>
-		       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteProduct(${voucher.code})">
+		       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#voucherModal" onclick="deleteVoucher(${voucher.code})">
 		          	<i class="tio-delete-outlined"></i> Xóa</a>
 		       <a href="<c:url value="/admin/vouchers/update/${voucher.code }"/>" class="btn btn-soft-warning btn-xs">
 			          	<i class="tio-archive"></i> Cập nhật</a> 
@@ -185,7 +190,7 @@
      </div>
      <!-- End Card -->
      
-     <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+     <div class="modal fade" id="voucherModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
               <!-- Header -->
@@ -220,8 +225,8 @@
 		    var rows = document.querySelectorAll("#voucherTable tbody tr");
 		    document.getElementById('filter-btn').innerText = status;
 		    rows.forEach(function(row) {
-		      var statusText = row.cells[3].innerText.trim();
-		      if (status === 'Tất cả' || statusText === status) {
+		      var cellStatus = row.cells[4].innerText.trim();
+		      if (status === 'Tất cả' || cellStatus.includes(status)) {
 		        row.style.display = '';
 		      } else {
 		        row.style.display = 'none';
@@ -229,7 +234,7 @@
 		    });
 		  }
 	  
-	   function deleteProduct(id) {
+	   function deleteVoucher(id) {
 	       document.getElementById('voucherForm').action = '<c:url value="/admin/vouchers/delete/' + id + '"/>';
 	   }
 	   
