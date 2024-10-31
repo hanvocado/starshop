@@ -39,4 +39,20 @@ public class VoucherServiceImpl implements VoucherService {
 		return voucherRepo.findByExpiredAtAfter(pageable, now);
 	}
 
+	@Override
+	public void save(Voucher voucher) {
+		voucherRepo.save(voucher);
+	}
+
+	@Override
+	public Voucher findByCode(String code) {
+		return voucherRepo.findByCode(code);
+	}
+
+	@Override
+	public void delete(String code) {
+		Voucher voucher = voucherRepo.findByCode(code);
+		if (voucher != null)
+			voucherRepo.delete(voucher);
+	}
 }

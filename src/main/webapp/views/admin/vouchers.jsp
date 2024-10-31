@@ -31,8 +31,7 @@
     <div class="page-header">
       <div class="row align-items-center mb-3">
         <div class="col-sm mb-2 mb-sm-0">
-          <h1 class="page-header-title">Vouchers </h1>
-          <span>${status }<span class="badge badge-soft-dark ml-2">${count }</span></span>
+          <h1 class="page-header-title">Vouchers <span class="badge badge-soft-dark ml-2">${count }</span></h1>
         </div>
 
         <div class="col-sm-auto">
@@ -77,7 +76,7 @@
                      <i class="tio-search"></i>
                    </div>
                  </div>
-                 <input id="datatableSearch" value='${search}' name="search" type="search" class="form-control" placeholder="Tìm bằng tên" aria-label="Search vouchers">
+                 <input id="datatableSearch" value='${search}' name="search" type="search" class="form-control" placeholder="Tìm bằng tên hoặc mã code" aria-label="Search vouchers">
                </div>
                <!-- End Search -->
              </form>
@@ -205,10 +204,10 @@
               <!-- Body -->
               <div class="modal-body">
               <form id="voucherForm" action="" method="post">
-			<div id="voucher-modal-text">Bạn chắc chắn muốn xóa phiếu giảm giá này?</div>
+				<div id="voucher-modal-text">Bạn chắc chắn muốn xóa phiếu giảm giá này?</div>
 
                
-               <div class="d-flex justify-content-center">
+               <div class="d-flex justify-content-center mt-3">
                 		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Xóa</button>	                
                </div>
 		 </form>
