@@ -38,6 +38,11 @@ public class Voucher {
 	@Column(name = "min_items_total", columnDefinition = "int default 0")
 	private int minOrderItemsTotal; // Minimum order value required to apply this voucher
 
+	@Transient
+	public boolean isExpired() {
+		LocalDateTime now = LocalDateTime.now();
+        return expiredAt != null && expiredAt.isBefore(now);
+	}
 	/*
 	 * @Transient public double getDiscountAmount(Order order) { if
 	 * (this.isAppliable(order)) { double originPrice; if (this.isFreeship()) {

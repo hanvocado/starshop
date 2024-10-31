@@ -28,7 +28,7 @@ public class ProductController {
 	@Autowired
 	private CategoryService categoryService;
 	
-	@GetMapping("")
+	@RequestMapping()
 	public String products(Model model, String status, String search, Integer pageNo, Integer pageSize) {
 		
 		Page<Product> page = null;

@@ -1,5 +1,6 @@
 package com.starshop.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +13,16 @@ import java.time.LocalDateTime;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
+	@Autowired
 	private VoucherRepository voucherRepo;
 
 	@Override
-	public Page<Voucher> getAll(Integer pageNo, Integer pageSize) {
+	public Page<Voucher> getAll(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return voucherRepo.findAll(pageable);
+		if (search == null || search.isBlank())
+			return voucherRepo.findAll(pageable);
+		else
+			return voucherRepo.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(pageable, search, search);
 	}
 
 	@Override

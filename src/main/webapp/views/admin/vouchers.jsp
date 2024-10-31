@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
+    
 
+<title>Vouchers</title>
 
-<title>Products</title>
-
-<body>	
+<body>
 	<!-- Display Flash Messages -->
 	<c:if test="${not empty message }">
 	
@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-sm-auto">
-          <a class="btn btn-primary" href="<c:url value="/admin/products/add"/>">
+          <a class="btn btn-primary" href="<c:url value="/admin/vouchers/add"/>">
               <i class="tio-add mr-1"></i> Tạo mới
           </a>
         </div>
@@ -69,7 +69,7 @@
        <div class="card-header">
          <div class="row justify-content-between align-items-center flex-grow-1">
            <div class="col-md-4 mb-3 mb-md-0">
-             <form action="<c:url value="/admin/product"/>" method="get">
+             <form action="<c:url value="/admin/voucher"/>" method="get">
                <!-- Search -->
                <div class="input-group input-group-merge input-group-flush">
                  <div class="input-group-prepend">
@@ -77,7 +77,7 @@
                      <i class="tio-search"></i>
                    </div>
                  </div>
-                 <input id="datatableSearch" value='${search}' name="search" type="search" class="form-control" placeholder="Tìm bằng tên" aria-label="Search products">
+                 <input id="datatableSearch" value='${search}' name="search" type="search" class="form-control" placeholder="Tìm bằng tên" aria-label="Search vouchers">
                </div>
                <!-- End Search -->
              </form>
@@ -91,10 +91,10 @@
 		    ${status }
 		  </button>
 		  <div class="dropdown-menu">
-		    <a class="dropdown-item" href="<c:url value="/admin/products?status=all"/>">Tất cả</a>
+		    <a class="dropdown-item" href="#" onclick="filterTable('Tất cả')">Tất cả</a>
 		    <div class="dropdown-divider"></div>
-		    <a class="dropdown-item" href="<c:url value="/admin/products?status=published"/>">Công khai</a>
-		    <a class="dropdown-item" href="<c:url value="/admin/products?status=unpublished"/>">Đã ẩn</a>
+		    <a class="dropdown-item" href="#" onclick="filterTable('Còn hạn')">Còn hạn</a>
+		    <a class="dropdown-item" href="#" onclick="filterTable('Hết hạn')">Hết hạn</a>
 		  </div>
 		</div>
 		<!-- End Dropleft FILTER -->
@@ -107,7 +107,7 @@
 
        <!-- Table -->
        <div class="table-responsive datatable-custom">
-         <table id="productTable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
+         <table id="voucherTable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
                   "columnDefs": [{
                      "targets": [0, 4, 9],
                      "width": "5%",
@@ -127,49 +127,44 @@
            <thead class="thead-light">
              <tr>
 
-               <th class="table-column-pr-0">Sản phẩm</th>
-               <th>Giá bán</th>
+               <th class="table-column-pr-0">Phiếu giảm giá</th>
+               <th>Đơn tối thiểu</th>
+               <th>Giảm tối đa</th>
                <th>Trạng thái</th>
                <th>Hành động</th>
              </tr>
            </thead>
 
            <tbody>
-             <c:forEach items="${products}" var="product" varStatus="STT">
+             <c:forEach items="${vouchers}" var="voucher" varStatus="STT">
               <tr>
-                <c:if test="${product.image.substring(0,5)=='https'}">
-			<c:url value="${product.image }" var="imgUrl"></c:url>
-		  </c:if>
-		  <c:if test="${product.image.substring(0,5)!='https'}">
-			<c:url value="/img/${product.image }" var="imgUrl"></c:url>
-		  </c:if>
-                <td class="table-column-pr-0">
-                  <a class="media align-items-center" href="ecommerce-product-details.html">
-                    <img class="avatar avatar-lg mr-3" src="${imgUrl }" alt="Image ${product.name }">
-                    <div class="media-body">
-                      <h5 class="text-hover-primary mb-0">${product.name }</h5>
-                    </div>
-                  </a>
+                <td>${voucher.name }
+                	<c:if test="${voucher.isFreeship()}">
+                		<span class="badge badge-dark badge-pill ml-1">Freeship</span>
+                	</c:if>
                 </td>
-                <td>${product.name }</td>
+                
+                <td>${voucher.minOrderItemsTotal }</td>
+                
+                <td>${voucher.maxDiscountAmount }</td>
 
                 <td>
                 	<c:choose>         
-		       <c:when test = "${product.isPublished()}">
-		          <span class="badge badge-info">Công khai</span>
-		       </c:when>
-		       
-		       <c:otherwise>
-		          <span class="badge badge-secondary">Đã ẩn</span>
-		       </c:otherwise>
-		    </c:choose>
-			</td>
-			<!-- End Status -->
+				       <c:when test = "${voucher.isExpired()}">
+				          <span class="badge badge-secondary">Hết hạn</span>
+				       </c:when>
+				       
+				       <c:otherwise>
+				          <span class="badge badge-info">Còn hạn</span>
+				       </c:otherwise>
+				    </c:choose>
+				</td>
+				<!-- End Status -->
 			
 			<td>
-		       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteProduct(${product.id})">
+		       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#productModal" onclick="deleteProduct(${voucher.code})">
 		          	<i class="tio-delete-outlined"></i> Xóa</a>
-		       <a href="<c:url value="/admin/products/update/${product.id }"/>" class="btn btn-soft-warning btn-xs">
+		       <a href="<c:url value="/admin/vouchers/update/${voucher.code }"/>" class="btn btn-soft-warning btn-xs">
 			          	<i class="tio-archive"></i> Cập nhật</a> 
 		          
             </td>
@@ -195,7 +190,7 @@
           <div class="modal-content">
               <!-- Header -->
               <div class="modal-header">
-                  <h4 id="inviteUserModalTitle" class="modal-title">Sản phẩm</h4>
+                  <h4 id="inviteUserModalTitle" class="modal-title">Phiếu giảm giá</h4>
 
                   <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
                       <i class="tio-clear tio-lg"></i>
@@ -204,8 +199,8 @@
               <!-- End Header -->
               <!-- Body -->
               <div class="modal-body">
-              <form id="productForm" action="" method="post">
-			<div id="product-modal-text">Bạn chắc chắn muốn xóa sản phẩm này?</div>
+              <form id="voucherForm" action="" method="post">
+			<div id="voucher-modal-text">Bạn chắc chắn muốn xóa phiếu giảm giá này?</div>
 
                
                <div class="d-flex justify-content-center">
@@ -219,13 +214,27 @@
   </div>
   	 <!-- End Modal -->
   
-	  <script>
+	<script>
+	  
+	  function filterTable(status) {
+		    var rows = document.querySelectorAll("#voucherTable tbody tr");
+		    document.getElementById('filter-btn').innerText = status;
+		    rows.forEach(function(row) {
+		      var statusText = row.cells[3].innerText.trim();
+		      if (status === 'Tất cả' || statusText === status) {
+		        row.style.display = '';
+		      } else {
+		        row.style.display = 'none';
+		      }
+		    });
+		  }
+	  
 	   function deleteProduct(id) {
-	       document.getElementById('productForm').action = '<c:url value="/admin/products/delete/' + id + '"/>';
+	       document.getElementById('voucherForm').action = '<c:url value="/admin/vouchers/delete/' + id + '"/>';
 	   }
 	   
 	   setTimeout(function() {
 	       document.getElementById('message-alert').style.display = 'none';
 	     }, 6000);
-	  </script>
+	</script>
 </body>

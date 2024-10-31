@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import com.starshop.models.Voucher;
 
 public interface VoucherService {
-	Page<Voucher> getAll(Integer pageNo, Integer pageSize);
+	Page<Voucher> getAll(Integer pageNo, Integer pageSize, String search);
 	
 	Page<Voucher> getUnexpired(Integer pageNo, Integer pageSize);
 	

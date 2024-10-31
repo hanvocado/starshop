@@ -49,14 +49,21 @@
                             </li>
                             
                             <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="orders" title="Orders" data-placement="left">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/categories"/>" title="Orders" data-placement="left">
                                     <i class="tio-money nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Orders</span>
                                 </a>
                             </li>
                             
                             <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="dashboard" title="Dashboard" data-placement="left">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/vouchers"/>" title="Vouchers" data-placement="left">
+                                    <i class="tio-money nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Vouchers</span>
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/dashboard"/>" title="Dashboard" data-placement="left">
                                     <i class="tio-chart-bar-1 nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboard</span>
                                 </a>
