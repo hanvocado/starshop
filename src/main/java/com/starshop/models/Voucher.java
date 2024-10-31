@@ -3,6 +3,8 @@ package com.starshop.models;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.starshop.utils.Formatter;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,6 +44,11 @@ public class Voucher {
 	public boolean isExpired() {
 		LocalDateTime now = LocalDateTime.now();
         return expiredAt != null && expiredAt.isBefore(now);
+	}
+	
+	@Transient
+	public String getFormattedExpiredAt() {
+		return Formatter.localDateTimeToDateWithSlash(expiredAt);
 	}
 	/*
 	 * @Transient public double getDiscountAmount(Order order) { if

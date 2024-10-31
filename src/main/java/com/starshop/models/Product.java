@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -64,6 +65,13 @@ public class Product implements Serializable {
 	@Transient	
 	public double getProfit() {
 		return salePrice - getDisplayPrice();
+	}
+	
+	@Transient	
+	public String getCategoryNames() {
+	    return categories.stream()
+	                     .map(Category::getName)  // Assuming Category has a getName() method
+	                     .collect(Collectors.joining(", "));
 	}
 	
 	@OneToMany(mappedBy = "product")

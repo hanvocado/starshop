@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
-
+<%@include file="/common/taglibs.jsp"%>
 
 <title>Products</title>
 
@@ -128,9 +127,12 @@
              <tr>
 
                <th class="table-column-pr-0">Sản phẩm</th>
-               <th>Giá bán</th>
+               <th>Giá gốc</th>
+               <th class="text-center">Giảm giá (%)</th>
+               <th class="text-center">Danh mục</th>
+               <th class="text-center">Số lượng</th>
                <th>Trạng thái</th>
-               <th>Hành động</th>
+               <th class="text-center">Hành động</th>
              </tr>
            </thead>
 
@@ -138,11 +140,11 @@
              <c:forEach items="${products}" var="product" varStatus="STT">
               <tr>
                 <c:if test="${product.image.substring(0,5)=='https'}">
-			<c:url value="${product.image }" var="imgUrl"></c:url>
-		  </c:if>
-		  <c:if test="${product.image.substring(0,5)!='https'}">
-			<c:url value="/img/${product.image }" var="imgUrl"></c:url>
-		  </c:if>
+					<c:url value="${product.image }" var="imgUrl"></c:url>
+				  </c:if>
+				  <c:if test="${product.image.substring(0,5)!='https'}">
+					<c:url value="/img/${product.image }" var="imgUrl"></c:url>
+				  </c:if>
                 <td class="table-column-pr-0">
                   <a class="media align-items-center" href="ecommerce-product-details.html">
                     <img class="avatar avatar-lg mr-3" src="${imgUrl }" alt="Image ${product.name }">
@@ -151,8 +153,15 @@
                     </div>
                   </a>
                 </td>
-                <td>${product.name }</td>
-
+                
+                <td><fmt:formatNumber value = "${product.salePrice }" type = "currency"/></td>
+				
+				<td class="text-center">${product.discountPercent }</td>
+				
+				<td>${product.categoryNames }</td>
+				
+				<td class="text-center">${product.currentQuantity }</td>
+				
                 <td>
                 	<c:choose>         
 		       <c:when test = "${product.isPublished()}">
