@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="jakarta.tags.core"%>
 
 <title>index page</title>
 
@@ -58,26 +59,102 @@
                 </div>
             </div>
             <div class="single-best-selling">
-            
-                <div class="row">
-                    {% for product in products %}
-                        <div class="col-md-4">
-                            <div class="card product-card">
-                                <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ product.name }}</h5>
-                                    <a href="{% url 'add_to_cart' product.p_id %}"><button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Add to Cart</button></a>
-                                    <a href="{% url 'add_to_wishlist' product.p_id %}"><button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Wishlist
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                        </svg>
-                                    </button></a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+          <div class="row">
+    <c:forEach var="product" items="${products}">
+        <div class="col-md-4">
+            <div class="card product-card">
+                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                    
+                    <!-- Thay thế URL với các liên kết JSP phù hợp -->
+                    <a href="${pageContext.request.contextPath}/add_to_cart?p_id=${product.id}">
+                        <button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Add to Cart</button>
+                    </a>
+                    
+                    <a href="${pageContext.request.contextPath}/add_to_wishlist?p_id=${product.id}">
+                        <button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Wishlist
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>
+                        </button>
+                    </a>
                 </div>
-                
+            </div>
+        </div>
+    </c:forEach>
+</div>
+
+<!-- Footer -->
+<div class="mt-3">
+    <!-- Pagination -->
+    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+        <div class="col-sm mb-2 mb-sm-0">
+            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                <span class="mr-2">Page size: </span>
+                <!-- Select -->
+                <form id="pageSizeForm" action="<c:url value='/${role}'/>" method="get">
+                    <select name="pageSize" onchange="document.getElementById('pageSizeForm').submit();"
+                        id="datatableEntries" class="js-select2-custom" data-hs-select2-options='{
+		                            "minimumResultsForSearch": "Infinity",
+		                            "customClass": "custom-select custom-select-sm custom-select-borderless",
+		                            "dropdownAutoWidth": true,
+		                            "width": true
+		                          }'>
+                        <option value="2" <c:if test="${pageSize == 2}">selected</c:if>>2</option>
+                        <option value="6" <c:if test="${pageSize == 6}">selected</c:if>>6</option>
+                        <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10</option>
+                    </select>
+                </form>
+
+                <!-- End Select -->
+            </div>
+        </div>
+
+        <div class="col-sm-auto">
+            <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- footer Pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <c:if test="${isFirst }">
+                            <li class="page-item disabled">
+                        </c:if>
+                        <c:if test="${!isFirst }">
+                            <li class="page-item">
+                        </c:if>
+                        <a class="page-link" href="<c:url value='/?pageNo=${pageNo-1}' />" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        </li>
+
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <li class="page-item <c:if test=" ${pageNo==i-1}">active</c:if>">
+                                <a class="page-link" href="<c:url value='/?pageNo=${i-1}' />">${i}</a>
+                            </li>
+                        </c:forEach>
+
+                        <c:if test="${isLast }">
+                            <li class="page-item disabled">
+                        </c:if>
+                        <c:if test="${!isLast }">
+                            <li class="page-item">
+                        </c:if>
+                        <a class="page-link" href="<c:url value='/?pageNo=${pageNo+1}' />" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End footer Pagination -->
+            </div>
+        </div>
+    </div>
+    <!-- End Pagination -->
+</div>
+<!-- End Footer -->
+
             </div>
         </div>
     </section>

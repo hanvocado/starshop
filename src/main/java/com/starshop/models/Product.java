@@ -66,6 +66,9 @@ public class Product implements Serializable {
 		return salePrice - getDisplayPrice();
 	}
 	
+	@OneToMany(mappedBy = "product")
+	Set<Wishlist> wishlists;
+	
 	public void addCategory(Category category) {
         categories.add(category);
         category.getProducts().add(this);

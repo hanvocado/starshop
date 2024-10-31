@@ -104,5 +104,4 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return productRepo.findByIsPublishedFalse(pageable);
 	}
-
 }
