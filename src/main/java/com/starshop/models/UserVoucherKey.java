@@ -1,6 +1,7 @@
 package com.starshop.models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,5 +18,5 @@ public class UserVoucherKey implements Serializable {
     private String voucherCode;
 
     @Column(name = "user_id")
-    private Long userId;
+    private UUID userId;
 }
