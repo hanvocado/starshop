@@ -19,7 +19,7 @@ public class HomeController {
 		
 		Page<Product> page = null;
 		if (pageNo == null) pageNo = 0;
-		if (pageSize == null) pageSize = 10;
+		if (pageSize == null) pageSize = 12;
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
 	
 		model.addAttribute("role","");

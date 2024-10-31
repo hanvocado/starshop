@@ -44,7 +44,7 @@ public class UserProductController {
 		if (pageNo == null)
 			pageNo = 0;
 		if (pageSize == null)
-			pageSize = 20;
+			pageSize = 21;
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
 
 		model.addAttribute("role", "user");

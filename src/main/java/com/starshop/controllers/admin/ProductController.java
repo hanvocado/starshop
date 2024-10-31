@@ -33,7 +33,7 @@ public class ProductController {
 		
 		Page<Product> page = null;
 		if (pageNo == null) pageNo = 0;
-		if (pageSize == null) pageSize = 6;
+		if (pageSize == null) pageSize = 9;
 		if (status == null || status.isBlank() || status.contentEquals("all")) {
 			page = productService.getProductsPagination(pageNo, pageSize, search);
 		} else if (status.contentEquals("published")) {

@@ -183,69 +183,7 @@
           
           <!-- Footer -->
           <div class="card-footer">
-            <!-- Pagination -->
-            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-              <div class="col-sm mb-2 mb-sm-0">
-                <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                  <span class="mr-2">Page size: </span>
-                  <!-- Select -->
-                  <form id="pageSizeForm" action="<c:url value="/admin/product"/>" method="get">
-					    <select name="pageSize" onchange="document.getElementById('pageSizeForm').submit();"
-					    		id="datatableEntries" class="js-select2-custom" data-hs-select2-options='{
-		                            "minimumResultsForSearch": "Infinity",
-		                            "customClass": "custom-select custom-select-sm custom-select-borderless",
-		                            "dropdownAutoWidth": true,
-		                            "width": true
-		                          }'>
-					        <option value="2" <c:if test="${pageSize == 2}">selected</c:if>>2</option>
-					        <option value="6" <c:if test="${pageSize == 6}">selected</c:if>>6</option>
-					        <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10</option>
-					    </select>
-					</form>
-
-                  <!-- End Select -->
-                </div>
-              </div>
-
-              <div class="col-sm-auto">
-                <div class="d-flex justify-content-center justify-content-sm-end">
-                  <!-- footer Pagination -->
-					<nav aria-label="Page navigation example">
-					  <ul class="pagination">
-					  	<c:if test="${isFirst }">
-					    	<li class="page-item disabled">
-					    </c:if>
-					    <c:if test="${!isFirst }">
-					    	<li class="page-item">
-					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo-1}&status=${status}"/>" aria-label="Previous">
-					        <span aria-hidden="true">«</span>
-					        <span class="sr-only">Previous</span>
-					      </a>
-					    </li>
-					    
-					    <c:forEach var="i" begin="1" end="${totalPages}">
-       						<li class="page-item <c:if test="${pageNo == i-1}">active</c:if>"><a class="page-link" href="<c:url value="/admin/products?pageNo=${i-1}&status=${status}"/>">${i}</a></li>
-    					</c:forEach>
-					    
-					    <c:if test="${isLast }">
-					    	<li class="page-item disabled">
-					    </c:if>
-					    <c:if test="${!isLast }">
-					    	<li class="page-item">
-					    </c:if>
-					      <a class="page-link" href="<c:url value="/admin/products?pageNo=${pageNo+1}&status=${status}"/>" aria-label="Next">
-					        <span aria-hidden="true">»</span>
-					        <span class="sr-only">Next</span>
-					      </a>
-					    </li>
-					  </ul>
-					</nav>
-					<!-- End footer Pagination -->
-                </div>
-              </div>
-            </div>
-            <!-- End Pagination -->
+            <%@include file="/common/pagination.jsp"%>
           </div>
           <!-- End Footer -->
 
