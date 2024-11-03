@@ -1,28 +1,49 @@
 package com.starshop.services.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.starshop.models.Product;
+import com.starshop.models.Role;
 import com.starshop.models.User;
+import com.starshop.models.UserLogin;
 import com.starshop.models.Wishlist;
 import com.starshop.repositories.ProductRepository;
+import com.starshop.repositories.RoleRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.repositories.WishlistRepository;
 import com.starshop.services.UserService;
+import com.starshop.utils.Constants;
+import com.starshop.utils.RoleName;
+import com.starshop.utils.ViewMessage;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -47,17 +68,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User addUser(User userRequest) {
-		if (userRepository.existsByUserName(userRequest.getUserName())) {
-			throw new RuntimeException("User existed!");
+	public boolean addUser(User user) {
+		if (userRepository.existsByUserName(user.getUserName()) || userRepository.existsByEmail(user.getEmail())) {
+			return false;
 		}
 
-		User user = new User();
-		BeanUtils.copyProperties(userRequest, user);
+		assignRole(user, RoleName.USER);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-		user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-		return userRepository.save(user);
+		userRepository.save(user);
+		return true;
+	}
+
+	@Override
+	public boolean checkUserLogin(UserLogin userLogin) {
+		log.warn("userLogin username: {}", userLogin.getUsername());
+		log.warn("userLogin pass :{}", userLogin.getPassword());
+		return userRepository.findByUserName(userLogin.getUsername())
+				.map(user -> passwordEncoder.matches(userLogin.getPassword(), user.getPassword())).orElse(false);
 	}
 
 	@Override
@@ -68,7 +96,6 @@ public class UserServiceImpl implements UserService {
 			user.setEmail(updatedUser.getEmail());
 			user.setPassword(updatedUser.getPassword());
 			user.setProfileImg(updatedUser.getProfileImg());
-			user.setRoleId(updatedUser.getRoleId());
 			return userRepository.save(user);
 		}).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng với ID: " + id));
 	}
@@ -87,5 +114,39 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> getUserById(UUID id) {
 		return userRepository.findById(id);
 	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public void assignRole(User user, RoleName roleName) {
+		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
+		user.setRole(role);
+	}
+
+//	@Override
+//	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//		Optional<User> user = userRepository.findByEmail(email);
+//        return user.map(UserLogin::new)
+//                .orElseThrow(() -> new UsernameNotFoundException("Email not found: " + email));
+//	}
+	
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//	    User user = userRepository.findByUserName(username)
+//	            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//	    
+//	    Collection<GrantedAuthority> authorities = new ArrayList<>();
+//	    authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
+//
+//	    return new org.springframework.security.core.userdetails.User(
+//	            user.getUserName(),
+//	            user.getPassword(),
+//	            authorities
+//	    );
+//	}
+
 
 }

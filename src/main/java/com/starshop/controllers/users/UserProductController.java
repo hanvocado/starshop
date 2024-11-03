@@ -22,7 +22,7 @@ import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user/products")
 public class UserProductController {
 
 	@Autowired
@@ -73,45 +73,5 @@ public class UserProductController {
 		List<Product> wishlist = userService.getWishlist(userId);
 		model.addAttribute("wishlist", wishlist);
 		return "user/wishlist";
-	}
-
-	@GetMapping("/list")
-	public String listUsers(Model model) {
-		model.addAttribute("users", userService.getAllUsers());
-		return "user/list";
-	}
-
-	@GetMapping("/add")
-	public String showAddUserForm(Model model) {
-		model.addAttribute("user", new User());
-		return "user/add";
-	}
-
-	@PostMapping("/add")
-	public String addUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-		userService.addUser(user);
-		redirectAttributes.addFlashAttribute("message", "Thêm người dùng thành công!");
-		return "redirect:/users";
-	}
-
-	@GetMapping("/edit/{id}")
-	public String showEditUserForm(@PathVariable UUID id, Model model) {
-		model.addAttribute("user", userService.getUserById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng")));
-		return "user/edit";
-	}
-
-	@PostMapping("/edit/{id}")
-	public String updateUser(@PathVariable UUID id, @ModelAttribute User user, RedirectAttributes redirectAttributes) {
-		userService.updateUser(id, user);
-		redirectAttributes.addFlashAttribute("message", "Cập nhật người dùng thành công!");
-		return "redirect:/user";
-	}
-
-	@GetMapping("/delete/{id}")
-	public String deleteUser(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
-		userService.deleteUser(id);
-		redirectAttributes.addFlashAttribute("message", "Xóa người dùng thành công!");
-		return "redirect:/user";
 	}
 }
