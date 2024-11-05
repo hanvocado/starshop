@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.entities;
 
 import java.util.Set;
 import java.util.UUID;

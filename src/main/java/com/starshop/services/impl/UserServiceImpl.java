@@ -17,11 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.starshop.models.Product;
-import com.starshop.models.Role;
-import com.starshop.models.User;
+import com.starshop.entities.Product;
+import com.starshop.entities.Role;
+import com.starshop.entities.User;
+import com.starshop.entities.Wishlist;
 import com.starshop.models.UserLogin;
-import com.starshop.models.Wishlist;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.RoleRepository;
 import com.starshop.repositories.UserRepository;

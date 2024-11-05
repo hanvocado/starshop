@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.starshop.models.User;
+import com.starshop.entities.User;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.UserService;
 import com.starshop.utils.RoleName;

@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.entities.compositekeys;
 
 import java.io.Serializable;
 import java.util.UUID;

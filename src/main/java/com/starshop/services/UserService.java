@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.starshop.models.Product;
-import com.starshop.models.User;
+import com.starshop.entities.Product;
+import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.utils.RoleName;
 import com.starshop.utils.ViewMessage;

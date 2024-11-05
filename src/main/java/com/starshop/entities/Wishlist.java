@@ -1,8 +1,11 @@
-package com.starshop.models;
+package com.starshop.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.starshop.entities.compositekeys.WishlistKey;
+
 import jakarta.persistence.*;
 
 @Data

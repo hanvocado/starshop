@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.starshop.models.Category;
-import com.starshop.models.Product;
+import com.starshop.entities.Category;
+import com.starshop.entities.Product;
 import com.starshop.repositories.CategoryRepository;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.services.ProductService;

@@ -1,6 +1,6 @@
 package com.starshop.services;
 
-import com.starshop.models.User;
+import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 
 public interface AuthService {

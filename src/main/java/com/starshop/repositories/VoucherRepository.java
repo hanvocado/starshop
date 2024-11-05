@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.starshop.models.Voucher;
+import com.starshop.entities.Voucher;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {

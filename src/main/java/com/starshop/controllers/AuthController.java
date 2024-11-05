@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.models.AuthenticationResponse;
-import com.starshop.models.User;
+import com.starshop.entities.AuthenticationResponse;
+import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.AuthService;

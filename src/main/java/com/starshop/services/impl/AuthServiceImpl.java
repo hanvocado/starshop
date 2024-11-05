@@ -7,8 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.starshop.models.AuthenticationResponse;
-import com.starshop.models.User;
+import com.starshop.entities.AuthenticationResponse;
+import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.AuthService;

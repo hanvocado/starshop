@@ -3,7 +3,7 @@ package com.starshop.services;
 
 import org.springframework.data.domain.Page;
 
-import com.starshop.models.Voucher;
+import com.starshop.entities.Voucher;
 
 public interface VoucherService {
 	Page<Voucher> getAll(Integer pageNo, Integer pageSize, String search);

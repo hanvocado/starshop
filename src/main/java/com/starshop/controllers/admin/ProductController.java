@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.models.Category;
-import com.starshop.models.Product;
+import com.starshop.entities.Category;
+import com.starshop.entities.Product;
 import com.starshop.services.CategoryService;
 import com.starshop.services.ProductService;
 import com.starshop.utils.*;

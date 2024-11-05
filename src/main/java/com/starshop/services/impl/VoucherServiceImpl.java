@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.starshop.models.Voucher;
+import com.starshop.entities.Voucher;
 import com.starshop.repositories.VoucherRepository;
 import com.starshop.services.VoucherService;
 import java.time.LocalDateTime;

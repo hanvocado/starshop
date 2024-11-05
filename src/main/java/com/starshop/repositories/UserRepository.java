@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.starshop.models.User;
+import com.starshop.entities.User;
 
 public interface UserRepository extends JpaRepository<User, UUID>{
 	boolean existsByUserName(String userName);

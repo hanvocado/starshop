@@ -22,6 +22,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import com.starshop.entities.AuthenticationResponse;
+import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.repositories.UserRepository;
 import com.nimbusds.jose.JOSEException;
@@ -31,8 +33,6 @@ import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.starshop.models.AuthenticationResponse;
-import com.starshop.models.User;
 import com.starshop.services.JwtService;
 import com.starshop.utils.Constants;
 

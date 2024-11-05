@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.models.User;
+import com.starshop.entities.User;
 import com.starshop.services.UserService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.ViewMessage;

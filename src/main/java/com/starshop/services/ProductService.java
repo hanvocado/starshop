@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.starshop.models.Product;
+import com.starshop.entities.Product;
 
 public interface ProductService {
 	List<Product> getAll();

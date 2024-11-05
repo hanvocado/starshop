@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.entities;
 
 import java.time.LocalDateTime;
 import java.util.Date;

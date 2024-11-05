@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.models.Voucher;
+import com.starshop.entities.Voucher;
 import com.starshop.services.VoucherService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.ViewMessage;

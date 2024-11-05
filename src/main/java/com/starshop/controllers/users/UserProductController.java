@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.models.Product;
-import com.starshop.models.User;
+import com.starshop.entities.Product;
+import com.starshop.entities.User;
 import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 

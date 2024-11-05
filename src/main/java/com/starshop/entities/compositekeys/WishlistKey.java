@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.entities.compositekeys;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

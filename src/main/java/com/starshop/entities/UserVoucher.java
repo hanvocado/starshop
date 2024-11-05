@@ -1,4 +1,6 @@
-package com.starshop.models;
+package com.starshop.entities;
+
+import com.starshop.entities.compositekeys.UserVoucherKey;
 
 import jakarta.persistence.*;
 import lombok.*;
