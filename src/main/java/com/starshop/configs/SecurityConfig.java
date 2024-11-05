@@ -29,6 +29,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -121,7 +123,7 @@ public class SecurityConfig {
 	                .csrf(csrf -> csrf.disable())
 	                .cors(cors -> cors.disable())
 	                .authorizeHttpRequests(auth -> {
-	                    auth.requestMatchers("/**").permitAll();
+	                    auth.requestMatchers("/*").permitAll();
 	                    auth.anyRequest().permitAll();
 	                })
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -143,6 +145,13 @@ public class SecurityConfig {
 	    @Bean
 	    PasswordEncoder passwordEncoder() {
 	        return new BCryptPasswordEncoder(10);
+	    }
+	    
+	    @Bean
+	    HttpFirewall allowDoubleSlashHttpFirewall() {
+	        StrictHttpFirewall firewall = new StrictHttpFirewall();
+	        firewall.setAllowUrlEncodedDoubleSlash(true);
+	        return firewall;
 	    }
 
 }

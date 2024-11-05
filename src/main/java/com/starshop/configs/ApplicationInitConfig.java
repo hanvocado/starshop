@@ -29,17 +29,15 @@ public class ApplicationInitConfig {
 	@Bean
 	ApplicationRunner applicationRunner(UserRepository userRepository) {
 		return args -> {
-			if(userRepository.findByUserName("admin").isEmpty()) {
-				User user = User.builder()
-						.userName("admin")
-						.email("admin@gmail.com")
-						.password(passwordEncoder.encode("admin123"))
-						.build();
+			if (userRepository.findByUserName("admin").isEmpty()) {
+				User user = User.builder().userName("admin").email("admin@gmail.com")
+						.password(passwordEncoder.encode("admin123")).build();
 				userService.assignRole(user, RoleName.ADMIN.name());
-				
+
 				userRepository.save(user);
 				log.warn("Admin has been created with default password: admin123, please change it");
 			}
 		};
 	}
+
 }
