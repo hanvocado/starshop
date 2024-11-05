@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 
-		assignRole(user, RoleName.USER);
+		assignRole(user, RoleName.USER.name());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 		userRepository.save(user);
@@ -82,8 +82,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkUserLogin(UserLogin userLogin) {
-		log.warn("userLogin username: {}", userLogin.getUsername());
-		log.warn("userLogin pass :{}", userLogin.getPassword());
 		return userRepository.findByUserName(userLogin.getUsername())
 				.map(user -> passwordEncoder.matches(userLogin.getPassword(), user.getPassword())).orElse(false);
 	}
@@ -121,7 +119,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void assignRole(User user, RoleName roleName) {
+	public void assignRole(User user, String roleName) {
 		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
 		user.setRole(role);
 	}

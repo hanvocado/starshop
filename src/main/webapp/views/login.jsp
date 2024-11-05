@@ -53,7 +53,7 @@
               <div class="card card-lg mb-5">
                 <div class="card-body">
                   <!-- Form -->
-                  <form class="js-validate" action>
+                  <form class="js-validate" action="/auth/login" method="post">
                     <div class="text-center">
                       <div class="mb-5">
                         <h1 class="display-4">Sign in</h1>
@@ -72,9 +72,9 @@
 
                     <!-- Form Group -->
                     <div class="js-form-message form-group">
-                      <label class="input-label" for="signinSrEmail">Your email</label>
+                      <label class="input-label" for="signinSrEmail">User Name</label>
 
-                      <input type="email" class="form-control form-control-lg" name="email" id="signinSrEmail" tabindex="1" placeholder="email@address.com" aria-label="email@address.com" required="" data-msg="Please enter a valid email address.">
+                      <input type="text" class="form-control form-control-lg" name="userName" id="signinSrEmail" tabindex="1" required="" data-msg="Please enter a valid email address.">
                     </div>
                     <!-- End Form Group -->
 

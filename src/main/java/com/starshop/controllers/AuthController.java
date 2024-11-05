@@ -50,58 +50,50 @@ public class AuthController {
 	public String login(Model model) {
 		ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);
-        log.warn("Đã vào login get");
 		return "login";
 	}
 	
-//	@ModelAttribute("userLogin")
-//	@PostMapping("/login")
-//    public String authenticate(Model model, @RequestBody UserLogin userLogin, BindingResult result,
-//			RedirectAttributes redirectAttributes) {
-//		if (result.hasErrors()) {
-//			log.warn("binding sai");
-//			return "redirect:/auth/login";
-//		}
-//		log.warn("userLogin username: {}", userLogin.getUsername());
-//		log.warn("userLogin pass :{}", userLogin.getPassword());
-//        boolean validated = userService.checkUserLogin(userLogin);
-//        if(!validated) {
-//        	log.warn("validate sai");
-//        	redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.validateLoginFailed));
-//	        return "redirect:/auth/login"; 
-//        }
-//        
-//        User authenticatedUser = authService.authenticate(userLogin);
-//        model.addAttribute("user", authenticatedUser);
+	@PostMapping("/login")
+    public String authenticate(Model model, @ModelAttribute("userLogin") UserLogin userLogin, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			return "redirect:/auth/login";
+		}
+		
+        boolean validated = userService.checkUserLogin(userLogin);
+        if(!validated) {
+        	redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.validateLoginFailed));
+	        return "redirect:/auth/login"; 
+        }
+        
+        User authenticatedUser = authService.authenticate(userLogin);
+        model.addAttribute("user", authenticatedUser);
+
+//        String jwtToken = jwtService.generateToken(authenticatedUser);
+//        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+        return "redirect:/user/products";
+    }
+//	@Autowired
+//    private AuthenticationManager authenticationManager;
+//	 @PostMapping("/login")
+//	    public ResponseEntity<?> login(@RequestBody UserLogin userLogin) throws IllegalAccessException {
+//	        Authentication authentication =
+//	                authenticationManager
+//	                        .authenticate(new UsernamePasswordAuthenticationToken(
+//	                                userLogin.getUsername(),
+//	                                userLogin.getPassword()));
+//	        SecurityContextHolder.getContext().setAuthentication(authentication);
 //
-////        String jwtToken = jwtService.generateToken(authenticatedUser);
-////
-////        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
+//	        UserLogin userDetails = (UserLogin) authentication.getPrincipal();
 //
-//        return "redirect:/user/products";
-//        	
-//    }
-	@Autowired
-    private AuthenticationManager authenticationManager;
-	 @PostMapping("/login")
-	    public ResponseEntity<?> login(@RequestBody UserLogin userLogin) throws IllegalAccessException {
-	        Authentication authentication =
-	                authenticationManager
-	                        .authenticate(new UsernamePasswordAuthenticationToken(
-	                                userLogin.getUsername(),
-	                                userLogin.getPassword()));
-	        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-	        UserLogin userDetails = (UserLogin) authentication.getPrincipal();
-
-
-	        log.info("Token requested for user :{}", authentication.getAuthorities());
-	        String token = jwtService.generateToken(authentication);
-
-//	        AuthDTO.Response response = new AuthDTO.Response("User logged in successfully", token);
-
-	        return ResponseEntity.ok(token);
-	    }
+//
+//	        log.info("Token requested for user :{}", authentication.getAuthorities());
+//	        String token = jwtService.generateToken(authentication);
+//
+////	        AuthDTO.Response response = new AuthDTO.Response("User logged in successfully", token);
+//
+//	        return ResponseEntity.ok(token);
+//	    }
 	 
 	@GetMapping("/register")
 	public String register(Model model) {

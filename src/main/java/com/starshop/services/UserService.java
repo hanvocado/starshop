@@ -33,7 +33,8 @@ public interface UserService {
 
 	boolean checkUserLogin(UserLogin userLogin);
 
-	void assignRole(User user, RoleName roleName);
+	void assignRole(User user, String roleName);
+
 
 //	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
 

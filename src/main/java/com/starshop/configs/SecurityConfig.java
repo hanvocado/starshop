@@ -34,9 +34,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import com.starshop.repositories.UserRepository;
 import com.starshop.services.impl.JpaUserDetailsService;
-import com.starshop.services.impl.UserServiceImpl;
 import com.starshop.utils.Constants;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,42 +44,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity
 @Slf4j
 public class SecurityConfig {
-	private final String[] PUBLIC_ENDPOINTS = { "/auth/login", "/auth/register", "/" };
+	private final String[] PUBLIC_ENDPOINTS = { "/auth/login/**", "/auth/register/**", 
+			"/admin/categories/**", "/admin/products/**", "/admin/vouchers/**" };
 
-//    @Bean
-//    SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS)
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated());
-//
-//        httpSecurity.oauth2ResourceServer(oauth2 -> 
-//        		oauth2.jwt(JwtConfigurer -> JwtConfigurer.decoder(jwtDecoder())
-//        				.jwtAuthenticationConverter(jwtAuthenticationConverter())));
-//        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-//
-//        return httpSecurity.build();
-//    } 	
-//    
-//    @Bean
-//    JwtAuthenticationConverter jwtAuthenticationConverter() {
-//        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-//
-//        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-//
-//        return jwtAuthenticationConverter;
-//    }
-//	
-//	@Bean
-//	JwtDecoder jwtDecoder() {
-//		  SecretKeySpec secretKeySpec = new SecretKeySpec(Constants.SIGNER_KEY.getBytes(), "HS512");
-//          return NimbusJwtDecoder
-//        		  .withSecretKey(secretKeySpec)
-//                  .macAlgorithm(MacAlgorithm.HS512)
-//                  .build();
-//	}
 //	
 //	@Autowired
 //	@Lazy
@@ -136,22 +101,6 @@ public class SecurityConfig {
 //		return config.getAuthenticationManager();
 //	}
 //
-//	@Bean
-//	CorsConfigurationSource corsConfigurationSource() {
-//		CorsConfiguration configuration = new CorsConfiguration();
-//
-//		configuration.setAllowedOrigins(List.of("http://localhost:8080"));
-//		configuration.setAllowedMethods(List.of("GET", "POST"));
-//		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-//
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//		source.registerCorsConfiguration("/**", configuration);
-//
-//		return source;
-//	}
-	
-	
 	  @Autowired
 	    private JpaUserDetailsService userDetailsService;
 
@@ -165,8 +114,6 @@ public class SecurityConfig {
 	        return new ProviderManager(authProvider);
 	    }
 
-
-
 	    @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
 
@@ -175,7 +122,7 @@ public class SecurityConfig {
 	                .cors(cors -> cors.disable())
 	                .authorizeHttpRequests(auth -> {
 	                    auth.requestMatchers("/**").permitAll();
-	                    auth.anyRequest().authenticated();
+	                    auth.anyRequest().permitAll();
 	                })
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
