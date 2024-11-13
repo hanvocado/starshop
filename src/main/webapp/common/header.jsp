@@ -60,13 +60,13 @@
                                 <small class="text">WishList</small>
                             </a> --%>
                             <c:if test="${not empty user}">
-        <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
-            <div class="icon">
-                <i class="fa fa-heart"></i>
-            </div>
-            <small class="text">WishList</small>
-        </a>
-    </c:if>
+						       <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
+						           <div class="icon">
+						               <i class="fa fa-heart"></i>
+						           </div>
+						           <small class="text">WishList</small>
+						       </a>
+						   </c:if>
                         </div>
                         <div class="widget__header">
                             <a href="{% url 'cart-page' %}" class="widget__view text-decoration-none">
