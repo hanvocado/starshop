@@ -2,6 +2,7 @@ package com.starshop.entities;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -29,7 +30,7 @@ public class Category implements Serializable {
 	private boolean isPublished;
 	
 	@ManyToMany(mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products;
 	
 	public Category(String name) {
 		this.name = name;

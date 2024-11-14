@@ -49,7 +49,7 @@
                             </li>
                             
                             <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/categories"/>" title="Orders" data-placement="left">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/orders"/>" title="Orders" data-placement="left">
                                     <i class="tio-money nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Orders</span>
                                 </a>

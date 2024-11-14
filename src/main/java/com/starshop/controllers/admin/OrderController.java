@@ -105,6 +105,7 @@ public class OrderController {
 	public String details(@PathVariable("id") Long orderId, String status, Model model, RedirectAttributes attributes, HttpServletRequest request) {
 		Order order = orderService.findByOrderId(orderId);
 		if (order != null) {
+			model.addAttribute("order", order);
 			return "admin/order-details";			
 		} else {
 			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));

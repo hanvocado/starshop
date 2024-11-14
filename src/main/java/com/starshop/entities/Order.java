@@ -2,6 +2,7 @@ package com.starshop.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import com.starshop.utils.Converter;
@@ -29,7 +30,7 @@ public class Order implements Serializable {
 	private User user;
 	
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductLine> lines;
+    private List<ProductLine> lines;
 	
 	@Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
