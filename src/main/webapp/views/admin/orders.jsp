@@ -86,8 +86,8 @@
 									<i class="tio-search"></i>
 								</div>
 							</div>
-							<input id="datatableSearch" value='${search}' name="search"
-								type="search" class="form-control" placeholder="Tìm bằng tên"
+							<input id="datatableSearch" value='${search}' name="searchId"
+								type="search" class="form-control" placeholder="Tìm bằng mã đơn hàng"
 								aria-label="Search orders">
 						</div>
 						<!-- End Search -->
@@ -135,31 +135,47 @@
              <c:forEach items="${orders}" var="order" varStatus="STT">
               <tr>
                 <td class="table-column-pr-0 text-center">
-                     <h5 class="text-hover-primary mb-0">${order.id }</h5>
+                	<a href="<c:url value="/admin/orders/details/${order.id}"/>">
+					          	<h5 class="text-primary mb-0">#${order.id }</h5></a>
+                     
                 </td>
                 
                 <td>${order.formattedOrderDate }</td>
                 
 				<td class="text-center">${order.user.userName }</td>
 								
-                <td><fmt:formatNumber value = "${order.totalAmount }" type = "currency"/></td>
+                <td><fmt:formatNumber value = "${order.totalAmount }" type = "currency"/>
+                	<c:choose>
+                		<c:when test="${order.isPayed()}">
+		                	<span class="badge badge-soft-success">
+		                      <span class="legend-indicator bg-success"></span>Paid
+		                    </span>
+                		</c:when>
+                		<c:otherwise>
+                			<span class="badge badge-soft-warning">
+		                      <span class="legend-indicator bg-warning"></span>Pending
+		                    </span>
+                		</c:otherwise>
+                	</c:choose>
+                </td>
 				                	
 				<c:if test="${not empty order.shipper }"><th>${order.shipper.userName }</th></c:if>               				
-				<td>
+				<td class="text-end">
 				  <c:choose>
 					<c:when test="${status == 'pending' }">
 				       <a href="<c:url value="/admin/orders/update/${order.id}/processing"/>" class="btn btn-primary btn-xs">
 					          	<i class="tio-archive"></i> Xác nhận</a> 					
 					</c:when>
 					<c:when test="${status == 'processing' }">
-				       <a data-toggle="modal" data-target="#shippersModal" class="btn btn-warning btn-xs"
+				       <a data-toggle="modal" data-target="#shippersModal" class="btn btn-info btn-xs"
 				       		onclick="assignShipperFor(${order.id})">
 					          	<i class="tio-archive"></i> Giao shipper</a> 					
 					</c:when>
 					
 				  </c:choose>
-				  	<a href="<c:url value="/admin/orders/details/${order.id}"/>" class="btn btn-info btn-xs">
-					          	<i class="tio-info"></i>Chi tiết</a>		          
+				  <a class="btn btn-sm btn-white" href="<c:url value="/admin/orders/details/${order.id}"/>">
+                        <i class="tio-visible-outlined"></i> Chi tiết
+                      </a>	          
 	            </td>
 			
               </tr>
@@ -171,7 +187,54 @@
        
        <!-- Footer -->
        <div class="card-footer">
-         <%@include file="/common/pagination.jsp"%>
+         <!-- Pagination -->
+    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+        <div class="col-md mb-2 mb-sm-0">
+            <div class="d-flex justify-content-end justify-content-sm-end align-items-end">
+				            <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- footer Pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <c:if test="${isFirst }">
+                            <li class="page-item disabled">
+                        </c:if>
+                        <c:if test="${!isFirst }">
+                            <li class="page-item">
+                        </c:if>
+                        <a class="page-link" href="<c:url value='/admin/orders?status=${status}&pageNo=${pageNo-1}' />" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        </li>
+
+                        <c:forEach var="i" begin="1" end="${totalPages}">
+                            <li class="page-item <c:if test=" ${pageNo==i-1}">active</c:if>">
+                                <a class="page-link" href="<c:url value='/admin/orders?status=${status}&pageNo=${i-1}' />">${i}</a>
+                            </li>
+                        </c:forEach>
+
+                        <c:if test="${isLast }">
+                            <li class="page-item disabled">
+                        </c:if>
+                        <c:if test="${!isLast }">
+                            <li class="page-item">
+                        </c:if>
+                        <a class="page-link" href="<c:url value='/admin/orders?status=${status}&pageNo=${pageNo+1}' />" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End footer Pagination -->
+            </div>
+				
+
+        	</div>
+        </div>
+    </div>
+    <!-- End Pagination -->
+       
        </div>
        <!-- End Footer -->
 

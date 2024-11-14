@@ -82,26 +82,26 @@ public class ProductServiceImpl implements ProductService {
 	public Page<Product> getProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		if (search != null && !search.isBlank()) {
-			productRepo.findByNameContainingIgnoreCase(search, pageable);
-		}
-		return productRepo.findAll(pageable);
+			return productRepo.findByNameContainingIgnoreCase(search, pageable);
+		} else
+			return productRepo.findAll(pageable);
 	}
 
 	@Override
 	public Page<Product> getPublishedProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		if (search != null && !search.isBlank()) {
-			productRepo.findByNameContainingIgnoreCaseAndIsPublishedTrue(search, pageable);
-		}
-		return productRepo.findByIsPublishedTrue(pageable);
+			return productRepo.findByNameContainingIgnoreCaseAndIsPublishedTrue(search, pageable);
+		} else
+			return productRepo.findByIsPublishedTrue(pageable);
 	}
 
 	@Override
 	public Page<Product> getUnpublishedProductsPagination(Integer pageNo, Integer pageSize, String search) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		if (search != null && !search.isBlank()) {
-			productRepo.findByNameContainingIgnoreCaseAndIsPublishedFalse(search, pageable);
-		}
-		return productRepo.findByIsPublishedFalse(pageable);
+			return productRepo.findByNameContainingIgnoreCaseAndIsPublishedFalse(search, pageable);
+		} else
+			return productRepo.findByIsPublishedFalse(pageable);
 	}
 }

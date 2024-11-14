@@ -21,6 +21,8 @@ import com.starshop.services.ShipperService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.OrderStatus;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/admin/orders")
 public class OrderController {
@@ -32,7 +34,11 @@ public class OrderController {
 	private ShipperService shipperService;
 
 	@RequestMapping()
-	public String orders(Model model, String status, String search, Integer pageNo, Integer pageSize) {
+	public String orders(Model model, String status, Long searchId, Integer pageNo, Integer pageSize) {
+		if (searchId != null) {
+			return "redirect:/admin/orders/details/" + searchId;
+		}
+		
 		OrderStatus orderStatus;
 		if (pageNo == null)
 			pageNo = 0;
@@ -47,6 +53,7 @@ public class OrderController {
 			List<User> shippers = shipperService.findAllShippers();
 			model.addAttribute("shippers", shippers);
 		}
+		
 
 		Page<Order> orders = orderService.findByStatus(orderStatus, pageNo, pageSize);
 
@@ -92,6 +99,18 @@ public class OrderController {
 		}
 
 		return "redirect:/admin/orders?status=" + OrderStatus.READYFORSHIP.name().toLowerCase();
+	}
+	
+	@GetMapping("/details/{id}")
+	public String details(@PathVariable("id") Long orderId, String status, Model model, RedirectAttributes attributes, HttpServletRequest request) {
+		Order order = orderService.findByOrderId(orderId);
+		if (order != null) {
+			return "admin/order-details";			
+		} else {
+			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));
+			String referer = request.getHeader("Referer"); 
+			return "redirect:" + referer;
+		}
 	}
 
 }

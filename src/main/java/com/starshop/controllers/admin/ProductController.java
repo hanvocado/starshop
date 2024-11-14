@@ -50,6 +50,7 @@ public class ProductController {
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
 		model.addAttribute("status", status);
+		model.addAttribute("search", search);
 		
 		ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);

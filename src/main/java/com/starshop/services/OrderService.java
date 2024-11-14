@@ -31,4 +31,6 @@ public interface OrderService {
 	Page<Order> findByStatus(OrderStatus status, Integer pageNo, Integer pageSize);
 	
 	Order assignShipper(Long orderId, UUID shipperId);
+	
+	Order findByOrderId(Long orderId);
 }
