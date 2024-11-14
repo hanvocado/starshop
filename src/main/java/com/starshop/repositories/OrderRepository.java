@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.starshop.entities.Order;
-import com.starshop.models.OrderStatus;
 import com.starshop.models.ShipperRecord;
+import com.starshop.utils.OrderStatus;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {

@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.starshop.entities.Order;
 import com.starshop.entities.User;
-import com.starshop.models.OrderStatus;
-import com.starshop.models.PaymentType;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.OrderService;
 import com.starshop.services.UserService;
+import com.starshop.utils.OrderStatus;
+import com.starshop.utils.PaymentType;
 import com.starshop.utils.RoleName;
 
 import lombok.AccessLevel;
@@ -95,7 +95,7 @@ public class ApplicationInitConfig {
 	
 	@Transactional
     private void createOrdersForUser(User user, int numberOfOrders) {
-		List<OrderStatus> statuses = List.of(OrderStatus.DELIVERED, OrderStatus.SHIPPING, OrderStatus.SHIPFAILED);
+		List<OrderStatus> statuses = List.of(OrderStatus.PENDING, OrderStatus.DELIVERED, OrderStatus.SHIPPING, OrderStatus.SHIPFAILED);
         IntStream.rangeClosed(1, numberOfOrders).forEach(i -> {
             Order order = new Order();
             order.setUser(user);
@@ -105,7 +105,8 @@ public class ApplicationInitConfig {
             OrderStatus status = statuses.get(i % statuses.size());
             order.setStatus(status);
             
-            order.setShipper(userRepository.findByEmail("shipper1@gmail.com").get());
+            if (order.getStatus() != OrderStatus.PENDING)
+            	order.setShipper(userRepository.findByEmail("shipper1@gmail.com").get());
             
             order.setTotalAmount(100 + i);  // Example amount
             order.setPayMethod(PaymentType.CASH);  // Example payment method

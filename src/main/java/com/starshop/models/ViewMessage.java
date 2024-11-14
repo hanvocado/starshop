@@ -1,4 +1,4 @@
-package com.starshop.utils;
+package com.starshop.models;
 
 import lombok.Data;
 

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Category;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.CategoryService;
 import com.starshop.utils.Constants;
-import com.starshop.utils.ViewMessage;
 
 import jakarta.validation.Valid;
 

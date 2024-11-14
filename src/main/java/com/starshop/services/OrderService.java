@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.starshop.entities.Order;
-import com.starshop.models.OrderStatus;
 import com.starshop.models.ShipperRecord;
+import com.starshop.utils.OrderStatus;
 
 public interface OrderService {
 	int updateOrderStatus(Long orderId, OrderStatus newStatus);
@@ -29,4 +29,6 @@ public interface OrderService {
 	Long count();
 	
 	Page<Order> findByStatus(OrderStatus status, Integer pageNo, Integer pageSize);
+	
+	Order assignShipper(Long orderId, UUID shipperId);
 }

@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.utils;
 
 public enum PaymentType {
 	CASH,

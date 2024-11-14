@@ -17,9 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.User;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.UserService;
 import com.starshop.utils.Constants;
-import com.starshop.utils.ViewMessage;
 
 import jakarta.validation.Valid;
 

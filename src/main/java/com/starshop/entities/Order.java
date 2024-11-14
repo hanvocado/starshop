@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.starshop.models.OrderStatus;
-import com.starshop.models.PaymentType;
 import com.starshop.utils.Converter;
+import com.starshop.utils.OrderStatus;
+import com.starshop.utils.PaymentType;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

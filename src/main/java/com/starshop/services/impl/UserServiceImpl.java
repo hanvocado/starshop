@@ -22,6 +22,7 @@ import com.starshop.entities.Role;
 import com.starshop.entities.User;
 import com.starshop.entities.Wishlist;
 import com.starshop.models.UserLogin;
+import com.starshop.models.ViewMessage;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.RoleRepository;
 import com.starshop.repositories.UserRepository;
@@ -29,7 +30,6 @@ import com.starshop.repositories.WishlistRepository;
 import com.starshop.services.UserService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.RoleName;
-import com.starshop.utils.ViewMessage;
 
 import lombok.extern.slf4j.Slf4j;
 

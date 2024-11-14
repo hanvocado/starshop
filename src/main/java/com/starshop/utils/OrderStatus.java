@@ -1,4 +1,4 @@
-package com.starshop.models;
+package com.starshop.utils;
 
 public enum OrderStatus {
 	PENDING, // chờ xác nhận

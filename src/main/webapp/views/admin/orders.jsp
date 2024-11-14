@@ -124,9 +124,10 @@
                <th>Ngày đặt hàng</th>
                <th class="text-center">Khách hàng</th>
                <th class="text-center">Số tiền</th>
-               <th>Trạng thái</th>
-               <th>Shipper</th>
-               <th class="text-center">Hành động</th>
+               
+               <c:if test="${status != 'pending' && status != 'processing' }"><th>Shipper</th></c:if>
+               
+               <th>Hành động</th>
              </tr>
            </thead>
 
@@ -142,20 +143,23 @@
 				<td class="text-center">${order.user.userName }</td>
 								
                 <td><fmt:formatNumber value = "${order.totalAmount }" type = "currency"/></td>
-				
-                <td>${order.status }</td>
-                
-				<td>${order.shipper.userName }</td>
-				
+				                	
+				<c:if test="${not empty order.shipper }"><th>${order.shipper.userName }</th></c:if>               				
 				<td>
-					<c:if test="${status == 'pending' }">
+				  <c:choose>
+					<c:when test="${status == 'pending' }">
 				       <a href="<c:url value="/admin/orders/update/${order.id}/processing"/>" class="btn btn-primary btn-xs">
 					          	<i class="tio-archive"></i> Xác nhận</a> 					
-					</c:if>
-					<c:if test="${status == 'processing' }">
-				       <a href="<c:url value="/admin/orders/update/${order.id}/readyforship"/>" class="btn btn-primary btn-xs">
+					</c:when>
+					<c:when test="${status == 'processing' }">
+				       <a data-toggle="modal" data-target="#shippersModal" class="btn btn-warning btn-xs"
+				       		onclick="assignShipperFor(${order.id})">
 					          	<i class="tio-archive"></i> Giao shipper</a> 					
-					</c:if>			          
+					</c:when>
+					
+				  </c:choose>
+				  	<a href="<c:url value="/admin/orders/details/${order.id}"/>" class="btn btn-info btn-xs">
+					          	<i class="tio-info"></i>Chi tiết</a>		          
 	            </td>
 			
               </tr>
@@ -174,12 +178,12 @@
      </div>
      <!-- End Card -->
      
-     <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+     <div class="modal fade" id="shippersModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
               <!-- Header -->
               <div class="modal-header">
-                  <h4 id="inviteUserModalTitle" class="modal-title">Giao shipper</h4>
+                  <h4 id="inviteUserModalTitle" class="modal-title">Chọn shipper</h4>
 
                   <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
                       <i class="tio-clear tio-lg"></i>
@@ -188,24 +192,21 @@
               <!-- End Header -->
               <!-- Body -->
               <div class="modal-body">
-              <form id="orderForm" action="<c:url value="/admin/orders/update/${order.id}/readyforship"/>" method="post">
-				
+              <form id="orderForm" action="<c:url value="/admin/orders/assignshipper"/>" method="post">
+				<input name="orderId" id="orderId" type="hidden" />
 				<!-- Dropdown -->
 				<div class="btn-group">
-				  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButtonPrimary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Chọn shipper
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonPrimary">
-				    <a class="dropdown-item" href="#">Action</a>
-				    <a class="dropdown-item" href="#">Another action</a>
-				    <a class="dropdown-item" href="#">Something else here</a>
-				  </div>
+				  <select name="shipperId" class="form-control">
+				  	<c:forEach var="shipper" items="${shippers }">
+				  		 <option value="${shipper.id}">${shipper.userName }</option>
+				  	</c:forEach>
+				  </select>
 				</div>
 				<!-- End Dropdown -->
 				<div id="order-modal-text">Bạn chắc chắn muốn giao đơn hàng cho shipper này?</div>
                
 	               <div class="d-flex justify-content-center">
-	                	<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Xóa</button>	                
+	                	<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">OK</button>	                
 	               </div>
 		 		</form>
               </div>
@@ -219,5 +220,9 @@
 	   setTimeout(function() {
 	       document.getElementById('message-alert').style.display = 'none';
 	     }, 6000);
+	   
+	   function assignShipperFor(orderId) {
+		   document.getElementById('orderId').value = orderId;
+	   }
 	  </script>
 </body>

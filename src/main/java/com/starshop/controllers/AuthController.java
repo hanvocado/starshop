@@ -23,13 +23,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.starshop.entities.AuthenticationResponse;
 import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
+import com.starshop.models.ViewMessage;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.AuthService;
 import com.starshop.services.JwtService;
 import com.starshop.services.UserService;
 import com.starshop.services.impl.UserServiceImpl;
 import com.starshop.utils.Constants;
-import com.starshop.utils.ViewMessage;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Voucher;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.VoucherService;
 import com.starshop.utils.Constants;
-import com.starshop.utils.ViewMessage;
 
 import jakarta.validation.Valid;
 

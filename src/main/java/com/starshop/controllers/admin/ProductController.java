@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Category;
 import com.starshop.entities.Product;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.CategoryService;
 import com.starshop.services.ProductService;
 import com.starshop.utils.*;
