@@ -68,6 +68,7 @@ public class AuthController {
         
         User authenticatedUser = authService.authenticate(userLogin);
         model.addAttribute("user", authenticatedUser);
+        log.warn(authenticatedUser.getRole().toString());
 
 //        String jwtToken = jwtService.generateToken(authenticatedUser);
 //        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());

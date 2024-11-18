@@ -27,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
@@ -35,6 +37,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import jakarta.servlet.DispatcherType;
 
 import com.starshop.services.impl.JpaUserDetailsService;
 import com.starshop.utils.Constants;
@@ -118,20 +122,38 @@ public class SecurityConfig {
 
 	    @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
 	        return http
 	                .csrf(csrf -> csrf.disable())
-	                .cors(cors -> cors.disable())
-	                .authorizeHttpRequests(auth -> {
-	                    auth.requestMatchers("/*").permitAll();
-	                    auth.anyRequest().permitAll();
-	                })
+	                .authorizeHttpRequests(authorize -> authorize
+	                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+	                        .requestMatchers("/auth/login/**", "/auth/register/**").permitAll()
+	                        .requestMatchers("/exec/**", "/img/**", "/shop/**").permitAll()
+	                        .requestMatchers("/admin/**").hasRole("ADMIN")
+	                        .requestMatchers("/user/**").hasRole("USER")
+	                        .anyRequest().denyAll()
+	                )
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
+	                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> 
+	                        jwtConfigurer.decoder(jwtDecoder())
+	                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
+	                ))
 	                .userDetailsService(userDetailsService)
 	                .httpBasic(Customizer.withDefaults())
 	                .build();
 	    }
+
+	    
+	    @Bean
+	    JwtAuthenticationConverter jwtAuthenticationConverter() {
+	        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+	        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+
+	        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+	        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+	        return jwtAuthenticationConverter;
+	    }
+	    
 
 	    @Bean
 		JwtDecoder jwtDecoder() {
