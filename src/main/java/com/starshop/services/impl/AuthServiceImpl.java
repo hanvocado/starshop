@@ -3,6 +3,7 @@ package com.starshop.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,17 +39,17 @@ public class AuthServiceImpl implements AuthService {
 //	}
 	
 	@Override
-	public User authenticate(UserLogin userLogin) {
+	public Authentication authenticate(UserLogin userLogin) {
 		log.warn("userLogin username: {}", userLogin.getUsername());
 		log.warn("userLogin pass :{}", userLogin.getPassword());
-        authenticationManager.authenticate(
+        return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userLogin.getUsername(),
                         userLogin.getPassword()
                 )
         );
 
-        return userRepository.findByUserName(userLogin.getUsername())
-                .orElseThrow();
+//        return userRepository.findByUserName(userLogin.getUsername())
+//                .orElseThrow();
     }
 }

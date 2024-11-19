@@ -55,7 +55,7 @@
             <div class="card card-lg mb-5">
               <div class="card-body">
                 <!-- Form -->
-                <form class="js-validate" action="/user/add" method="post">
+                <form class="js-validate" action="/register" method="post">
                   <div class="text-center">
                     <div class="mb-5">
                       <h1 class="display-4">Create your account</h1>

@@ -29,40 +29,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-//	 @PostMapping("testadd")
-//	    public User addUser(@RequestBody User user) {
-//	        return userService.addUser(user);
-//	    }
-//	 
-//	@GetMapping
-//	public String usersList(Model model) {
-//		model.addAttribute("users", userService.getAllUsers());
-//		return "user/list";
-//	}
-//
-//	@GetMapping("/add")
-//	public String showAddUserForm(Model model) {
-//		model.addAttribute("user", new User());
-//		return "user/add";
-//	}
-
-	@PostMapping("/add")
-	public String addUser(ModelMap model, @Valid @ModelAttribute("user") User user, BindingResult result,
-			RedirectAttributes redirectAttributes) {
-		if (result.hasErrors()) {
-			return "redirect:/auth/register";
-		}
-
-		boolean success = userService.addUser(user);
-		if (!success) {
-			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.registerFailed));
-	        return "redirect:/auth/register"; 
-	    }
-
-		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", Constants.registerSuccess));
-		return "redirect:/auth/login";
-	}
-
 	@GetMapping("/edit/{id}")
 	public String showEditUserForm(@PathVariable UUID id, Model model) {
 		model.addAttribute("user", userService.getUserById(id)

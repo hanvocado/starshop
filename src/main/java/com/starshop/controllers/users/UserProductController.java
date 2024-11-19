@@ -22,7 +22,7 @@ import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 
 @Controller
-@RequestMapping("/user/products")
+//@RequestMapping("/user/products")
 public class UserProductController {
 
 	@Autowired
@@ -31,7 +31,7 @@ public class UserProductController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("")
+	@GetMapping("/user/products")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
 			@RequestParam(required = false) UUID userId) {
 

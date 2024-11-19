@@ -22,29 +22,31 @@ public class UserLogin implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	private String userName;
-    private String password;
-    Set<SimpleGrantedAuthority> authorities;
+	private String password;
+	Set<SimpleGrantedAuthority> authorities;
 
-    public UserLogin(User user) {
-        userName = user.getUserName();
-        password = user.getPassword();
-        authorities = Collections.singleton(new SimpleGrantedAuthority("USER"));
-    }
+	public UserLogin(User user) {
+		this.userName = user.getUserName();
+		this.password = user.getPassword();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+		authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    @Override
-    public String getUsername() {
-        return userName;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return userName;
+	}
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -69,5 +71,5 @@ public class UserLogin implements UserDetails {
 	public String getUserName() {
 		return userName;
 	}
-	
+
 }

@@ -40,8 +40,10 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import jakarta.servlet.DispatcherType;
 
+import com.starshop.entities.Role;
 import com.starshop.services.impl.JpaUserDetailsService;
 import com.starshop.utils.Constants;
+import com.starshop.utils.RoleName;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -128,9 +130,9 @@ public class SecurityConfig {
 	                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
 	                        .requestMatchers("/auth/login/**", "/auth/register/**").permitAll()
 	                        .requestMatchers("/exec/**", "/img/**", "/shop/**").permitAll()
-	                        .requestMatchers("/admin/**").hasRole("ADMIN")
-	                        .requestMatchers("/user/**").hasRole("USER")
-	                        .anyRequest().denyAll()
+	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
+	                        .requestMatchers("/user/**").hasAuthority("USER")
+	                        .anyRequest().authenticated()
 	                )
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> 
