@@ -1,5 +1,6 @@
 package com.starshop.configs;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -128,10 +129,11 @@ public class SecurityConfig {
 	                .csrf(csrf -> csrf.disable())
 	                .authorizeHttpRequests(authorize -> authorize
 	                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-	                        .requestMatchers("/auth/login/**", "/auth/register/**").permitAll()
-	                        .requestMatchers("/exec/**", "/img/**", "/shop/**").permitAll()
-	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
-	                        .requestMatchers("/user/**").hasAuthority("USER")
+	                        .requestMatchers("/**").permitAll()
+//	                        .requestMatchers("/auth/login/**", "/auth/register/**").permitAll()
+//	                        .requestMatchers("/exec/**", "/img/**", "/shop/**").permitAll()
+//	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
+//	                        .requestMatchers("/user/**").hasAuthority("USER")
 	                        .anyRequest().authenticated()
 	                )
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -143,7 +145,6 @@ public class SecurityConfig {
 	                .httpBasic(Customizer.withDefaults())
 	                .build();
 	    }
-
 	    
 	    @Bean
 	    JwtAuthenticationConverter jwtAuthenticationConverter() {

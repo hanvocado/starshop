@@ -1,5 +1,8 @@
 package com.starshop.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +32,7 @@ import com.starshop.services.UserService;
 import com.starshop.utils.Constants;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +59,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public String authenticate(Model model, @ModelAttribute("userLogin") UserLogin userLogin, BindingResult result,
-			RedirectAttributes redirectAttributes, HttpServletResponse response) {
+			RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request) {		
 		if (result.hasErrors()) {
 			return "redirect:/auth/login";
 		}
@@ -71,18 +75,19 @@ public class AuthController {
 		model.addAttribute("user", authentication);
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwtToken = jwtService.generateToken(authentication);
-		response.addHeader("Authorization", "Bearer " + jwtToken);
-		
-//		// Lưu token vào cookie
-//		Cookie jwtCookie = new Cookie("JWT", jwtToken);
-//		jwtCookie.setHttpOnly(true); // Bảo vệ khỏi JavaScript (giảm nguy cơ XSS)
-//		jwtCookie.setPath("/"); // Áp dụng cookie cho toàn bộ ứng dụng
-//		jwtCookie.setMaxAge(3600); // Thời gian sống của cookie (giả sử là 1 giờ)
-//		response.addCookie(jwtCookie);
+		String jwt = jwtService.generateToken(authentication);
 
+//		// Đặt JWT vào Cookie
+//	    Cookie cookie = new Cookie("jwt", jwt);
+//	    cookie.setHttpOnly(true); 
+//	    cookie.setSecure(true);   
+//	    cookie.setPath("/");      
+//	    cookie.setMaxAge(3600);   
+//	    response.addCookie(cookie);	
+		redirectAttributes.addFlashAttribute("jwt", jwt);
+		
 		UserLogin user = (UserLogin) authentication.getPrincipal();
-		user.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+		user.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority())); 
 
 		return "redirect:/user/products";
 	}
