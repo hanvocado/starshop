@@ -22,7 +22,6 @@ import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 
 @Controller
-//@RequestMapping("/user/products")
 public class UserProductController {
 
 	@Autowired
@@ -31,7 +30,7 @@ public class UserProductController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("/user/products")
+	@GetMapping("/products")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
 			@RequestParam(required = false) UUID userId) {
 
@@ -74,4 +73,23 @@ public class UserProductController {
 		model.addAttribute("wishlist", wishlist);
 		return "user/wishlist";
 	}
+	
+	@GetMapping("/user/cart")
+	public String abc() {
+		return "user/cart";
+	}
+	
+	@GetMapping("/user/payment")
+	public String abd() {
+		return "user/payment";
+	}
+	
+    @GetMapping("/products/{id}")
+    public String productDetails(@PathVariable Long id, Model model) {
+        Product product = productService.getById(id);
+        model.addAttribute("product", product);
+        return "user/product-details"; 
+    }
+    
+    
 }

@@ -1,131 +1,126 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@include file="/common/taglibs.jsp"%>
 
 <header class="section__header">
     <section class="header_main border_bottom">
         <div class="container">
             <div class="row align-items-center">
+                <!-- Logo -->
                 <div class="col-xl-2 col-lg-3 col-md-12">
-                    <a href="" class="brand--wrap text-decoration-none">
+                    <a href="${pageContext.request.contextPath}/home" class="brand--wrap text-decoration-none">
                         <h1 class="logo">STAR SHOP</h1>
                     </a>
-                    <!-- brand--wrap.// -->
                 </div>
-                <!-- col.// -->
+                <!-- Search Bar -->
                 <div class="col-xl-6 col-lg-5 col-md-6">
-                    <form action="#" class="fs__form search--header">
+                    <form action="${pageContext.request.contextPath}/search" class="fs__form search--header">
                         <div class="input-group w-100">
                             <i class="fa fa-search"></i>
-                            <input type="text" class="form-control" placeholder="Why are you searching? When we have some exciting categories...">
-
+                            <input type="text" class="form-control" placeholder="What are you looking for?" name="query">
                         </div>
                     </form>
-                    <!-- search--wrap.// -->
-                    
                 </div>
-                <!-- col.// -->
+                <!-- User Menu -->
                 <div class="col-xl-4 col-lg-4 col-md-6">
                     <div class="widgets--wrap float-md-right">
-                        <div class="widget__header mr-2 ">
-                            <a class="nav-link widget__view text-decoration-none" href="{% url 'login-page' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="'icon">
-                                  <i class="fas fa-user-circle"></i>
-                                </div>
-                                <small class="text">Account</small>
-                              </a>
-                              <ul class="dropdown-menu">
-                                <%-- <%	
-                        
-                        	if (userId != null) {
-                        %>
-                        		<li><a class="dropdown-item" href="{% url 'signout-page' %}">Logout </a></li>
-                        	<%
-                        	} else {
-                        	%>
-                        		<li><a class="dropdown-item" href="{% url 'login-page' %}">Login </a></li>
-                                <li><a class="dropdown-item" href="{% url 'signup-page' %}">Sign Up</a></li>
-                        	<%
-                        	}                        	
-                        	%> --%>
-                              </ul>
-                              
-                              
+                        <!-- Account -->
+                        <div class="widget__header mr-2 dropdown">
+                            <c:choose>
+                                <!-- Nếu user có role 'USER' -->
+                                <c:when test="${not empty user and fn:contains(user.role, 'USER')}">
+                                    <a class="nav-link widget__view text-decoration-none dropdown-toggle" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div class="icon">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                        <small class="text">Account</small>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a></li>
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+                                    </ul>
+                                </c:when>
+                                <!-- Nếu không, hiển thị Login và Register -->
+                                <c:otherwise>
+                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/login" role="button">
+                                        <div class="icon">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                        <small class="text">Login</small>
+                                    </a>
+                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/register" role="button">
+                                        <div class="icon">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                        <small class="text">Register</small>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
+                        <!-- Wishlist -->
                         <div class="widget__header mr-2">
-                            <%-- <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
-                                <div class="icon">
-                                    <i class="fa fa-heart"></i>
-                                </div>
-                                <small class="text">WishList</small>
-                            </a> --%>
-                            <c:if test="${not empty user}">
-						       <a href="/user/${user.id}/wishlist" class="widget__view text-decoration-none">
-						           <div class="icon">
-						               <i class="fa fa-heart"></i>
-						           </div>
-						           <small class="text">WishList</small>
-						       </a>
-						   </c:if>
+                            <c:if test="${not empty user and fn:contains(user.role, 'USER')}">
+                                <a href="${pageContext.request.contextPath}/user/${user.id}/wishlist" class="widget__view text-decoration-none">
+                                    <div class="icon">
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <small class="text">Wishlist</small>
+                                </a>
+                            </c:if>
                         </div>
+                        <!-- Shopping Cart -->
                         <div class="widget__header">
-                            <a href="{% url 'cart-page' %}" class="widget__view text-decoration-none">
-                                <div class="icon">
-                                    <i class="fa fa-shopping-cart"></i>
-                                </div>
-                                <small class="text">Shopping cart</small>
-                            </a>
+                            <c:if test="${not empty user and fn:contains(user.role, 'USER')}">
+                                <a href="${pageContext.request.contextPath}/cart" class="widget__view text-decoration-none">
+                                    <div class="icon">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </div>
+                                    <small class="text">Cart</small>
+                                </a>
+                            </c:if>
                         </div>
                     </div>
-                    <!-- widgets--wrap.// -->
                 </div>
-                <!-- col.// -->
             </div>
-            <!-- row.// -->
         </div>
-        <!-- container.// -->
     </section>
-    <!-- header__main.// -->
-
+    <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg border__bottom">
         <div class="container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav" aria-controls="main_nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
             </button>
-    
             <div class="collapse navbar-collapse" id="main_nav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home-page' %}">Home</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Categories
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'category-page' %}">Birthday Flowers</a></li>
-                            <li><a class="dropdown-item" href="{% url 'valentineday-page' %}">Valentine Day Flowers</a></li>
-                            <li><a class="dropdown-item" href="{% url 'marriage-page' %}">Marriage Flowers</a></li>
-                            <li><a class="dropdown-item" href="{% url 'anniversary-page' %}">Anniversary Flowers</a></li>
-                            <li><a class="dropdown-item" href="{% url 'puja-page' %}">Puja Flowers</a></li>
-                            <li><a class="dropdown-item" href="{% url 'plant-page' %}">Plants & Greenery</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/birthday-flowers">Birthday Flowers</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/valentine-flowers">Valentine Day Flowers</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/marriage-flowers">Marriage Flowers</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/anniversary-flowers">Anniversary Flowers</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/puja-flowers">Puja Flowers</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/plants">Plants & Greenery</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cactus-page' %}">Cactus</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/categories/cactus">Cactus</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'gift-page' %}">All Products</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/products">All Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about-page' %}">About</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/about">About</a>
                     </li>
                 </ul>
             </div>
-            <!-- collapse.// -->
         </div>
-        <!-- container.// -->
     </nav>
-    
-
 </header>

@@ -3,13 +3,18 @@ package com.starshop.services.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -122,6 +127,31 @@ public class UserServiceImpl implements UserService {
 	public void assignRole(User user, String roleName) {
 		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
 		user.setRole(role);
+	}
+	
+	@Override
+	public String getUserRole(Authentication authentication) {
+        UserLogin user = (UserLogin) authentication.getPrincipal();
+        return user.getAuthorities()
+                   .stream()
+                   .findFirst() 
+                   .map(GrantedAuthority::getAuthority) 
+                   .orElseThrow(() -> new RuntimeException("No role found for user")); 
+    }
+	
+	@Override
+	public User getUserByAuthentication() throws AuthenticationException {
+		
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	    if (authentication == null) {
+	        throw new AuthenticationException("No authentication found.");
+	    }
+
+	    String username = authentication.getName();
+
+	    return userRepository.findByUserName(username)
+	            .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
 	}
 
 //	@Override

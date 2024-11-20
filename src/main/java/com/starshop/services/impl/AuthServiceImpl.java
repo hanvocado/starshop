@@ -28,16 +28,6 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	AuthenticationManager authenticationManager;
 	
-//	@Autowired
-//	JwtService jwtService;
-//
-//	public AuthenticationResponse authenticate(UserLogin userLogin) {
-//
-//		var token = jwtService.generateToken(user);
-//
-//		return AuthenticationResponse.builder().token(token).build();
-//	}
-	
 	@Override
 	public Authentication authenticate(UserLogin userLogin) {
 		log.warn("userLogin username: {}", userLogin.getUsername());
@@ -48,8 +38,5 @@ public class AuthServiceImpl implements AuthService {
                         userLogin.getPassword()
                 )
         );
-
-//        return userRepository.findByUserName(userLogin.getUsername())
-//                .orElseThrow();
     }
 }

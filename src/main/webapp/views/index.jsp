@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@include file="/common/taglibs.jsp"%>
 
 <title>index page</title>
 
@@ -62,6 +62,7 @@
           <div class="row">
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
+          <a href="${pageContext.request.contextPath}/products/${product.id}" style="text-decoration: none; color: inherit;">
             <div class="card product-card">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
@@ -87,6 +88,7 @@
                     </a>
                 </div>
             </div>
+            </a>
         </div>
     </c:forEach>
 </div>

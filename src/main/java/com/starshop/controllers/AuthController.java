@@ -3,6 +3,8 @@ package com.starshop.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,7 +61,7 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public String authenticate(Model model, @ModelAttribute("userLogin") UserLogin userLogin, BindingResult result,
-			RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request) {		
+			RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request) throws AuthenticationException {
 		if (result.hasErrors()) {
 			return "redirect:/auth/login";
 		}
@@ -72,7 +74,8 @@ public class AuthController {
 		}
 
 		Authentication authentication = authService.authenticate(userLogin);
-		model.addAttribute("user", authentication);
+		User user = userService.getUserByAuthentication();
+		model.addAttribute("user", user);
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtService.generateToken(authentication);
@@ -84,12 +87,20 @@ public class AuthController {
 //	    cookie.setPath("/");      
 //	    cookie.setMaxAge(3600);   
 //	    response.addCookie(cookie);	
-		redirectAttributes.addFlashAttribute("jwt", jwt);
-		
-		UserLogin user = (UserLogin) authentication.getPrincipal();
-		user.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority())); 
+//		redirectAttributes.addFlashAttribute("jwt", jwt);
 
-		return "redirect:/user/products";
+		String role = userService.getUserRole(authentication);
+		log.warn("User role: {}", role);
+
+		switch (role) {
+		case "ADMIN":
+			return "redirect:/admin/categories";
+		case "USER":
+			return "redirect:/products";
+		default:
+			log.warn("Unknown role: {}", role);
+			return "redirect:/products";
+		}
 	}
 
 	@GetMapping("/register")

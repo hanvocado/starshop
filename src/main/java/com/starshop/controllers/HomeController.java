@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.starshop.entities.Product;
+import com.starshop.entities.User;
 import com.starshop.services.ProductService;
 
 @Controller
@@ -23,7 +24,7 @@ public class HomeController {
 		if (pageSize == null) pageSize = 12;
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
 	
-		model.addAttribute("role","");
+		model.addAttribute("user", user);
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());
 		model.addAttribute("pageSize", pageSize);
