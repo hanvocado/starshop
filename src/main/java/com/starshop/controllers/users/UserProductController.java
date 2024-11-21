@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -32,16 +34,19 @@ public class UserProductController {
 
 	@GetMapping("/products")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
-			@RequestParam(required = false) UUID userId) {
+			@RequestParam(required = false) UUID userId) throws AuthenticationException {
 
 		Page<Product> page = null;
 		if (pageNo == null)
 			pageNo = 0;
 		if (pageSize == null)
 			pageSize = 21;
+		
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
 
-		model.addAttribute("role", "user");
+		User user = userService.getUserByAuthentication();
+		
+		model.addAttribute("user", user);
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());
 		model.addAttribute("pageSize", pageSize);
@@ -49,14 +54,6 @@ public class UserProductController {
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
-		/*
-		 * if (!user.isEmpty()) { model.addAttribute("user", user); }
-		 */
-//		userId = (UUID)1;
-		if (userId != null) {
-			Optional<User> user = userService.getUserById(userId);
-			user.ifPresent(value -> model.addAttribute("user", value));
-		}
 
 		return "index";
 	}

@@ -74,8 +74,9 @@ public class AuthController {
 		}
 
 		Authentication authentication = authService.authenticate(userLogin);
-		User user = userService.getUserByAuthentication();
-		model.addAttribute("user", user);
+		if (authentication == null || !authentication.isAuthenticated()) {
+		    throw new AuthenticationException("Authentication failed for user: " + userLogin.getUsername());
+		}
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtService.generateToken(authentication);

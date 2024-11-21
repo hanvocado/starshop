@@ -114,14 +114,18 @@ public class SecurityConfig {
 	    private JpaUserDetailsService userDetailsService;
 
 
-	    @Bean
-	    public AuthenticationManager authManager() {
-
-	        var authProvider = new DaoAuthenticationProvider();
-	        authProvider.setUserDetailsService(userDetailsService);
-	        authProvider.setPasswordEncoder(passwordEncoder());
-	        return new ProviderManager(authProvider);
-	    }
+	  @Bean
+	  public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
+	      return config.getAuthenticationManager();
+	  }
+	  
+	  @Bean
+	  public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+	      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	      authProvider.setUserDetailsService(userDetailsService);
+	      authProvider.setPasswordEncoder(passwordEncoder);
+	      return authProvider;
+	  }
 
 	    @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
