@@ -81,14 +81,13 @@ public class AuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtService.generateToken(authentication);
 
-//		// Đặt JWT vào Cookie
-//	    Cookie cookie = new Cookie("jwt", jwt);
-//	    cookie.setHttpOnly(true); 
-//	    cookie.setSecure(true);   
-//	    cookie.setPath("/");      
-//	    cookie.setMaxAge(3600);   
-//	    response.addCookie(cookie);	
-//		redirectAttributes.addFlashAttribute("jwt", jwt);
+		// Đặt JWT vào Cookie
+	    Cookie cookie = new Cookie("jwt", jwt);
+	    cookie.setHttpOnly(true); 
+	    cookie.setSecure(true);   
+	    cookie.setPath("/");      
+	    cookie.setMaxAge(3600);   
+	    response.addCookie(cookie);	
 
 		String role = userService.getUserRole(authentication);
 		log.warn("User role: {}", role);

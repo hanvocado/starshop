@@ -8,11 +8,19 @@ import java.util.function.Function;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface JwtService {
 
 	String generateToken(Authentication authentication);
+    String getJwtFromCookies(HttpServletRequest request);
+    JWTClaimsSet extractAllClaims(String token);
+    String getRoleFromJwt(String token);
+    String getUserNameFromJwt(String token);
+
 
 //	Boolean validateToken(String token, UserDetails userDetails);
 //

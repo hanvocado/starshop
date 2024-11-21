@@ -153,6 +153,12 @@ public class UserServiceImpl implements UserService {
 	    return userRepository.findByUserName(username)
 	            .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
 	}
+	
+	@Override
+	public User getUserByUserName(String userName) {
+		return userRepository.findByUserName(userName)
+				.orElseThrow(()-> new NoSuchElementException("User not found with username: " + userName));
+	}
 
 //	@Override
 //	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

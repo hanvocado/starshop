@@ -30,9 +30,12 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.starshop.services.JwtService;
 import com.starshop.utils.Constants;
 
@@ -41,6 +44,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -169,12 +174,10 @@ public class JwtServiceImpl implements JwtService {
 	@Override
 	public String generateToken(Authentication authentication) {
 		JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-		
-		String scope = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-		
+
+		String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(" "));
+
 		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(authentication.getName()).issuer("starshop.com")
 				.issueTime(new Date()).expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
 				.claim("scope", scope).build();
@@ -190,4 +193,63 @@ public class JwtServiceImpl implements JwtService {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public String getJwtFromCookies(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("jwt".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public JWTClaimsSet extractAllClaims(String token) {
+	    try {
+	        // Parse JWT
+	        SignedJWT signedJWT = SignedJWT.parse(token);
+
+	        // Xác thực chữ ký
+	        JWSVerifier verifier = new MACVerifier(Constants.SIGNER_KEY.getBytes());
+
+	        if (!signedJWT.verify(verifier)) {
+	            throw new RuntimeException("Invalid JWT signature");
+	        }
+
+	        // Trả về claims set nếu xác thực thành công
+	        return signedJWT.getJWTClaimsSet();
+	    } catch (JOSEException | ParseException e) {
+	        throw new RuntimeException("Error parsing or verifying the token", e);
+	    }
+	}
+
+	public Key getSignKey() {
+	    // Giải mã khóa từ Base64 để sử dụng cho HS512
+	    byte[] keyBytes = Decoders.BASE64.decode(Constants.SIGNER_KEY);
+	    return Keys.hmacShaKeyFor(keyBytes);
+	}
+
+
+	@Override
+	public String getRoleFromJwt(String token) {
+	    try {
+	        JWTClaimsSet claims = extractAllClaims(token);
+	        return claims.getStringClaim("scope");
+	    } catch (ParseException e) {
+	        throw new RuntimeException("Error extracting role from JWT", e);
+	    }
+	}
+
+
+	@Override
+	public String getUserNameFromJwt(String token) {
+		JWTClaimsSet claims = extractAllClaims(token);
+		return claims.getSubject();
+	}
+
+
 }

@@ -27,8 +27,7 @@
                         <!-- Account -->
                         <div class="widget__header mr-2 dropdown">
                             <c:choose>
-                                <!-- Nếu user có role 'USER' -->
-                                <c:when test="${not empty user and fn:contains(user.role, 'USER')}">
+                                <c:when test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
                                     <a class="nav-link widget__view text-decoration-none dropdown-toggle" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                         <div class="icon">
                                             <i class="fas fa-user-circle"></i>
@@ -42,7 +41,6 @@
                                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
                                     </ul>
                                 </c:when>
-                                <!-- Nếu không, hiển thị Login và Register -->
                                 <c:otherwise>
                                     <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/login" role="button">
                                         <div class="icon">
@@ -61,7 +59,7 @@
                         </div>
                         <!-- Wishlist -->
                         <div class="widget__header mr-2">
-                            <c:if test="${not empty user and fn:contains(user.role, 'USER')}">
+                            <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
                                 <a href="${pageContext.request.contextPath}/user/${user.id}/wishlist" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-heart"></i>
@@ -72,7 +70,7 @@
                         </div>
                         <!-- Shopping Cart -->
                         <div class="widget__header">
-                            <c:if test="${not empty user and fn:contains(user.role, 'USER')}">
+                            <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
                                 <a href="${pageContext.request.contextPath}/cart" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-shopping-cart"></i>

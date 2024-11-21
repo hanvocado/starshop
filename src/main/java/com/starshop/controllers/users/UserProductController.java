@@ -20,10 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Product;
 import com.starshop.entities.User;
+import com.starshop.services.JwtService;
 import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class UserProductController {
 
 	@Autowired
@@ -31,11 +36,17 @@ public class UserProductController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private JwtService jwtService;
 
 	@GetMapping("/products")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
-			@RequestParam(required = false) UUID userId) throws AuthenticationException {
+			@RequestParam(required = false) UUID userId, HttpServletRequest request) throws AuthenticationException {
 
+		String jwt = jwtService.getJwtFromCookies(request);
+		User user = userService.getUserByUserName(jwtService.getUserNameFromJwt(jwt));
+		
 		Page<Product> page = null;
 		if (pageNo == null)
 			pageNo = 0;
@@ -43,8 +54,6 @@ public class UserProductController {
 			pageSize = 21;
 		
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
-
-		User user = userService.getUserByAuthentication();
 		
 		model.addAttribute("user", user);
 		model.addAttribute("products", page.getContent());

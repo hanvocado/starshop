@@ -42,6 +42,8 @@ public interface UserService {
 
 	User getUserByAuthentication() throws AuthenticationException;
 
+	User getUserByUserName(String userName);
+
 
 //	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
 
