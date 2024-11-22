@@ -44,7 +44,6 @@ public interface UserService {
 
 	User getUserByUserName(String userName);
 
-
-//	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }

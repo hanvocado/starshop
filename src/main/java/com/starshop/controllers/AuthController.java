@@ -96,10 +96,10 @@ public class AuthController {
 		case "ADMIN":
 			return "redirect:/admin/categories";
 		case "USER":
-			return "redirect:/products";
+			return "redirect:/user/products";
 		default:
 			log.warn("Unknown role: {}", role);
-			return "redirect:/products";
+			return "redirect:/";
 		}
 	}
 

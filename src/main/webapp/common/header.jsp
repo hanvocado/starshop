@@ -28,31 +28,25 @@
                         <div class="widget__header mr-2 dropdown">
                             <c:choose>
                                 <c:when test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                    <a class="nav-link widget__view text-decoration-none dropdown-toggle" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <div class="icon">
-                                            <i class="fas fa-user-circle"></i>
-                                        </div>
-                                        <small class="text">Account</small>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a></li>
-                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings">Settings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Logout</a></li>
-                                    </ul>
+                                    <a class="nav-link widget__view text-decoration-none dropdown-toggle d-flex align-items-center" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+									    <div class="icon me-2">
+									        <i class="fas fa-user-circle fa-2x"></i>
+									    </div>
+									    <small class="text">${user.getUserName()})</small>
+									</a>
+									<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="accountDropdown">
+									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
+									    <li><hr class="dropdown-divider"></li>
+									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+									</ul>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/login" role="button">
-                                        <div class="icon">
-                                            <i class="fas fa-user-circle"></i>
-                                        </div>
-                                        <small class="text">Login</small>
+                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/auth/login" role="button">
+                                        <strong class="text">Login</strong>
                                     </a>
-                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/register" role="button">
-                                        <div class="icon">
-                                            <i class="fas fa-user-circle"></i>
-                                        </div>
-                                        <small class="text">Register</small>
+                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/auth/register" role="button">
+                                        <strong class="text">Register</strong>
                                     </a>
                                 </c:otherwise>
                             </c:choose>
@@ -60,7 +54,7 @@
                         <!-- Wishlist -->
                         <div class="widget__header mr-2">
                             <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${pageContext.request.contextPath}/user/${user.id}/wishlist" class="widget__view text-decoration-none">
+                                <a href="${pageContext.request.contextPath}/user/wishlist" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-heart"></i>
                                     </div>
@@ -71,7 +65,7 @@
                         <!-- Shopping Cart -->
                         <div class="widget__header">
                             <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${pageContext.request.contextPath}/cart" class="widget__view text-decoration-none">
+                                <a href="${pageContext.request.contextPath}/usr/cart" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-shopping-cart"></i>
                                     </div>

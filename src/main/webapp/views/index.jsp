@@ -62,7 +62,7 @@
           <div class="row">
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
-          <a href="${pageContext.request.contextPath}/products/${product.id}" style="text-decoration: none; color: inherit;">
+          <a href="${pageContext.request.contextPath}/user/products/${product.id}" style="text-decoration: none; color: inherit;">
             <div class="card product-card">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
@@ -74,7 +74,6 @@
                 <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
                     
-                    <!-- Thay thế URL với các liên kết JSP phù hợp -->
                     <a href="${pageContext.request.contextPath}/add_to_cart?p_id=${product.id}">
                         <button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Add to Cart</button>
                     </a>

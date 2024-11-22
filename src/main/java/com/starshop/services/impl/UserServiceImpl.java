@@ -160,27 +160,10 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(()-> new NoSuchElementException("User not found with username: " + userName));
 	}
 
-//	@Override
-//	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//		Optional<User> user = userRepository.findByEmail(email);
-//        return user.map(UserLogin::new)
-//                .orElseThrow(() -> new UsernameNotFoundException("Email not found: " + email));
-//	}
-	
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//	    User user = userRepository.findByUserName(username)
-//	            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//	    
-//	    Collection<GrantedAuthority> authorities = new ArrayList<>();
-//	    authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
-//
-//	    return new org.springframework.security.core.userdetails.User(
-//	            user.getUserName(),
-//	            user.getPassword(),
-//	            authorities
-//	    );
-//	}
-
-
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Optional<User> user = userRepository.findByUserName(username);
+        return user.map(UserLogin::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found: " + username));
+	}
 }

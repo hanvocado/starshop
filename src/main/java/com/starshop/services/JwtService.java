@@ -15,29 +15,20 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface JwtService {
 
+	String getUserNameFromJwt(String token);
+
+	String getRoleFromJwt(String token);
+
+	Key getSignKey();
+
+	Boolean isTokenExpired(JWTClaimsSet claimsSet);
+
+	Boolean validateToken(String token, UserDetails userDetails);
+
+	JWTClaimsSet extractAllClaims(String token);
+
+	String getJwtFromCookies(HttpServletRequest request);
+
 	String generateToken(Authentication authentication);
-    String getJwtFromCookies(HttpServletRequest request);
-    JWTClaimsSet extractAllClaims(String token);
-    String getRoleFromJwt(String token);
-    String getUserNameFromJwt(String token);
-
-
-//	Boolean validateToken(String token, UserDetails userDetails);
-//
-//	Boolean isTokenExpired(String token);
-//
-//	Claims extractAllClaims(String token);
-//
-//	<T> T extractClaim(String token, Function<Claims, T> claimResolver);
-//
-//	Date extractExpiration(String token);
-//
-//	String extractEmail(String token);
-//
-//	Key getSignKey();
-//
-//	String generateToken(String email);
-	
-	
 
 }

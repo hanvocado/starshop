@@ -53,63 +53,14 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity
 @Slf4j
 public class SecurityConfig {
+		
 	private final String[] PUBLIC_ENDPOINTS = { "/auth/login/**", "/auth/register/**", 
-			"/admin/categories/**", "/admin/products/**", "/admin/vouchers/**" };
-
-//	
-//	@Autowired
-//	@Lazy
-//	private JwtFilter jwtFilter;
-//
-//	// Defines a UserDetailsService bean for user authentication
-//	@Bean
-//	@Lazy
-//	public UserDetailsService userDetailsService() {
-//		return new UserServiceImpl();
-//	}
-//
-//	// Configures the security filter chain
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//		log.warn("Đã vào securityconfig");
-////		httpSecurity.formLogin(form -> form.loginPage("/auth/login").permitAll());
-////		httpSecurity.csrf(csrf -> csrf.disable()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-////				.authorizeHttpRequests(auth -> auth.requestMatchers("/").permitAll().anyRequest().authenticated())
-////				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-////				.authenticationProvider(authenticationProvider());
-////		return httpSecurity.build();
-//
-//		httpSecurity.csrf(csrf -> csrf.disable()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//				.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-//						.anyRequest().authenticated())
-//				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//				.authenticationProvider(authenticationProvider());
-//		log.warn("Đã qua securityconfig");
-//		return httpSecurity.build();
-//	}
-//
-//	// Creates a DaoAuthenticationProvider to handle user authentication
-//	@Bean
-//	public AuthenticationProvider authenticationProvider() {
-//		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//		authenticationProvider.setUserDetailsService(userDetailsService());
-//		authenticationProvider.setPasswordEncoder(passwordEncoder());
-//		return authenticationProvider;
-//	}
-//
-//	// Defines a PasswordEncoder bean that uses bcrypt hashing by default for
-//	// password encoding
-//	@Bean
-//	PasswordEncoder passwordEncoder() {
-//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//	}
-//
-//	// Defines an AuthenticationManager bean to manage authentication processes
-//	@Bean
-//	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-//		return config.getAuthenticationManager();
-//	}
-//
+			"/products/**", "/exec/**", "/img/**", "/shop/**" };
+	
+	  @Autowired
+	  @Lazy
+	  private JwtFilter jwtFilter;
+	
 	  @Autowired
 	    private JpaUserDetailsService userDetailsService;
 
@@ -134,19 +85,15 @@ public class SecurityConfig {
 	                .authorizeHttpRequests(authorize -> authorize
 	                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
 	                        .requestMatchers("/**").permitAll()
-//	                        .requestMatchers("/auth/login/**", "/auth/register/**").permitAll()
-//	                        .requestMatchers("/exec/**", "/img/**", "/shop/**").permitAll()
-//	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
-//	                        .requestMatchers("/user/**").hasAuthority("USER")
+	                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
+	                        .requestMatchers("/user/**").hasAuthority("USER")
 	                        .anyRequest().authenticated()
 	                )
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> 
-	                        jwtConfigurer.decoder(jwtDecoder())
-	                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
-	                ))
-	                .userDetailsService(userDetailsService)
-	                .httpBasic(Customizer.withDefaults())
+	                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) 
+	                .userDetailsService(userDetailsService) 
+	                .httpBasic(Customizer.withDefaults()) 
 	                .build();
 	    }
 	    

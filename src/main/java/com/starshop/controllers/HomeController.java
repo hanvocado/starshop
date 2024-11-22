@@ -5,7 +5,9 @@ import javax.naming.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +34,7 @@ public class HomeController {
 		if (pageSize == null) pageSize = 12;
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
 		
-		User user = userService.getUserByAuthentication();
-		model.addAttribute("user", user);
-	
-		model.addAttribute("user", user);
+		model.addAttribute("user", null);
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());
 		model.addAttribute("pageSize", pageSize);
@@ -45,4 +44,5 @@ public class HomeController {
 		model.addAttribute("isLast", page.isLast());
 		return "index";
 	}
+	
 }
