@@ -33,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
+	private final String[] PUBLIC_ENDPOINTS = { "/auth/login/**", "/auth/register/**", 
+			"/products/**", "/exec/**", "/img/**", "/shop/**" };
+	
     @Autowired
     private JwtService jwtService;
 
@@ -43,30 +46,53 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+    	String requestURI = request.getRequestURI();
+        for (String publicEndpoint : PUBLIC_ENDPOINTS) {
+            if (requestURI.startsWith(publicEndpoint.replace("/**", ""))) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
+        
         try {
+        	
+        	if (request.getServletPath().equals("/auth/login")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        	
             String jwt = jwtService.getJwtFromCookies(request);
-            
+
             if (jwt != null) {
                 String username = jwtService.getUserNameFromJwt(jwt);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = userService.loadUserByUsername(username);
 
                     if (jwtService.validateToken(jwt, userDetails)) {
-                        // Tạo đối tượng Authentication và thiết lập vào SecurityContext
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                         // Thiết lập đối tượng Authentication vào SecurityContext
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                    } else {
+                        response.sendRedirect("/auth/login");
+                        return;
                     }
                 }
+            } else {
+                // Nếu không tìm thấy JWT, chuyển hướng đến trang login
+                response.sendRedirect("/auth/login");
+                return;
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
+            response.sendRedirect("/auth/login");
+            return;
         }
 
         // Tiếp tục chuỗi bộ lọc
         filterChain.doFilter(request, response);
     }
+
 }

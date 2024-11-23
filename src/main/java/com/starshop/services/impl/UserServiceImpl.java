@@ -22,12 +22,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.starshop.entities.Cart;
 import com.starshop.entities.Product;
 import com.starshop.entities.Role;
 import com.starshop.entities.User;
 import com.starshop.entities.Wishlist;
 import com.starshop.models.UserLogin;
 import com.starshop.models.ViewMessage;
+import com.starshop.repositories.CartRepository;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.RoleRepository;
 import com.starshop.repositories.UserRepository;
@@ -55,6 +57,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private WishlistRepository wishlistRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
 
 	@Override
 	public void addProductToWishlist(UUID userId, Long productId) {
@@ -80,8 +85,12 @@ public class UserServiceImpl implements UserService {
 
 		assignRole(user, RoleName.USER.name());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
 		userRepository.save(user);
+		
+		Cart newCart = new Cart();
+        newCart.setUser(user);
+        cartRepository.save(newCart);
+		
 		return true;
 	}
 

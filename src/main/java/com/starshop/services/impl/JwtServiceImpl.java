@@ -1,12 +1,15 @@
 package com.starshop.services.impl;
 
 import java.security.Key;
+import java.security.Principal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +25,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.starshop.repositories.UserRepository;
 import com.starshop.services.JwtService;
 import com.starshop.utils.Constants;
 
@@ -33,6 +37,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtServiceImpl implements JwtService {
 
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Override
 	public String generateToken(Authentication authentication) {
 		JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -132,5 +139,11 @@ public class JwtServiceImpl implements JwtService {
 		JWTClaimsSet claims = extractAllClaims(token);
 		return claims.getSubject();
 	}
+	
+	@Override
+	public UUID getUserIdFromPrincipal(Principal principal) {
+        return userRepository.findByUserName(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found")).getId();
+    }
 
 }

@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.starshop.entities.Cart;
 import com.starshop.entities.Order;
 import com.starshop.entities.User;
+import com.starshop.repositories.CartRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.OrderService;
 import com.starshop.services.UserService;
@@ -42,6 +44,9 @@ public class ApplicationInitConfig {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
 
 	@Bean
 	ApplicationRunner applicationRunner(UserRepository userRepository) {
@@ -82,16 +87,25 @@ public class ApplicationInitConfig {
 	}
 	
 	@Transactional
-    private User createTestBuyerIfNotExists() {
-		if (userRepository.findByUserName("testbuyer").isEmpty()) {
-			User user = User.builder().userName("testbuyer").email("testbuyer@gmail.com")
-					.password(passwordEncoder.encode("12345")).build();
-			userService.assignRole(user, RoleName.USER.name());
+	private User createTestBuyerIfNotExists() {
+	    if (userRepository.findByUserName("testbuyer").isEmpty()) {
+	        User user = User.builder()
+	                .userName("testbuyer")
+	                .email("testbuyer@gmail.com")
+	                .password(passwordEncoder.encode("12345"))
+	                .build();
+	        userService.assignRole(user, RoleName.USER.name());
+	        user = userRepository.save(user);
 
-			return userRepository.save(user);
-		} else
-			return userRepository.findByEmail("testbuyer@gmail.com").get();
-    }
+	        Cart newCart = new Cart();
+	        newCart.setUser(user);
+	        cartRepository.save(newCart);
+
+	        return user;
+	    } else {
+	        return userRepository.findByEmail("testbuyer@gmail.com").get();
+	    }
+	}
 	
 	@Transactional
     private void createOrdersForUser(User user, int numberOfOrders) {

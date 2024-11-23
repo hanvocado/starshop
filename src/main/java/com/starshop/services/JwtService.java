@@ -1,8 +1,10 @@
 package com.starshop.services;
 
 import java.security.Key;
+import java.security.Principal;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.security.core.Authentication;
@@ -30,5 +32,7 @@ public interface JwtService {
 	String getJwtFromCookies(HttpServletRequest request);
 
 	String generateToken(Authentication authentication);
+
+	UUID getUserIdFromPrincipal(Principal principal);
 
 }

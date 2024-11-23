@@ -6,15 +6,23 @@
     <section class="header_main border_bottom">
         <div class="container">
             <div class="row align-items-center">
-                <!-- Logo -->
-                <div class="col-xl-2 col-lg-3 col-md-12">
-                    <a href="${pageContext.request.contextPath}/home" class="brand--wrap text-decoration-none">
-                        <h1 class="logo">STAR SHOP</h1>
-                    </a>
+			    <!-- Logo -->
+        		<div class="col-xl-2 col-lg-3 col-md-12">
+                    <c:choose>
+		                <c:when test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
+		                    <a href="${basePath}/user/products" class="brand--wrap text-decoration-none"><h1 class="logo">STAR SHOP</h1>
+		                    </a>
+		                </c:when>
+		                <c:otherwise>
+		                    <a href="${basePath}" class="brand--wrap text-decoration-none"><h1 class="logo">STAR SHOP</h1>
+		                    </a>
+		                </c:otherwise>
+		            </c:choose>
                 </div>
+
                 <!-- Search Bar -->
                 <div class="col-xl-6 col-lg-5 col-md-6">
-                    <form action="${pageContext.request.contextPath}/search" class="fs__form search--header">
+                    <form action="${basePath}/search" class="fs__form search--header">
                         <div class="input-group w-100">
                             <i class="fa fa-search"></i>
                             <input type="text" class="form-control" placeholder="What are you looking for?" name="query">
@@ -35,17 +43,17 @@
 									    <small class="text">${user.getUserName()})</small>
 									</a>
 									<ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="accountDropdown">
-									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
-									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
+									    <li><a class="dropdown-item" href="${basePath}/profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+									    <li><a class="dropdown-item" href="${basePath}/settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
 									    <li><hr class="dropdown-divider"></li>
-									    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+									    <li><a class="dropdown-item" href="${basePath}/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
 									</ul>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/auth/login" role="button">
+                                    <a class="nav-link widget__view text-decoration-none" href="${basePath}/auth/login" role="button">
                                         <strong class="text">Login</strong>
                                     </a>
-                                    <a class="nav-link widget__view text-decoration-none" href="${pageContext.request.contextPath}/auth/register" role="button">
+                                    <a class="nav-link widget__view text-decoration-none" href="${basePath}/auth/register" role="button">
                                         <strong class="text">Register</strong>
                                     </a>
                                 </c:otherwise>
@@ -54,7 +62,7 @@
                         <!-- Wishlist -->
                         <div class="widget__header mr-2">
                             <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${pageContext.request.contextPath}/user/wishlist" class="widget__view text-decoration-none">
+                                <a href="${basePath}/user/wishlist" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-heart"></i>
                                     </div>
@@ -65,7 +73,7 @@
                         <!-- Shopping Cart -->
                         <div class="widget__header">
                             <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${pageContext.request.contextPath}/usr/cart" class="widget__view text-decoration-none">
+                                <a href="${basePath}/user/cart" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-shopping-cart"></i>
                                     </div>
@@ -87,29 +95,29 @@
             <div class="collapse navbar-collapse" id="main_nav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a>
+                        <a class="nav-link" href="${basePath}/home">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Categories
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/birthday-flowers">Birthday Flowers</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/valentine-flowers">Valentine Day Flowers</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/marriage-flowers">Marriage Flowers</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/anniversary-flowers">Anniversary Flowers</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/puja-flowers">Puja Flowers</a></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories/plants">Plants & Greenery</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/birthday-flowers">Birthday Flowers</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/valentine-flowers">Valentine Day Flowers</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/marriage-flowers">Marriage Flowers</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/anniversary-flowers">Anniversary Flowers</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/puja-flowers">Puja Flowers</a></li>
+                            <li><a class="dropdown-item" href="${basePath}/categories/plants">Plants & Greenery</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/categories/cactus">Cactus</a>
+                        <a class="nav-link" href="${basePath}/categories/cactus">Cactus</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/products">All Products</a>
+                        <a class="nav-link" href="${basePath}/products">All Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/about">About</a>
+                        <a class="nav-link" href="${basePath}/about">About</a>
                     </li>
                 </ul>
             </div>

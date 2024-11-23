@@ -5,47 +5,207 @@
 <title>Carts</title>
 
 <body>
-    <h2 class="text-center">My Cart</h2>
-    <nav class="navbar navbar-main navbar-expand-lg border__bottom">
-        <div class="container">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Item Price</th>
-                        <th>Delivery Charge</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="item" items="${cartItems}">
-                        <tr>
-                            <td>
-                                ${item.product.name}
-                                <img src="${pageContext.request.contextPath}/media/${item.product.image}" class="img-fluid align-items-center" style="width: 120px;" alt="Product Image">
-                            </td>
-                            <td>${item.quantity}</td>
-                            <td>&#8377;${item.product.price}</td>
-                            <td>&#8377;${item.product.deliveryCharge}</td>
-                            <td>
-                                <a href="${pageContext.request.contextPath}/remove/${item.id}/" class="btn btn-danger">Remove</a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="3" class="text-right">Grand Total</td>
-                        <td>&#8377;${totalPrice}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </nav>
 
+<nav class="navbar navbar-main navbar-expand-lg border__bottom">
+    <div class="container my-3 mx-0 d-flex justify-content-between" style="max-width: 100%;">
+        <c:choose>
+            <c:when test="${empty productLines}">
+                <div class="d-flex justify-content-center align-items-center text-center" style="height: 50vh; width: 100%;">
+                    <p class="text-muted fs-5">
+                        Không có sản phẩm trong giỏ hàng
+                    </p>
+                </div>
+            </c:when>
+
+            <c:otherwise>
+                <div class="container-fluid my-3">
+                    <div class="w-100">
+                    <h3 class="mb-4">Shopping Cart</h3>
+                        <p>${productLines.size()} items</p>
+
+                        <form action="${pageContext.request.contextPath}/user/cart/update" method="POST">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="text-center col-1">
+                                                <input type="checkbox" id="selectAll" onclick="toggleAll(this)"> <!-- Select All Checkbox -->
+                                            </th>
+                                            <th class="col-3">Sản Phẩm</th>
+                                            <th class="col-2">Loại</th>
+                                            <th class="col-2">Đơn Giá</th>
+                                            <th class="col-2">Số Lượng</th>
+                                            <th class="col-1">Số Tiền</th>
+                                            <th class="col-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="productLine" items="${productLines}" varStatus="loop">
+                                            <tr>
+                                                <!-- Checkbox -->
+                                                <td class="text-center">
+                                                    <input type="checkbox" name="selectedItems" value="${productLine.id}" class="selectItem">
+                                                </td>
+                                                <!-- Product Image and Name -->
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <c:set var="imageUrl">
+													    <c:choose>
+													        <c:when test="${productLine.product.image.startsWith('https')}">
+													            ${productLine.product.image}
+													        </c:when>
+													        <c:otherwise>
+													            /img/${productLine.product.image}
+													        </c:otherwise>
+													    </c:choose>
+													</c:set>
+													<img src="${imageUrl}" 
+													     alt="${productLine.product.name}" 
+													     class="img-fluid mr-2" 
+													     style="width: 80px; height: 80px;">
+
+                                                        <span>${productLine.product.name}</span>
+                                                    </div>
+                                                </td>
+                                                <!-- Product Description -->
+                                                <td> 
+                                                	<div class="d-flex align-items-center">${productLine.product.getCategoryNames()}</div>
+                                                </td>
+                                                <!-- Product Price -->
+                                                <td>
+                                                    <div class="row">
+                                                        <span class="text-muted text-decoration-line-through mr-2">đ${productLine.product.salePrice}</span><br>
+                                                        <span class="fw-bold">đ${productLine.product.getDisplayPrice()}</span>
+                                                    </div>
+                                                </td>
+                                                <!-- Quantity -->
+                                                <td>
+												    <div class="input-group">
+												        <button class="btn btn-outline-secondary update-quantity-btn" data-action="decrease" data-productline-id="${productLine.id}" type="button">-</button>
+												        <input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" class="quantity-input form-control text-center">
+												        <button class="btn btn-outline-secondary update-quantity-btn" data-action="increase" data-productline-id="${productLine.id}" type="button">+</button>
+												    </div>
+												</td>
+                                                <!-- Total Price -->
+                                                <td class="text-danger fw-bold product-line-total" data-productline-id="${productLine.id}">đ${productLine.quantity * productLine.product.getDisplayPrice()}</td>
+                                                <!-- Remove -->
+                                                <td>
+                                                    <a href="${pageContext.request.contextPath}/user/cart/remove/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+
+                        <!-- Voucher and Total -->
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Voucher Section -->
+                                <div>
+                                    <button class="btn btn-link text-decoration-none" data-bs-toggle="modal" data-bs-target="#voucherModal">
+                                        <i class="bi bi-ticket-perforated"></i> Chọn hoặc nhập mã
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Total Payment Section -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div></div>
+                                <div class="text-end d-flex align-items-center">
+                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger">đ0</span></p>
+                                    <button class="btn btn-primary btn-lg">Mua Hàng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <!-- Voucher Modal -->
+    <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="voucherModalLabel">Chọn Voucher</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="voucherCode" class="form-label">Mã Voucher</label>
+                            <input type="text" id="voucherCode" class="form-control" placeholder="Nhập mã voucher">
+                        </div>
+                        <button type="button" class="btn btn-primary">Áp Dụng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+<script>
+    function toggleAll(source) {
+        const checkboxes = document.querySelectorAll('.selectItem');
+        checkboxes.forEach(cb => cb.checked = source.checked);
+    }
+</script>
+
+
+<!-- Form thanh toán, chỉ hiển thị nếu có sản phẩm trong giỏ -->
+<c:if test="${not empty productLines}">
     <form id="payment-form" class="container" method="POST" action="${pageContext.request.contextPath}/initiate-payment">
         <textarea name="address" id="address" cols="30" rows="3" class="form-control" placeholder="Enter Delivery Address"></textarea>
         <input type="hidden" id="amount" name="amount" value="${totalPrice}">
-        <button type="button" id="pay-button" class="btn custom-btn">Pay Now</button>
+        <button type="submit" id="pay-button" class="btn custom-btn">Pay Now</button>
     </form>
+</c:if>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Xử lý sự kiện click vào nút "+" hoặc "-"
+    $(document).on('click', '.update-quantity-btn', function() {
+        var action = $(this).data('action');
+        var productLineId = $(this).data('productline-id');
+        updateQuantity(action, productLineId);
+    });
+
+    // Xử lý sự kiện nhấn phím "Enter" trong ô input
+    $(document).on('keyup', '.quantity-input', function(event) {
+        if (event.which === 13 || event.keyCode === 13) {
+            event.preventDefault(); 
+            var productLineId = $(this).data('productline-id');
+            var action = 'set';
+            updateQuantity(action, productLineId);
+        }
+    });
+
+    function updateQuantity(action, productLineId) {
+        var quantity = $("#quantity-" + productLineId).val();  
+
+        $.ajax({
+            url: '/user/cart/update-quantity',
+            type: 'POST',
+            data: {
+                action: action,
+                productLineId: productLineId,
+                quantity: quantity
+            },
+            success: function(response) {
+                $('input[name="quantity-' + productLineId + '"]').val(response.newQuantity);
+                $('.product-line-total[data-productline-id="' + productLineId + '"]').text('đ' + response.plTotalPrice);
+                $('#total-price').text('đ' + response.totalPrice);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating quantity:', error);
+            }
+        });
+    }
+</script>
 
     <script>
         $(document).ready(function() {
