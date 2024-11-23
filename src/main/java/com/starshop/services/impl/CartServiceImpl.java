@@ -93,9 +93,9 @@ public class CartServiceImpl implements CartService {
 		ProductLine productLine = productLineRepository.findById(productLineId)
 				.orElseThrow(() -> new RuntimeException("ProductLine not found"));
 		int newQuantity = productLine.getQuantity() + change;
+		productLine.setQuantity(newQuantity);
 		
 		if (newQuantity > 0 || productLine.getQuantity() > 0) {
-			productLine.setQuantity(newQuantity);
 			productLineRepository.save(productLine);
 		} else {
 			throw new RuntimeException("Quantity cannot be less than 1");

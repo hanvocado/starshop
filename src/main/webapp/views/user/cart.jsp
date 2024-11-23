@@ -40,7 +40,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    	<c:set var="totalCartPrice" value="0" />
                                         <c:forEach var="productLine" items="${productLines}" varStatus="loop">
+                                        	<c:set var="productLinePrice" value="${productLine.quantity * productLine.product.getDisplayPrice()}" />
+    										<c:set var="totalCartPrice" value="${totalCartPrice + productLinePrice}" />
                                             <tr>
                                                 <!-- Checkbox -->
                                                 <td class="text-center">
@@ -87,7 +90,7 @@
 												    </div>
 												</td>
                                                 <!-- Total Price -->
-                                                <td class="text-danger fw-bold product-line-total" data-productline-id="${productLine.id}">đ${productLine.quantity * productLine.product.getDisplayPrice()}</td>
+                                                <td class="text-danger fw-bold product-line-total" data-productline-id="${productLine.id}">đ${productLinePrice}</td>
                                                 <!-- Remove -->
                                                 <td>
                                                     <a href="${pageContext.request.contextPath}/user/cart/remove/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
@@ -114,7 +117,7 @@
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div></div>
                                 <div class="text-end d-flex align-items-center">
-                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger">đ0</span></p>
+                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ${totalCartPrice}</span></p>
                                     <button class="btn btn-primary btn-lg">Mua Hàng</button>
                                 </div>
                             </div>
