@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.starshop.entities.ProductLine;
+import com.starshop.entities.Voucher;
 import com.starshop.services.CartService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductLineService;
+import com.starshop.services.VoucherService;
 
 @Controller
 @RequestMapping("/user/cart")
@@ -30,6 +32,9 @@ public class UserCartController {
 
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private VoucherService voucherService;
 
 	@Autowired
 	private JwtService jwtService;
@@ -38,7 +43,7 @@ public class UserCartController {
 	private ProductLineService productLineService;
 	
 
-	@GetMapping("")
+	@GetMapping()
 	public String viewCart(Model model, Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 
@@ -48,6 +53,11 @@ public class UserCartController {
 		} else {
 			model.addAttribute("productLines", null);
 		}
+		
+		List<Voucher> discountVouchers = voucherService.getDiscountVoucher();
+		List<Voucher> freeShipVouchers = voucherService.getFreeshipVoucher();
+        model.addAttribute("discountVouchers", discountVouchers);
+        model.addAttribute("freeShipVouchers", freeShipVouchers);
 
 		return "user/cart";
 	}

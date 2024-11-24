@@ -10,6 +10,7 @@ import com.starshop.entities.Voucher;
 import com.starshop.repositories.VoucherRepository;
 import com.starshop.services.VoucherService;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -55,4 +56,15 @@ public class VoucherServiceImpl implements VoucherService {
 		if (voucher != null)
 			voucherRepo.delete(voucher);
 	}
+	
+	public List<Voucher> getDiscountVoucher() {
+        LocalDateTime now = LocalDateTime.now();
+        return voucherRepo.findByExpiredAtAfterAndIsFreeshipFalse(now);
+    }
+    
+    @Override
+	public List<Voucher> getFreeshipVoucher() {
+        LocalDateTime now = LocalDateTime.now();
+        return voucherRepo.findByExpiredAtAfterAndIsFreeshipTrue(now); 
+    }
 }

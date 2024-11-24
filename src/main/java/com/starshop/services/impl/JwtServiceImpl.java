@@ -48,7 +48,7 @@ public class JwtServiceImpl implements JwtService {
 				.collect(Collectors.joining(" "));
 
 		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder().subject(authentication.getName()).issuer("starshop.com")
-				.issueTime(new Date()).expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+				.issueTime(new Date()).expirationTime(new Date(Instant.now().plus(24, ChronoUnit.HOURS).toEpochMilli()))
 				.claim("scope", scope).build();
 
 		Payload payload = new Payload(jwtClaimsSet.toJSONObject());

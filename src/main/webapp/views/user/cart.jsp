@@ -107,9 +107,11 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- Voucher Section -->
                                 <div>
-                                    <button class="btn btn-link text-decoration-none" data-bs-toggle="modal" data-bs-target="#voucherModal">
-                                        <i class="bi bi-ticket-perforated"></i> Chọn hoặc nhập mã
-                                    </button>
+                                    <button 
+                class="mt-4 bg-primary text-primary-foreground p-2 rounded hover:bg-primary/80" 
+                onclick="toggleModal()">
+                Chọn hoặc nhập mã
+            </button>
                                 </div>
                             </div>
 
@@ -117,7 +119,7 @@
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div></div>
                                 <div class="text-end d-flex align-items-center">
-                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ${totalCartPrice}</span></p>
+                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ0</span></p>
                                     <button class="btn btn-primary btn-lg">Mua Hàng</button>
                                 </div>
                             </div>
@@ -129,35 +131,9 @@
     </div>
 
     <!-- Voucher Modal -->
-    <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="voucherModalLabel">Chọn Voucher</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="voucherCode" class="form-label">Mã Voucher</label>
-                            <input type="text" id="voucherCode" class="form-control" placeholder="Nhập mã voucher">
-                        </div>
-                        <button type="button" class="btn btn-primary">Áp Dụng</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <%@include file="/views/user/vouchers.jsp"%>
+    
 </nav>
-
-<script>
-    function toggleAll(source) {
-        const checkboxes = document.querySelectorAll('.selectItem');
-        checkboxes.forEach(cb => cb.checked = source.checked);
-    }
-</script>
-
 
 <!-- Form thanh toán, chỉ hiển thị nếu có sản phẩm trong giỏ -->
 <c:if test="${not empty productLines}">
@@ -169,6 +145,7 @@
 </c:if>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Update quantity -->
 <script>
     // Xử lý sự kiện click vào nút "+" hoặc "-"
     $(document).on('click', '.update-quantity-btn', function() {
@@ -201,7 +178,6 @@
             success: function(response) {
                 $('input[name="quantity-' + productLineId + '"]').val(response.newQuantity);
                 $('.product-line-total[data-productline-id="' + productLineId + '"]').text('đ' + response.plTotalPrice);
-                $('#total-price').text('đ' + response.totalPrice);
             },
             error: function(xhr, status, error) {
                 console.error('Error updating quantity:', error);
@@ -210,6 +186,59 @@
     }
 </script>
 
+<!-- Update totalOrderPrice -->
+<script>
+    // Hàm cập nhật tổng tiền khi checkbox thay đổi
+    function updateTotalPrice() {
+	    let totalOrderPrice = 0;
+	
+	    // Lấy danh sách các checkbox được chọn
+	    document.querySelectorAll('.selectItem:checked').forEach(function (checkbox) {
+	        let productLineId = checkbox.value;
+	        console.log('Type of productLineId:', typeof productLineId); 
+	        //let productLineId = "123";
+			console.log('productLineId (direct):', productLineId); 
+			console.log(`productLineId$: ${productLineId}`); 
+			console.trace(); 
+	
+	        // Lấy giá trị tổng tiền từ cột tương ứng
+			var productLineTotalElement = document.querySelector('.product-line-total[data-productline-id="' + productLineId + '"]');
+	        console.log(`productLineTotalElement`, productLineTotalElement);
+	        console.log(document.querySelector(`.product-line-total[data-productline-id="productLineId"]`));
+	        if (productLineTotalElement) {
+	            const productLineTotal = parseFloat(
+	                productLineTotalElement.innerText.replace('đ', '').replace(/,/g, '')
+	            ) || 0;
+	            console.log(`ProductLine Total`, productLineTotal);
+	            totalOrderPrice += productLineTotal;
+	        }
+	    });
+	    console.log(`Total Order Price: `, totalOrderPrice);
+	
+	    // Cập nhật giá trị tổng tiền hiển thị
+	    document.getElementById('total-price').innerText = 'đ' + totalOrderPrice.toLocaleString('vi-VN');
+	}
+
+    // Hàm toggle tất cả checkbox
+    function toggleAll(source) {
+        const checkboxes = document.querySelectorAll('.selectItem');
+        checkboxes.forEach(cb => {
+            cb.checked = source.checked;
+        });
+        updateTotalPrice();
+    }
+
+    // Sự kiện khi checkbox từng sản phẩm thay đổi
+    document.addEventListener('DOMContentLoaded', function () {
+	    document.addEventListener('change', function (e) {
+	        if (e.target.classList.contains('selectItem')) {
+	            updateTotalPrice();
+	        }
+	    });
+	});
+</script>
+
+    
     <script>
         $(document).ready(function() {
             $("#pay-button").click(function(e) {

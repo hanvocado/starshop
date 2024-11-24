@@ -1,6 +1,8 @@
 package com.starshop.services;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.starshop.entities.Voucher;
@@ -17,4 +19,8 @@ public interface VoucherService {
 	Voucher findByCode(String code);
 
 	void delete(String code);
+
+	List<Voucher> getFreeshipVoucher();
+
+	List<Voucher> getDiscountVoucher();
 }

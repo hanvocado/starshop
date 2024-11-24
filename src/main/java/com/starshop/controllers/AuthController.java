@@ -86,7 +86,7 @@ public class AuthController {
 	    cookie.setHttpOnly(true); 
 	    cookie.setSecure(true);   
 	    cookie.setPath("/");      
-	    cookie.setMaxAge(3600);   
+	    cookie.setMaxAge(24*60*60);   
 	    response.addCookie(cookie);	
 
 		String role = userService.getUserRole(authentication);
