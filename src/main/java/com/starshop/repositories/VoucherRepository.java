@@ -1,6 +1,7 @@
 package com.starshop.repositories;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +30,8 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Page<Voucher> findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(Pageable pageable, String name, String code);
     
     Voucher findByCode(String code);
+    
+    List<Voucher> findByExpiredAtAfterAndIsFreeshipTrue(LocalDateTime now);
+    
+    List<Voucher> findByExpiredAtAfterAndIsFreeshipFalse(LocalDateTime now);
 }

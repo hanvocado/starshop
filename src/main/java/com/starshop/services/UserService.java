@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.naming.AuthenticationException;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -35,7 +38,12 @@ public interface UserService {
 
 	void assignRole(User user, String roleName);
 
+	String getUserRole(Authentication authentication);
 
-//	UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+	User getUserByAuthentication() throws AuthenticationException;
+
+	User getUserByUserName(String userName);
+
+	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }

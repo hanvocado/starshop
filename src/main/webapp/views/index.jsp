@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@include file="/common/taglibs.jsp"%>
 
 <title>index page</title>
 
@@ -62,6 +62,7 @@
           <div class="row">
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
+          <a href="${pageContext.request.contextPath}/user/products/${product.id}" style="text-decoration: none; color: inherit;">
             <div class="card product-card">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
@@ -72,21 +73,32 @@
                 <img src="${imgUrl}" class="card-img-top product-image" alt="${product.name}" height=350>
                 <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
-                    
-                    <!-- Thay thế URL với các liên kết JSP phù hợp -->
-                    <a href="${pageContext.request.contextPath}/add_to_cart?p_id=${product.id}">
-                        <button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Add to Cart</button>
-                    </a>
-                    
-                    <a href="${pageContext.request.contextPath}/add_to_wishlist?p_id=${product.id}">
-                        <button class="fs__button custom-btn btn w-max mt-2" type="button" style="width: 140px; height: 40px;">Wishlist
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                            </svg>
-                        </button>
-                    </a>
+                    <div>
+                    </div>
+                    <div class="d-flex justify-content-start">
+					    <!-- Add to Cart Button -->
+					    <div class="mr-2">
+						    <form action="${pageContext.request.contextPath}/user/cart/add/${product.id}" method="POST">
+						        <button class="fs__button custom-btn btn w-max mt-2" type="submit" style="width: 140px; height: 40px;">
+						            Add to Cart
+						        </button>
+						    </form>
+					    </div>
+					
+					    <!-- Wishlist Button -->
+					    <a href="${pageContext.request.contextPath}/add_to_wishlist?p_id=${product.id}">
+					        <button class="fs__button custom-btn btn w-max mt-2 ms-2" type="button" style="width: 140px; height: 40px;">
+					            Wishlist
+					            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
+					                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+					            </svg>
+					        </button>
+					    </a>
+					</div>
+
                 </div>
             </div>
+            </a>
         </div>
     </c:forEach>
 </div>

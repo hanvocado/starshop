@@ -1,5 +1,6 @@
 package com.starshop.configs;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -27,6 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.HttpFirewall;
@@ -36,8 +39,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import jakarta.servlet.DispatcherType;
+
+import com.starshop.entities.Role;
 import com.starshop.services.impl.JpaUserDetailsService;
 import com.starshop.utils.Constants;
+import com.starshop.utils.RoleName;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,92 +53,61 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity
 @Slf4j
 public class SecurityConfig {
+		
 	private final String[] PUBLIC_ENDPOINTS = { "/auth/login/**", "/auth/register/**", 
-			"/admin/categories/**", "/admin/products/**", "/admin/vouchers/**" };
-
-//	
-//	@Autowired
-//	@Lazy
-//	private JwtFilter jwtFilter;
-//
-//	// Defines a UserDetailsService bean for user authentication
-//	@Bean
-//	@Lazy
-//	public UserDetailsService userDetailsService() {
-//		return new UserServiceImpl();
-//	}
-//
-//	// Configures the security filter chain
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//		log.warn("Đã vào securityconfig");
-////		httpSecurity.formLogin(form -> form.loginPage("/auth/login").permitAll());
-////		httpSecurity.csrf(csrf -> csrf.disable()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-////				.authorizeHttpRequests(auth -> auth.requestMatchers("/").permitAll().anyRequest().authenticated())
-////				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-////				.authenticationProvider(authenticationProvider());
-////		return httpSecurity.build();
-//
-//		httpSecurity.csrf(csrf -> csrf.disable()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//				.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-//						.anyRequest().authenticated())
-//				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//				.authenticationProvider(authenticationProvider());
-//		log.warn("Đã qua securityconfig");
-//		return httpSecurity.build();
-//	}
-//
-//	// Creates a DaoAuthenticationProvider to handle user authentication
-//	@Bean
-//	public AuthenticationProvider authenticationProvider() {
-//		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//		authenticationProvider.setUserDetailsService(userDetailsService());
-//		authenticationProvider.setPasswordEncoder(passwordEncoder());
-//		return authenticationProvider;
-//	}
-//
-//	// Defines a PasswordEncoder bean that uses bcrypt hashing by default for
-//	// password encoding
-//	@Bean
-//	PasswordEncoder passwordEncoder() {
-//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//	}
-//
-//	// Defines an AuthenticationManager bean to manage authentication processes
-//	@Bean
-//	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-//		return config.getAuthenticationManager();
-//	}
-//
+			"/products/**", "/exec/**", "/img/**", "/shop/**" };
+	
+	  @Autowired
+	  @Lazy
+	  private JwtFilter jwtFilter;
+	
 	  @Autowired
 	    private JpaUserDetailsService userDetailsService;
 
 
-	    @Bean
-	    public AuthenticationManager authManager() {
-
-	        var authProvider = new DaoAuthenticationProvider();
-	        authProvider.setUserDetailsService(userDetailsService);
-	        authProvider.setPasswordEncoder(passwordEncoder());
-	        return new ProviderManager(authProvider);
-	    }
+	  @Bean
+	  public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
+	      return config.getAuthenticationManager();
+	  }
+	  
+	  @Bean
+	  public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+	      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	      authProvider.setUserDetailsService(userDetailsService);
+	      authProvider.setPasswordEncoder(passwordEncoder);
+	      return authProvider;
+	  }
 
 	    @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-
 	        return http
 	                .csrf(csrf -> csrf.disable())
-	                .cors(cors -> cors.disable())
-	                .authorizeHttpRequests(auth -> {
-	                    auth.requestMatchers("/*").permitAll();
-	                    auth.anyRequest().permitAll();
-	                })
+	                .authorizeHttpRequests(authorize -> authorize
+	                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+	                        .requestMatchers("/**").permitAll()
+	                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+	                        .requestMatchers("/admin/**").hasRole(RoleName.ADMIN.name())
+	                        .requestMatchers("/user/**").hasAuthority("USER")
+	                        .anyRequest().authenticated()
+	                )
 	                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
-	                .userDetailsService(userDetailsService)
-	                .httpBasic(Customizer.withDefaults())
+	                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) 
+	                .userDetailsService(userDetailsService) 
+	                .httpBasic(Customizer.withDefaults()) 
 	                .build();
 	    }
+	    
+	    @Bean
+	    JwtAuthenticationConverter jwtAuthenticationConverter() {
+	        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+	        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+
+	        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+	        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+	        return jwtAuthenticationConverter;
+	    }
+	    
 
 	    @Bean
 		JwtDecoder jwtDecoder() {

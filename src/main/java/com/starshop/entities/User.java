@@ -3,6 +3,10 @@ package com.starshop.entities;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,7 +21,8 @@ import lombok.*;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	@Column(name = "user_id", updatable = false)
+	@JdbcTypeCode(SqlTypes.CHAR)	
+	@Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "char(36)")
 	private UUID id;
 
 	@Column(name = "first_name", columnDefinition = "nvarchar(250)")
@@ -58,5 +63,8 @@ public class User {
 	
 	@OneToMany(mappedBy = "user")
 	private Set<Order> orders;
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Cart cart;
 
 }

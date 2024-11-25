@@ -53,7 +53,7 @@
               <div class="card card-lg mb-5">
                 <div class="card-body">
                   <!-- Form -->
-                  <form class="js-validate" action="/auth/login" method="post">
+                  <form id="loginForm" class="js-validate" action="/auth/login" method="post">
                     <div class="text-center">
                       <div class="mb-5">
                         <h1 class="display-4">Sign in</h1>
@@ -154,6 +154,11 @@
 
       <!-- JS Front -->
       <script src="/exec/js/theme.min.js"></script>
+      
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      
+      <!-- JS store jwt -->
+ 
 
       <!-- JS Plugins Init. -->
       <script>

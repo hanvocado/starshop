@@ -1,16 +1,21 @@
 package com.starshop.controllers;
 
-import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,17 +25,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.starshop.entities.AuthenticationResponse;
 import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.models.ViewMessage;
-import com.starshop.repositories.UserRepository;
 import com.starshop.services.AuthService;
 import com.starshop.services.JwtService;
 import com.starshop.services.UserService;
-import com.starshop.services.impl.UserServiceImpl;
 import com.starshop.utils.Constants;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -39,42 +45,90 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 	@Autowired
 	JwtService jwtService;
-	
+
 	@Autowired
 	AuthService authService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@GetMapping("/login")
 	public String login(Model model) {
-		ViewMessage message  = (ViewMessage) model.asMap().get("result");
-        model.addAttribute("message", message);
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		model.addAttribute("message", message);
 		return "login";
 	}
-	
+
 	@PostMapping("/login")
-    public String authenticate(Model model, @ModelAttribute("userLogin") UserLogin userLogin, BindingResult result,
-			RedirectAttributes redirectAttributes) {
+	public String authenticate(Model model, @ModelAttribute("userLogin") UserLogin userLogin, BindingResult result,
+			RedirectAttributes redirectAttributes, HttpServletResponse response, HttpServletRequest request) throws AuthenticationException {
 		if (result.hasErrors()) {
 			return "redirect:/auth/login";
 		}
-		
-        boolean validated = userService.checkUserLogin(userLogin);
-        if(!validated) {
-        	redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.validateLoginFailed));
-	        return "redirect:/auth/login"; 
-        }
-        
-        User authenticatedUser = authService.authenticate(userLogin);
-        model.addAttribute("user", authenticatedUser);
 
-//        String jwtToken = jwtService.generateToken(authenticatedUser);
-//        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
-        return "redirect:/user/products";
-    }
+		// Check username và password
+		boolean validated = userService.checkUserLogin(userLogin);
+		if (!validated) {
+			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.validateLoginFailed));
+			return "redirect:/auth/login";
+		}
+
+		Authentication authentication = authService.authenticate(userLogin);
+		if (authentication == null || !authentication.isAuthenticated()) {
+		    throw new AuthenticationException("Authentication failed for user: " + userLogin.getUsername());
+		}
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtService.generateToken(authentication);
+
+		// Đặt JWT vào Cookie
+	    Cookie cookie = new Cookie("jwt", jwt);
+	    cookie.setHttpOnly(true); 
+	    cookie.setSecure(true);   
+	    cookie.setPath("/");      
+	    cookie.setMaxAge(24*60*60);   
+	    response.addCookie(cookie);	
+
+		String role = userService.getUserRole(authentication);
+		log.warn("User role: {}", role);
+
+		switch (role) {
+		case "ADMIN":
+			return "redirect:/admin/categories";
+		case "USER":
+			return "redirect:/user/products";
+		default:
+			log.warn("Unknown role: {}", role);
+			return "redirect:/";
+		}
+	}
+
+	@GetMapping("/register")
+	public String register(Model model) {
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		model.addAttribute("message", message);
+		return "register";
+	}
+
+	@PostMapping("/register")
+	public String addUser(ModelMap model, @Valid @ModelAttribute("user") User user, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			return "redirect:/auth/register";
+		}
+
+		boolean success = userService.addUser(user);
+		if (!success) {
+			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.registerFailed));
+			return "redirect:/auth/register";
+		}
+
+		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", Constants.registerSuccess));
+		return "redirect:/auth/login";
+	}
+//	
 //	@Autowired
-//    private AuthenticationManager authenticationManager;
+//  private AuthenticationManager authenticationManager;
 //	 @PostMapping("/login")
 //	    public ResponseEntity<?> login(@RequestBody UserLogin userLogin) throws IllegalAccessException {
 //	        Authentication authentication =
@@ -94,28 +148,5 @@ public class AuthController {
 //
 //	        return ResponseEntity.ok(token);
 //	    }
-	 
-	@GetMapping("/register")
-	public String register(Model model) {
-		ViewMessage message  = (ViewMessage) model.asMap().get("result");
-        model.addAttribute("message", message);
-		return "register";
-	}
-	
-	@PostMapping("/token")
-	public ResponseEntity<User> authenticate(@RequestBody UserLogin request) {
-		var res = authService.authenticate(request);
-		return ResponseEntity.ok(res);
-	}
-	
-//	@PostMapping("/introspect")
-//	public ResponseEntity<IntrospectResponse> authenticate(@RequestBody IntrospectToken request) throws JOSEException, ParseException {
-//		var result = authenticationService.introspect(request);
-//		/*
-//		 * if (result) { return ResponseEntity.ok("Authentication successful"); } else {
-//		 * return ResponseEntity.status(401).body("Invalid password"); }
-//		 */
-//		return ResponseEntity.ok(result);
-//	}
 
 }
