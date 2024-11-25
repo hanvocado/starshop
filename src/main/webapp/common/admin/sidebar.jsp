@@ -12,8 +12,8 @@
 
 
                         <a class="navbar-brand" href="<c:url value="/admin"/>" aria-label="Front">
-                            <img class="navbar-brand-logo" src="/exec/svg/logos/logo.svg" alt="Logo">
-                            <img class="navbar-brand-logo-mini" src="/exec/svg/logos/logo-short.svg" alt="Logo">
+                            <img class="navbar-brand-logo" src="/logo.svg" alt="Logo">
+                            <img class="navbar-brand-logo-mini" src="/logo.svg" alt="Logo">
                         </a>
 
                         <!-- End Logo -->
