@@ -82,10 +82,6 @@
 	                          <span class="font-weight-bold">${line.product.categoryNames }</span>
 	                        </div>
 	                        <div class="font-size-sm text-body">
-	                          <span>Description:</span>
-	                          <span class="font-weight-bold">${line.product.description }</span>
-	                        </div>
-	                        <div class="font-size-sm text-body">
 	                          <span>Đơn giá gốc:</span>
 	                          <span class="font-weight-bold">${line.product.salePrice }</span>
 	                        </div>
@@ -100,7 +96,7 @@
 	                      </div>
 	
 	                      <div class="col col-md-2 align-self-center text-right">
-	                        <h5>subtotal</h5>
+	                        <h5>${line.subTotal }</h5>
 	                      </div>
 	                    </div>
 	                  </div>
@@ -114,16 +110,16 @@
                 <div class="row justify-content-md-end mb-3">
                   <div class="col-md-8 col-lg-7">
                     <dl class="row text-sm-right">
-                      <dt class="col-sm-6">Subtotal:</dt>
-                      <dd class="col-sm-6">$65.00</dd>
-                      <dt class="col-sm-6">Shipping fee:</dt>
-                      <dd class="col-sm-6">$0.00</dd>
-                      <dt class="col-sm-6">Tax:</dt>
-                      <dd class="col-sm-6">$7.00</dd>
-                      <dt class="col-sm-6">Total:</dt>
-                      <dd class="col-sm-6">$65.00</dd>
-                      <dt class="col-sm-6">Amount paid:</dt>
-                      <dd class="col-sm-6">$65.00</dd>
+                      <dt class="col-sm-6">Tổng sản phẩm:</dt>
+                      <dd class="col-sm-6">${order.productsTotal }</dd>
+                      <dt class="col-sm-6">Phí vận chuyển:</dt>
+                      <dd class="col-sm-6">${order.shippingFee }</dd>
+                      <c:if test="${order.discountTotal > 0}">
+	                      <dt class="col-sm-6">Voucher:</dt>
+	                      <dd class="col-sm-6">- ${order.discountTotal }</dd>
+                      </c:if>
+                      <dt class="col-sm-6">Tổng cộng:</dt>
+                      <dd class="col-sm-6">${order.finalTotal }</dd>
                     </dl>
                     <!-- End Row -->
                   </div>

@@ -1,5 +1,7 @@
 package com.starshop.entities;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -66,5 +68,13 @@ public class User {
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
+	
+	@ManyToMany()
+    @JoinTable(
+        name = "user_voucher",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "voucher_id")
+    )
+    private List<Voucher> usedVouchers;
 
 }

@@ -144,7 +144,7 @@
                 
 				<td class="text-center">${order.user.userName }</td>
 								
-                <td><fmt:formatNumber value = "${order.totalAmount }" type = "currency"/>
+                <td><fmt:formatNumber value = "${order.finalTotal }" type = "currency"/>
                 	<c:choose>
                 		<c:when test="${order.isPayed()}">
 		                	<span class="badge badge-soft-success">

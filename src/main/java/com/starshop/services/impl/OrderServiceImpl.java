@@ -43,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Order add(Order order) {
+		order.setFinalTotal();
 		return orderRepo.save(order);
 	}
 

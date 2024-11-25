@@ -34,4 +34,14 @@ public class ProductLine {
 	    this.cart = cart;
 	    this.quantity = quantity;
 	}
+	
+	public ProductLine(Product product, Order order, int quantity) {
+		this.product = product;
+	    this.order = order;
+	    this.quantity = quantity;
+	}
+	
+	public double getSubTotal() {
+		return this.product.getDisplayPrice() * this.quantity;
+	}
 }

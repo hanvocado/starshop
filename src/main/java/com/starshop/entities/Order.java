@@ -42,8 +42,18 @@ public class Order implements Serializable {
     @Column(name = "status", nullable = false)
     private OrderStatus status;
 	
-	@Column(name = "total_amount", nullable = false)
-    private double totalAmount;
+	@Column(name = "products_total", nullable = false)
+	private double productsTotal;
+	
+	@Column(name = "shipping_fee", nullable = false)
+	private double shippingFee;
+	
+	@OneToOne
+	@JoinColumn(name = "voucher_id", nullable = true)
+	private Voucher voucher;
+	
+	@Column(name = "final_total", nullable = false)
+	private double finalTotal;
 	
 	@Enumerated(EnumType.STRING)
     @Column(name = "pay_method", nullable = false)
@@ -58,9 +68,26 @@ public class Order implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "shipper_id", nullable = true)
 	private User shipper;
-	
+
 	@Transient
 	public String getFormattedOrderDate() {
 		return Converter.localDateTimeToDateWithSlash(orderDate);
+	}
+	
+	public void setFinalTotal() {
+		setProductsTotal();
+		this.finalTotal = productsTotal + shippingFee - this.getDiscountTotal();
+	}
+	
+	private void setProductsTotal() {
+		double total = 0;
+		for (ProductLine line : this.lines) {
+			total += line.getSubTotal();
+		}
+		this.productsTotal = total;
+	}
+	
+	public double getDiscountTotal() {
+		return this.voucher == null ? 0 : voucher.getDiscountAmount(this);
 	}
 }

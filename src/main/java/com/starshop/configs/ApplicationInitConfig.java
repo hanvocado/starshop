@@ -1,6 +1,7 @@
 package com.starshop.configs;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -13,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.starshop.entities.Cart;
 import com.starshop.entities.Order;
+import com.starshop.entities.Product;
+import com.starshop.entities.ProductLine;
 import com.starshop.entities.User;
 import com.starshop.repositories.CartRepository;
+import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.OrderService;
 import com.starshop.services.UserService;
@@ -47,43 +51,51 @@ public class ApplicationInitConfig {
 	
 	@Autowired
 	private CartRepository cartRepository;
-
+	
+	@Autowired
+	private ProductRepository productRepository;
+	
 	@Bean
 	ApplicationRunner applicationRunner(UserRepository userRepository) {
 		return args -> {
-			if (userRepository.findByUserName("admin").isEmpty()) {
-				User user = User.builder().userName("admin").email("admin@gmail.com")
-						.password(passwordEncoder.encode("admin123")).build();
-				userService.assignRole(user, RoleName.ADMIN.name());
-
-				userRepository.save(user);
-				log.warn("Admin has been created with default password: admin123, please change it");
-			}
-			
-			if (userRepository.findByUserName("shipper").isEmpty()) {
-				User user = User.builder().userName("shipper").email("shipper1@gmail.com")
-						.password(passwordEncoder.encode("s12345")).build();
-				userService.assignRole(user, RoleName.SHIPPER.name());
-
-				userRepository.save(user);
-			}
-			
-			if (userRepository.findByUserName("shipper2").isEmpty()) {
-				User user = User.builder().userName("shipper2").email("shipper2@gmail.com")
-						.password(passwordEncoder.encode("s12345")).build();
-				userService.assignRole(user, RoleName.SHIPPER.name());
-
-				userRepository.save(user);
-			}
-			
+			createSeedUsers();
+						
 			long orderCount = orderService.count();
+			long productCount = productRepository.count();
 
-            if (orderCount < 10) {
+            if (orderCount < 10 && productCount >= 10) {
                 User user = createTestBuyerIfNotExists();
 
                 createOrdersForUser(user, 10);
             }
 		};
+	}
+	
+	private void createSeedUsers() {
+		if (userRepository.findByUserName("admin").isEmpty()) {
+			User user = User.builder().userName("admin").email("admin@gmail.com")
+					.password(passwordEncoder.encode("admin123")).build();
+			userService.assignRole(user, RoleName.ADMIN.name());
+
+			userRepository.save(user);
+			log.warn("Admin has been created with default password: admin123, please change it");
+		}
+		
+		if (userRepository.findByUserName("shipper").isEmpty()) {
+			User user = User.builder().userName("shipper").email("shipper1@gmail.com")
+					.password(passwordEncoder.encode("s12345")).build();
+			userService.assignRole(user, RoleName.SHIPPER.name());
+
+			userRepository.save(user);
+		}
+		
+		if (userRepository.findByUserName("shipper2").isEmpty()) {
+			User user = User.builder().userName("shipper2").email("shipper2@gmail.com")
+					.password(passwordEncoder.encode("s12345")).build();
+			userService.assignRole(user, RoleName.SHIPPER.name());
+
+			userRepository.save(user);
+		}
 	}
 	
 	@Transactional
@@ -122,11 +134,14 @@ public class ApplicationInitConfig {
             if (order.getStatus() != OrderStatus.PENDING)
             	order.setShipper(userRepository.findByEmail("shipper1@gmail.com").get());
             
-            order.setTotalAmount(100 + i);  // Example amount
             order.setPayMethod(PaymentType.CASH);  // Example payment method
             order.setPayed(false);  // Alternate payment status
-            orderService.add(order);
-        
+            List<ProductLine> lines = new ArrayList<>();
+            Product product = productRepository.findById((long) i).get();
+            lines.add(new ProductLine(product, order, 2));
+            order.setLines(lines);
+            order.setShippingFee(i*2000);
+            orderService.add(order);        
         });
     }
 
