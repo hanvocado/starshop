@@ -121,19 +121,11 @@ public class ApplicationInitConfig {
 	
 	@Transactional
     private void createOrdersForUser(User user, int numberOfOrders) {
-		List<OrderStatus> statuses = List.of(OrderStatus.PENDING, OrderStatus.DELIVERED, OrderStatus.SHIPPING, OrderStatus.SHIPFAILED);
         IntStream.rangeClosed(1, numberOfOrders).forEach(i -> {
             Order order = new Order();
             order.setUser(user);
             order.setOrderDate(LocalDateTime.now().minusDays(i));
-            
-         // Assign different statuses in a rotating manner
-            OrderStatus status = statuses.get(i % statuses.size());
-            order.setStatus(status);
-            
-            if (order.getStatus() != OrderStatus.PENDING)
-            	order.setShipper(userRepository.findByEmail("shipper1@gmail.com").get());
-            
+          
             order.setPayMethod(PaymentType.CASH);  // Example payment method
             order.setPayed(false);  // Alternate payment status
             List<ProductLine> lines = new ArrayList<>();

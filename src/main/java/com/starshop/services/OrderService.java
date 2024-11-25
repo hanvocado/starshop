@@ -12,7 +12,7 @@ import com.starshop.models.ShipperRecord;
 import com.starshop.utils.OrderStatus;
 
 public interface OrderService {
-	int updateOrderStatus(Long orderId, OrderStatus newStatus);
+	Order updateOrderStatus(Long orderId, OrderStatus newStatus);
 	
 	List<Order> findAll();
 		
@@ -22,9 +22,11 @@ public interface OrderService {
 	
 	List<Order> findByShipperId(UUID shipperId);
 	
-	List<ShipperRecord> getShipperRecords();
-	
-	Optional<ShipperRecord> findShipperRecordByShipperId(UUID shipperId);
+	/*
+	 * List<ShipperRecord> getShipperRecords();
+	 * 
+	 * Optional<ShipperRecord> findShipperRecordByShipperId(UUID shipperId);
+	 */
 	
 	Long count();
 	

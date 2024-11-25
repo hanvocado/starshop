@@ -42,10 +42,10 @@
 	      <a class="nav-link <c:if test="${status == 'pending'}">active</c:if>" id="pending" href="<c:url value="/admin/orders?status=pending" />">Chờ xác nhận</a>
 	    </li>
 	    <li class="nav-item">
-	      <a class="nav-link <c:if test="${status == 'processing'}">active</c:if>" id="processing" href="<c:url value="/admin/orders?status=processing" />">Đang chuẩn bị hàng</a>
+	      <a class="nav-link <c:if test="${status == 'preparing'}">active</c:if>" id="preparing" href="<c:url value="/admin/orders?status=preparing" />">Đang chuẩn bị hàng</a>
 	    </li>
 	    <li class="nav-item">
-	      <a class="nav-link <c:if test="${status == 'readyforship'}">active</c:if>" id="s2" href="<c:url value="/admin/orders?status=readyforship" />">Chờ giao hàng</a>
+	      <a class="nav-link <c:if test="${status == 'ready_for_ship'}">active</c:if>" id="s2" href="<c:url value="/admin/orders?status=ready_for_ship" />">Chờ giao hàng</a>
 	    </li>
 	    <li class="nav-item">
 	      <a class="nav-link <c:if test="${status == 'shipping'}">active</c:if>" id="s3" href="<c:url value="/admin/orders?status=shipping" />" >Đang giao</a>
@@ -57,7 +57,7 @@
 	      <a class="nav-link <c:if test="${status == 'cancelled'}">active</c:if>" id="s5" href="<c:url value="/admin/orders?status=cancelled" />" >Đã hủy</a>
 	    </li>
 	    <li class="nav-item">
-	      <a class="nav-link <c:if test="${status == 'shipfailed'}">active</c:if>" id="s6" href="<c:url value="/admin/orders?status=shipfailed" />" >Giao thất bại</a>
+	      <a class="nav-link <c:if test="${status == 'ship_failed'}">active</c:if>" id="s6" href="<c:url value="/admin/orders?status=ship_failed" />" >Giao thất bại</a>
 	    </li>
 	  </ul>
 	</div>
@@ -125,7 +125,7 @@
                <th class="text-center">Khách hàng</th>
                <th class="text-center">Số tiền</th>
                
-               <c:if test="${status != 'pending' && status != 'processing' }"><th>Shipper</th></c:if>
+               <c:if test="${status != 'pending' && status != 'preparing' }"><th>Shipper</th></c:if>
                
                <th>Hành động</th>
              </tr>
@@ -163,10 +163,10 @@
 				<td class="text-end">
 				  <c:choose>
 					<c:when test="${status == 'pending' }">
-				       <a href="<c:url value="/admin/orders/update/${order.id}/processing"/>" class="btn btn-primary btn-xs">
+				       <a href="<c:url value="/admin/orders/update/${order.id}/preparing"/>" class="btn btn-primary btn-xs">
 					          	<i class="tio-archive"></i> Xác nhận</a> 					
 					</c:when>
-					<c:when test="${status == 'processing' }">
+					<c:when test="${status == 'preparing' }">
 				       <a data-toggle="modal" data-target="#shippersModal" class="btn btn-info btn-xs"
 				       		onclick="assignShipperFor(${order.id})">
 					          	<i class="tio-archive"></i> Giao shipper</a> 					

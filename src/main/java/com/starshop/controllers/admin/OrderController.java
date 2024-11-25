@@ -49,7 +49,7 @@ public class OrderController {
 		else
 			orderStatus = OrderStatus.valueOf(status.toUpperCase());
 
-		if (orderStatus == OrderStatus.PROCESSING) {
+		if (orderStatus == OrderStatus.PREPARING) {
 			List<User> shippers = shipperService.findAllShippers();
 			model.addAttribute("shippers", shippers);
 		}
@@ -98,7 +98,7 @@ public class OrderController {
 			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.failed));
 		}
 
-		return "redirect:/admin/orders?status=" + OrderStatus.READYFORSHIP.name().toLowerCase();
+		return "redirect:/admin/orders?status=" + OrderStatus.READY_FOR_SHIP.name().toLowerCase();
 	}
 	
 	@GetMapping("/details/{id}")

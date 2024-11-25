@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@include file="/common/taglibs.jsp"%>
 
 <title>Chi tiết đơn hàng</title>
 
@@ -25,22 +25,13 @@
                		</c:otherwise>
                	</c:choose>
                	<span class="badge badge-soft-info ml-2 ml-sm-3">
-                  <span class="legend-indicator bg-info"></span>${order.status }
+                  <span class="legend-indicator bg-info"></span>${order.currentStatus }
                 </span>
                 <span class="ml-2 ml-sm-3">
                   <i class="tio-date-range"></i> ${order.formattedOrderDate }
                 </span>
               </div>
 
-            </div>
-
-            <div class="col-sm-auto">
-              <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle mr-1" href="#" data-toggle="tooltip" data-placement="top" title="Previous order">
-                <i class="tio-arrow-backward"></i>
-              </a>
-              <a class="btn btn-icon btn-sm btn-ghost-secondary rounded-circle" href="#" data-toggle="tooltip" data-placement="top" title="Next order">
-                <i class="tio-arrow-forward"></i>
-              </a>
             </div>
           </div>
         </div>
@@ -52,7 +43,7 @@
             <div class="card mb-3 mb-lg-5">
               <!-- Header -->
               <div class="card-header">
-                <h4 class="card-header-title">Order details <span class="badge badge-soft-dark rounded-circle ml-1">4</span></h4>
+                <h4 class="card-header-title">Chi tiết đơn hàng <span class="badge badge-soft-dark rounded-circle ml-1">${order.numberOfProducts }</span></h4>
               </div>
               <!-- End Header -->
           
@@ -78,17 +69,15 @@
 	                        <a class="h5 d-block" href="<c:url value='/admin/products/update/${line.product.id }' />">${product.name }</a>
 	
 	                        <div class="font-size-sm text-body">
-	                          <span>Category:</span>
-	                          <span class="font-weight-bold">${line.product.categoryNames }</span>
+	                          <span class="font-weight-bold">${line.product.name }</span>
 	                        </div>
 	                        <div class="font-size-sm text-body">
-	                          <span>Đơn giá gốc:</span>
-	                          <span class="font-weight-bold">${line.product.salePrice }</span>
+	                          <span class="font-weight-bold"><fmt:formatNumber value = "${line.product.salePrice }" type = "currency"/></span>
 	                        </div>
 	                      </div>
 	
 	                      <div class="col col-md-2 align-self-center">
-	                        <h5>${line.product.displayPrice }</h5>
+	                        <h5><fmt:formatNumber value = "${line.product.displayPrice }" type = "currency"/></h5>
 	                      </div>
 	
 	                      <div class="col col-md-2 align-self-center">
@@ -96,7 +85,7 @@
 	                      </div>
 	
 	                      <div class="col col-md-2 align-self-center text-right">
-	                        <h5>${line.subTotal }</h5>
+	                        <h5><fmt:formatNumber value = "${line.subTotal }" type = "currency"/></h5>
 	                      </div>
 	                    </div>
 	                  </div>
@@ -130,15 +119,16 @@
             </div>
             <!-- End Card -->
 
-            <!-- Card -->
+            
+          </div>
+        	
+        	<div class="col-lg-4 mb-3 mb-lg-0">
+        		<!-- Card -->
             <div class="card">
               <!-- Header -->
               <div class="card-header">
                 <h4 class="card-header-title">
-                  Shipping activity
-                  <span class="badge badge-soft-dark ml-1">
-                    <span class="legend-indicator bg-dark"></span>Marked as fulfilled
-                  </span>
+                  Theo dõi đơn hàng
                 </h4>
               </div>
               <!-- End Header -->
@@ -147,118 +137,24 @@
               <div class="card-body">
                 <!-- Step -->
                 <ul class="step step-icon-xs">
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <small class="step-divider">Wednesday, 19 August</small>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Delivered</a>
-                        </h5>
-
-                        <p class="font-size-sm mb-0">4:17 AM</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Out for delivery</a>
-                        </h5>
-
-                        <p class="font-size-sm mb-0">2:38 AM</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Package arrived at the final delivery station</a>
-                        </h5>
-
-                        <p class="font-size-sm mb-0">2:00 AM</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <small class="step-divider">Tuesday, 18 August</small>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Tracking number</a>
-                        </h5>
-
-                        <a class="link" href="#">3981241023109293</a>
-                        <p class="font-size-sm mb-0">6:29 AM</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Package has dispatched</a>
-                        </h5>
-
-                        <p class="font-size-sm mb-0">6:29 AM</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
-
-                  <!-- Step Item -->
-                  <li class="step-item">
-                    <div class="step-content-wrapper">
-                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
-
-                      <div class="step-content">
-                        <h5 class="mb-1">
-                          <a class="text-dark" href="#">Order was placed</a>
-                        </h5>
-
-                        <p class="font-size-sm mb-0">Order #32543</p>
-                      </div>
-                    </div>
-                  </li>
-                  <!-- End Step Item -->
+					<c:forEach items="${order.tracking }" var="track">						
+	                  <!-- Step Item -->
+	                  <li class="step-item">
+	                    <div class="step-content-wrapper">
+	                      <span class="step-icon step-icon-soft-dark step-icon-pseudo"></span>
+	
+	                      <div class="step-content">
+	                        <h5 class="mb-1">
+	                          <a class="text-dark" href="#">${track.status.getDescription() }</a>
+	                        </h5>
+	
+	                        <p class="font-size-sm mb-0">${track.formattedTime }</p>
+	                      </div>
+	                    </div>
+	                  </li>
+	                  <!-- End Step Item -->
+					</c:forEach>
+					
                 </ul>
                 <!-- End Step -->
 
@@ -267,8 +163,7 @@
               <!-- End Body -->
             </div>
             <!-- End Card -->
-          </div>
-        
+        	</div>
         
         
         </div>
