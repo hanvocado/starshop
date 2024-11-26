@@ -69,15 +69,29 @@ public class Order implements Serializable {
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TrackingOrder> tracking = new ArrayList<>();
-
-	@Transient
+	
+	private OrderStatus currentStatus;
+	
+	private double profit;
+	
+	public Order(User user, List<ProductLine> lines, double shippingFee, Voucher voucher, PaymentType paymentType, String note) {
+		this.user = user;
+		this.lines = lines;
+		this.shippingFee = shippingFee;
+	}
+	
 	public String getFormattedOrderDate() {
 		return Converter.localDateTimeToDateWithSlash(orderDate);
 	}
 
-	public void setFinalTotal() {
+	public void setTotalAndProfit() {
 		setProductsTotal();
 		this.finalTotal = productsTotal + shippingFee - this.getDiscountTotal();
+		double profit = 0;
+		for (ProductLine line : this.lines) {
+			profit += line.getProfit();
+		}
+		this.profit = profit;
 	}
 
 	private void setProductsTotal() {
@@ -90,10 +104,6 @@ public class Order implements Serializable {
 
 	public double getDiscountTotal() {
 		return this.voucher == null ? 0 : voucher.getDiscountAmount(this);
-	}
-	
-	public OrderStatus getCurrentStatus() {
-		return this.tracking.get(tracking.size() - 1).getStatus();
 	}
 
 	public void addTrackingOrder(TrackingOrder trackingOrder) {
@@ -109,4 +119,12 @@ public class Order implements Serializable {
 	public int getNumberOfProducts() {
 		return this.lines.size();
 	}
+
+    public long getTotalItems() {
+    	long res = 0;
+		for (ProductLine line : this.lines) {
+			res += line.getQuantity();
+		}
+		return res;
+    }
 }

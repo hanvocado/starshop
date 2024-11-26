@@ -44,4 +44,8 @@ public class ProductLine {
 	public double getSubTotal() {
 		return this.product.getDisplayPrice() * this.quantity;
 	}
+
+	public double getProfit() {
+		return this.product.getProfit() * this.quantity;
+	}
 }

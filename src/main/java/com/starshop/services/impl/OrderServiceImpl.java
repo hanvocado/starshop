@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.starshop.entities.Order;
 import com.starshop.entities.TrackingOrder;
 import com.starshop.entities.User;
+import com.starshop.models.MonthlyReport;
 import com.starshop.models.ShipperRecord;
 import com.starshop.repositories.OrderRepository;
 import com.starshop.repositories.UserRepository;
@@ -35,7 +36,8 @@ public class OrderServiceImpl implements OrderService {
 		Order order = orderRepo.findById(orderId).orElse(null);
 		if (order != null) {
 			TrackingOrder newTracking = new TrackingOrder(order, newStatus, LocalDateTime.now());
-			order.addTrackingOrder(newTracking);			
+			order.addTrackingOrder(newTracking);
+			order.setCurrentStatus(newStatus);
 			orderRepo.save(order);
 		}
 		return order;
@@ -53,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Order add(Order order) {
-		order.setFinalTotal();
+		order.setTotalAndProfit();
 
 		TrackingOrder placedOrder = new TrackingOrder(order, OrderStatus.PENDING, LocalDateTime.now());
 		order.addTrackingOrder(placedOrder);
@@ -66,13 +68,16 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepo.findByShipperId(shipperId);
 	}
 
-	/*
-	 * @Override public List<ShipperRecord> getShipperRecords() { return
-	 * orderRepo.getShipperRecords(); }
-	 * 
-	 * @Override public Optional<ShipperRecord> findShipperRecordByShipperId(UUID
-	 * shipperId) { return orderRepo.findShipperRecordByShipperId(shipperId); }
-	 */
+	@Override
+	public List<ShipperRecord> getShipperRecords() {
+		return orderRepo.getShipperRecords();
+	}
+
+	@Override
+	public Optional<ShipperRecord> findShipperRecordByShipperId(UUID shipperId) {
+		return orderRepo.findShipperRecordByShipperId(shipperId);
+	}
+
 	@Override
 	public Long count() {
 		return orderRepo.count();
@@ -81,11 +86,10 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Page<Order> findByStatus(OrderStatus status, Integer pageNo, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		List<Order> orders = orderRepo.findAll().stream()
-                .filter(order -> order.getCurrentStatus() == status)
-                .collect(Collectors.toList());
-			
-        return new PageImpl<>(orders, pageable, orders.size());
+		List<Order> orders = orderRepo.findAll().stream().filter(order -> order.getCurrentStatus() == status)
+				.collect(Collectors.toList());
+
+		return new PageImpl<>(orders, pageable, orders.size());
 	}
 
 	@Override
@@ -94,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 		User shipper = userRepo.findById(shipperId).orElse(null);
 		if (order != null && shipper != null) {
 			TrackingOrder readyForShip = new TrackingOrder(order, OrderStatus.READY_FOR_SHIP, LocalDateTime.now());
-			order.addTrackingOrder(readyForShip);			
+			order.addTrackingOrder(readyForShip);
 			order.setShipper(shipper);
 			return orderRepo.save(order);
 		}

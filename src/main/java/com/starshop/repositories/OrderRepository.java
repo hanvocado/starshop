@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.starshop.entities.Order;
+import com.starshop.models.MonthlyReport;
 import com.starshop.models.ShipperRecord;
 import com.starshop.utils.OrderStatus;
 
@@ -19,23 +20,39 @@ import com.starshop.utils.OrderStatus;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByUserId(UUID userId);
-	
+
 	List<Order> findByShipperId(UUID shipperId);
+
+	@Query("SELECT new com.starshop.models.ShipperRecord(o.shipper, "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED THEN 1 ELSE 0 END), "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.SHIP_FAILED THEN 1 ELSE 0 END), "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.SHIPPING THEN 1 ELSE 0 END)) "
+			+ "FROM Order o GROUP BY o.shipper")
+	List<ShipperRecord> getShipperRecords();
+
+	@Query("SELECT new com.starshop.models.ShipperRecord(o.shipper, "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED THEN 1 ELSE 0 END), "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.SHIP_FAILED THEN 1 ELSE 0 END), "
+			+ "SUM(CASE WHEN o.currentStatus = com.starshop.utils.OrderStatus.SHIPPING THEN 1 ELSE 0 END)) "
+			+ "FROM Order o WHERE o.shipper.id = :shipperId GROUP BY o.shipper")
+	Optional<ShipperRecord> findShipperRecordByShipperId(@Param("shipperId") UUID shipperId);
+
+	@Query("SELECT new com.starshop.models.MonthlyReport("
+			+ "YEAR(o.orderDate), MONTH(o.orderDate), SUM(o.finalTotal), SUM(o.profit)) "
+			+ "FROM Order o " 
+			+ "WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED "
+			+ "GROUP BY YEAR(o.orderDate), MONTH(o.orderDate) " 
+			+ "ORDER BY YEAR(o.orderDate), MONTH(o.orderDate)")
+	List<MonthlyReport> getMonthlyReport();
 	
-	/*
-	 * @Query("SELECT new com.starshop.models.ShipperRecord(o.shipper, " +
-	 * "SUM(CASE WHEN o.currentStatus = 'DELIVERED' THEN 1 ELSE 0 END), " +
-	 * "SUM(CASE WHEN o.currentStatus = 'SHIPFAILED' THEN 1 ELSE 0 END), " +
-	 * "SUM(CASE WHEN o.currentStatus = 'SHIPPING' THEN 1 ELSE 0 END)) " +
-	 * "FROM Order o GROUP BY o.shipper") List<ShipperRecord> getShipperRecords();
-	 * 
-	 * @Query("SELECT new com.starshop.models.ShipperRecord(o.shipper, " +
-	 * "SUM(CASE WHEN o.currentStatus = 'DELIVERED' THEN 1 ELSE 0 END), " +
-	 * "SUM(CASE WHEN o.currentStatus = 'SHIPFAILED' THEN 1 ELSE 0 END), " +
-	 * "SUM(CASE WHEN o.currentStatus = 'SHIPPING' THEN 1 ELSE 0 END)) " +
-	 * "FROM Order o WHERE o.shipper.id = :shipperId GROUP BY o.shipper")
-	 * Optional<ShipperRecord> findShipperRecordByShipperId(@Param("shipperId") UUID
-	 * shipperId);
-	 */
+	@Query("SELECT SUM(o.finalTotal) FROM Order o " + 
+			"WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED")
+	long getTotalRevenue();
 	
+	long countByCurrentStatus(OrderStatus status);
+
+	@Query("SELECT SUM(o.profit) FROM Order o " + 
+			"WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED")
+	long getTotalProfit();
+
 }
