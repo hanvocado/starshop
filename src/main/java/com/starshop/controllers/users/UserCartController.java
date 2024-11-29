@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.ProductLine;
 import com.starshop.entities.Voucher;
-import com.starshop.models.VoucherRequest;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.CartService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductLineService;
@@ -34,16 +35,15 @@ public class UserCartController {
 
 	@Autowired
 	private CartService cartService;
-	
+
 	@Autowired
 	private VoucherService voucherService;
 
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@Autowired
 	private ProductLineService productLineService;
-	
 
 	@GetMapping()
 	public String viewCart(Model model, Principal principal) {
@@ -55,11 +55,11 @@ public class UserCartController {
 		} else {
 			model.addAttribute("productLines", null);
 		}
-		
+
 		List<Voucher> discountVouchers = voucherService.getDiscountVoucher();
 		List<Voucher> freeShipVouchers = voucherService.getFreeshipVoucher();
-        model.addAttribute("discountVouchers", discountVouchers);
-        model.addAttribute("freeShipVouchers", freeShipVouchers);
+		model.addAttribute("discountVouchers", discountVouchers);
+		model.addAttribute("freeShipVouchers", freeShipVouchers);
 
 		return "user/cart";
 	}
@@ -100,38 +100,35 @@ public class UserCartController {
 
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@PostMapping("/apply-voucher")
-	public ResponseEntity<String> applyVoucher(@RequestBody VoucherRequest voucherRequest) {
-	    String voucherCode = voucherRequest.getVoucherCode();
-	    double totalPrice = voucherRequest.getTotalPrice();
+	public String applyVoucher(Model model, String voucherCode, int totalPrice, RedirectAttributes redirectAttributes) {
+		
+		redirectAttributes.addFlashAttribute("showModal", true);
+		if (voucherCode == null || voucherCode.trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
+			return "redirect:/user/cart";
+		}
 
-	    Voucher voucher = voucherService.findByCode(voucherCode);
-	    if (voucher == null) {
-	        return ResponseEntity.badRequest().body("Voucher không tồn tại.");
-	    }
+		Voucher voucher = voucherService.findByCode(voucherCode);
+		if (voucher == null) {
+			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Voucher không tồn tại"));
+		}
 
-	    if (totalPrice < voucher.getMinOrderItemsTotal() ) {
-	        return ResponseEntity.badRequest().body(String.format(
-	            "Đơn hàng cần có giá trị tối thiểu là %.2f để áp dụng voucher này.", 
-	            (double) voucher.getMinOrderItemsTotal()
-	        ));
-	    }
-	    	double discountValue = totalPrice * voucher.getDiscountPercent() / 100;
-	        double discountAmount = Math.min(discountValue, voucher.getMaxDiscountAmount());
+		double discountValue = totalPrice * voucher.getDiscountPercent() / 100;
+		double discountAmount = Math.min(discountValue, voucher.getMaxDiscountAmount());
+		double finalPrice = totalPrice - discountAmount;
 
-	    if (discountAmount <= 0) {
-	        return ResponseEntity.badRequest().body("Không thể áp dụng voucher cho đơn hàng này.");
-	    }
+		if (discountAmount <= 0) {
+			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Voucher không tồn tại"));
+		}
 
-	    double finalPrice = totalPrice - discountAmount;
-
-	    return ResponseEntity.ok(String.format(
-	        "Áp dụng voucher thành công! Giảm giá: %.2f. Tổng tiền sau giảm giá: %.2f.", 
-	        discountAmount, finalPrice
-	    ));
+		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Voucher áp dụng thành công!"));
+		redirectAttributes.addFlashAttribute("showModal", false);
+		model.addAttribute("finalPrice", finalPrice);
+		model.addAttribute("discountAmount", discountAmount);
+		return "redirect:/user/cart";
 	}
-
 
 	@PostMapping("/update/{product-id}")
 	public String updateCartItem(@PathVariable("product-id") Long productId, @RequestParam Integer quantity,

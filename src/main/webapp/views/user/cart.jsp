@@ -40,10 +40,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    	<c:set var="totalCartPrice" value="0" />
+                                    	<c:set var="finalPrice" value="0" />
                                         <c:forEach var="productLine" items="${productLines}" varStatus="loop">
                                         	<c:set var="productLinePrice" value="${productLine.quantity * productLine.product.getDisplayPrice()}" />
-    										<c:set var="totalCartPrice" value="${totalCartPrice + productLinePrice}" />
                                             <tr>
                                                 <!-- Checkbox -->
                                                 <td class="text-center">
@@ -108,8 +107,9 @@
                                 <!-- Voucher Section -->
                                 <div>
                                     <button 
+                                    	id="voucherButton"
 						                class="mt-4 bg-primary text-primary-foreground p-2 rounded hover:bg-primary/80" 
-						                onclick="toggleModal()">
+						                onclick="checkAndToggleVoucherInputs()">
 						                Chọn hoặc nhập mã
 						            </button>
                                 </div>
@@ -119,7 +119,7 @@
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <div></div>
                                 <div class="text-end d-flex align-items-center">
-                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ0</span></p>
+                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ${finalPrice}</span></p>
                                     <button class="btn btn-primary btn-lg">Mua Hàng</button>
                                 </div>
                             </div>
@@ -212,9 +212,12 @@
 	
 	    // Cập nhật giá trị tổng tiền hiển thị
 	    document.getElementById('total-price').innerText = 'đ' + totalOrderPrice.toLocaleString('vi-VN');
-	}
-
-    // Hàm toggle tất cả checkbox
+		
+	    //Cập nhật giá trị vào hidden input
+	    document.getElementById('totalPriceNotVoucher').value = totalOrderPrice;
+    }
+    
+ // Hàm toggle tất cả checkbox
     function toggleAll(source) {
         const checkboxes = document.querySelectorAll('.selectItem');
         checkboxes.forEach(cb => {
@@ -222,7 +225,49 @@
         });
         updateTotalPrice();
     }
+ 
+</script>
 
+<script>
+	function toggleModal() {
+	    const modal = document.getElementById('voucherModal');
+	    modal.classList.toggle('hidden');
+	}
+
+    // Hàm kiểm tra và hiển thị thông báo nếu không có sản phẩm nào được chọn
+    function checkAndToggleVoucherInputs() {
+        let anyProductSelected = false; 
+
+        document.querySelectorAll('.selectItem:checked').forEach(function (checkbox) {
+            anyProductSelected = true;
+        });
+        
+        const voucherCodeInput = document.getElementById('voucherCodeInput');
+        const inputVoucherButton = document.getElementById('inputVoucherButton');
+        const applyVoucherButton = document.getElementById('applyVoucherButton');
+        const voucherRadioButtons = document.querySelectorAll('input[name="voucherCode"]');
+        const messageElement = document.getElementById('minPriceMessage');
+
+        if (!anyProductSelected) {
+            voucherCodeInput.disabled = true;
+            inputVoucherButton.disabled = true;
+            applyVoucherButton.disabled = true;
+            voucherRadioButtons.forEach(rb => rb.disabled = true);
+
+            messageElement.classList.remove('hidden');
+        } else {
+            voucherCodeInput.disabled = false;
+            inputVoucherButton.disabled = false;
+            applyVoucherButton.disabled = false;
+            voucherRadioButtons.forEach(rb => rb.disabled = false);
+
+            messageElement.classList.add('hidden');
+        }
+		
+        minPriceCondition();
+        toggleModal();
+    }
+    
     // Sự kiện khi checkbox từng sản phẩm thay đổi
     document.addEventListener('DOMContentLoaded', function () {
 	    document.addEventListener('change', function (e) {
@@ -232,6 +277,46 @@
 	    });
 	});
 </script>
+
+<script>
+    const vouchers = [
+        <c:forEach items="${discountVouchers}" var="voucher">
+            {
+                code: "${voucher.code}",
+                description: "${voucher.description}",
+                discountPercent: "${voucher.discountPercent}",
+                minItemsTotal: ${voucher.minOrderItemsTotal},
+                expiredAt: "${voucher.getFormattedExpiredAt()}"
+            }<c:if test="${voucher != discountVouchers[discountVouchers.size() - 1]}">,</c:if>
+        </c:forEach>
+    ];
+    
+    function minPriceCondition() {
+        // Lấy giá trị totalPrice từ input
+        const totalPrice = parseFloat(document.getElementById('totalPriceNotVoucher').value);
+
+        // Lặp qua tất cả các vouchers
+        vouchers.forEach((voucher, index) => {
+            // Lấy radio button của voucher
+			const radioButton = document.querySelector('input[name="voucherCode"][value="' + voucher.code + '"]');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('color__main');
+            messageElement.style.display = 'none';  
+
+            if (totalPrice < voucher.minItemsTotal) {
+                // Nếu không đủ điều kiện, hiển thị thông báo và disable radio button
+                messageElement.innerText = 'Giá trị đơn hàng không đủ điều kiện áp dụng';
+                radioButton.disabled = true;
+
+                // Thêm thông báo dưới voucher
+                radioButton.closest('.flex').appendChild(messageElement);
+                messageElement.style.display = 'block';  // Hiển thị thông báo
+            }
+        });
+    };
+
+</script>
+
 
     
     <script>
