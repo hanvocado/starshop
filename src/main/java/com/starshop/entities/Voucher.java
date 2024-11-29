@@ -78,5 +78,4 @@ public class Voucher {
 
 		return true;
 	}
-
 }

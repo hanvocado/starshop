@@ -15,12 +15,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.starshop.entities.ProductLine;
 import com.starshop.entities.Voucher;
+import com.starshop.models.VoucherRequest;
 import com.starshop.services.CartService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductLineService;
@@ -98,6 +100,38 @@ public class UserCartController {
 
 		return ResponseEntity.ok(response);
 	}
+	
+	@PostMapping("/apply-voucher")
+	public ResponseEntity<String> applyVoucher(@RequestBody VoucherRequest voucherRequest) {
+	    String voucherCode = voucherRequest.getVoucherCode();
+	    double totalPrice = voucherRequest.getTotalPrice();
+
+	    Voucher voucher = voucherService.findByCode(voucherCode);
+	    if (voucher == null) {
+	        return ResponseEntity.badRequest().body("Voucher không tồn tại.");
+	    }
+
+	    if (totalPrice < voucher.getMinOrderItemsTotal() ) {
+	        return ResponseEntity.badRequest().body(String.format(
+	            "Đơn hàng cần có giá trị tối thiểu là %.2f để áp dụng voucher này.", 
+	            (double) voucher.getMinOrderItemsTotal()
+	        ));
+	    }
+	    	double discountValue = totalPrice * voucher.getDiscountPercent() / 100;
+	        double discountAmount = Math.min(discountValue, voucher.getMaxDiscountAmount());
+
+	    if (discountAmount <= 0) {
+	        return ResponseEntity.badRequest().body("Không thể áp dụng voucher cho đơn hàng này.");
+	    }
+
+	    double finalPrice = totalPrice - discountAmount;
+
+	    return ResponseEntity.ok(String.format(
+	        "Áp dụng voucher thành công! Giảm giá: %.2f. Tổng tiền sau giảm giá: %.2f.", 
+	        discountAmount, finalPrice
+	    ));
+	}
+
 
 	@PostMapping("/update/{product-id}")
 	public String updateCartItem(@PathVariable("product-id") Long productId, @RequestParam Integer quantity,
@@ -111,7 +145,7 @@ public class UserCartController {
 	public String removeFromCart(@PathVariable("product-id") Long productId, Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 		cartService.removeFromCart(userId, productId);
-		return "redirect:/cart";
+		return "redirect:/user/cart";
 	}
 
 }

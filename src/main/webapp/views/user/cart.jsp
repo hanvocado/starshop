@@ -108,10 +108,10 @@
                                 <!-- Voucher Section -->
                                 <div>
                                     <button 
-                class="mt-4 bg-primary text-primary-foreground p-2 rounded hover:bg-primary/80" 
-                onclick="toggleModal()">
-                Chọn hoặc nhập mã
-            </button>
+						                class="mt-4 bg-primary text-primary-foreground p-2 rounded hover:bg-primary/80" 
+						                onclick="toggleModal()">
+						                Chọn hoặc nhập mã
+						            </button>
                                 </div>
                             </div>
 
@@ -195,11 +195,6 @@
 	    // Lấy danh sách các checkbox được chọn
 	    document.querySelectorAll('.selectItem:checked').forEach(function (checkbox) {
 	        let productLineId = checkbox.value;
-	        console.log('Type of productLineId:', typeof productLineId); 
-	        //let productLineId = "123";
-			console.log('productLineId (direct):', productLineId); 
-			console.log(`productLineId$: ${productLineId}`); 
-			console.trace(); 
 	
 	        // Lấy giá trị tổng tiền từ cột tương ứng
 			var productLineTotalElement = document.querySelector('.product-line-total[data-productline-id="' + productLineId + '"]');

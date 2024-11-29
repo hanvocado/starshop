@@ -6,18 +6,24 @@
     <div id="voucherModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
         <div class="fixed inset-0 flex items-center justify-center">
             <div class="bg-white rounded-lg shadow-lg p-6 modal-content" style="max-height: 80vh; overflow-y: auto; width: 600px;">
-                <h2 class="text-lg font-semibold text-gray-800">Chọn Shopee Voucher</h2>
+                <h2 class="text-lg font-semibold text-gray-800 text-center">Chọn Voucher</h2>
                 
                 <!-- Voucher Code Input -->
-                <div class="mt-4">
-                    <label class="block text-sm text-gray-600">Mã Voucher</label>
-                    <input type="text" class="mt-1 p-2 border border-gray-300 rounded w-full bg-white" placeholder="Nhập mã voucher" />
-                    <button class="mt-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded">ÁP DỤNG</button>
+                <div class="mt-3 mx-2">
+                    <label class="block text-md font-semibold text-gray-600 mb-2">Mã Voucher</label>
+                    <div class="row">
+                    	<div class="col-lg-9 mr-0">
+                    		<input id="voucherCodeInput" type="text" class="p-2 border border-gray-300 rounded w-full bg-white" placeholder="Nhập mã voucher" />
+                    	</div>
+                    	<div class="col-lg-3 ml-0 d-flex justify-content-end">
+                    		<button class="btn btn-primary" onclick="applyVoucherCode()">Áp dụng</button>
+                    	</div>
+                    </div>
                 </div>
 
                 <!-- Free Shipping Vouchers -->
-                <h3 class="text-md font-semibold text-gray-800">Mã Miễn Phí Vận Chuyển</h3>
-                <div class="space-y-2">
+                <div class="mx-2 my-3">
+                	<h3 class="text-md font-semibold text-gray-600 mb-2">Mã Miễn Phí Vận Chuyển</h3>
                     <c:forEach items="${freeShipVouchers}" var="voucher">
                         <div class="flex items-center justify-between p-2 border border-gray-300 rounded bg-white <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>voucher-disabled</c:if>'">
                             <div>
@@ -28,13 +34,13 @@
                                     <p class="text-danger">Giá trị đơn hàng không đủ</p>
                                 </c:if>
                             </div>
-                            <input type="radio" name="freeShippingCode" value="${voucher.code}" <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>disabled</c:if>/>
+                            <input type="radio" name="voucherCode" value="${voucher.code}" <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>disabled</c:if>/>
                         </div>
                     </c:forEach>
                 </div>
-                <div class="mt-4">
+                <div class="mx-2 xy-3">
                     <!-- Discount Vouchers -->
-                    <h3 class="text-md font-semibold text-gray-800">Mã Giảm Giá</h3>
+                    <h3 class="text-md font-semibold text-gray-600 mb-2">Mã Giảm Giá</h3>
                     <div class="space-y-2">
                         <c:forEach items="${discountVouchers}" var="voucher">
                             <div class="flex items-center justify-between p-2 border border-gray-300 rounded bg-white <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>voucher-disabled</c:if>'">
@@ -46,7 +52,7 @@
                                         <p class="text-danger">Giá trị đơn hàng không đủ</p>
                                     </c:if>
                                 </div>
-                                <input type="radio" name="discountCode" value="${voucher.code}" <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>disabled</c:if>/>
+                                <input type="radio" name="voucherCode" value="${voucher.code}" <c:if test='${grandTotal < voucher.minOrderItemsTotal}'>disabled</c:if>/>
                             </div>
                         </c:forEach>
                     </div>
@@ -56,9 +62,9 @@
                     <button 
                         class="bg-gray-200 text-gray-800 hover:bg-gray-300 p-2 rounded"
                         onclick="toggleModal()">
-                        TRỞ LẠI
+                        Trở lại
                     </button>
-                    <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded">OK</button>
+                    <button class="bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded" onclick="submitVoucher()">OK</button>
                 </div>
             </div>
         </div>
@@ -93,6 +99,71 @@
         // JavaScript to toggle modal visibility
         function toggleModal() {
             const modal = document.getElementById('voucherModal');
-            modal.classList.toggle('hidden'); // Show/hide modal
+            modal.classList.toggle('hidden'); 
         }
+        
+        function applyVoucherCode() {
+        	const voucherCode = document.getElementById('voucherCodeInput').value.trim();
+            const totalPriceNotApply = parseFloat(document.getElementById('total-price').innerText.replace('đ', '').replace(/,/g, ''));
+            
+            if (!voucherCode) {
+                alert("Vui lòng nhập mã voucher!");
+                return;
+            }
+            
+            const voucherRequest = {
+                    voucherCode: voucherCode,
+                    totalPriceNotApply: totalPriceNotApply
+                };
+
+            fetch('/apply-voucher', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(voucherRequest), 
+            })
+            .then(response => response.text()) 
+            .then(message => {
+                alert(message);
+                const newTotalPrice = parseFloat(message.split(": ")[1].replace(/,/g, ''));
+                document.getElementById('total-price').innerText = 'đ' + newTotalPrice.toLocaleString('vi-VN');
+                toggleModal();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Gửi mã voucher được chọn
+        function submitVoucher() {
+		    const selectedVoucher = document.querySelector('input[name="voucherCode"]:checked');
+		
+		    if (!selectedVoucher) {
+		        alert("Vui lòng chọn một mã voucher!");
+		        return;
+		    }
+		
+		    const voucherCode = selectedVoucher.value;
+		    const totalPrice = parseFloat(document.getElementById('total-price').innerText.replace('đ', '').replace(/,/g, ''));
+		
+		    const voucherRequest = {
+		        voucherCode: voucherCode,
+		        totalPrice: totalPrice
+		    };
+		
+		    fetch('/apply-voucher', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify(voucherRequest),  
+		    })
+		    .then(response => response.text()) 
+		    .then(message => {
+		        alert(message);  
+				const newTotalPrice = parseFloat(message.split(": ")[1].replace(/,/g, ''));
+		        document.getElementById('total-price').innerText = 'đ' + newTotalPrice.toLocaleString('vi-VN');
+		        toggleModal(); 
+		    })
+		    .catch(error => console.error('Error:', error));
+		}
     </script>
