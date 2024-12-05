@@ -22,9 +22,6 @@ public class HomeController {
 
 	@Autowired
 	private ProductService productService;
-	
-	@Autowired
-	private UserService userService;
 
 	@GetMapping("/")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search) throws AuthenticationException {

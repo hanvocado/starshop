@@ -1,80 +1,61 @@
 package com.starshop.entities;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@AllArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "role")
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PROTECTED)
 @Entity
+@SuperBuilder
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "user_name"),
 		@UniqueConstraint(columnNames = "email") })
-public class User {
+public abstract class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@JdbcTypeCode(SqlTypes.CHAR)	
 	@Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "char(36)")
-	private UUID id;
+	UUID id;
 
 	@Column(name = "first_name", columnDefinition = "nvarchar(250)")
-	private String firstName;
+	String firstName;
 
 	@Column(name = "last_name", columnDefinition = "nvarchar(250)")
-	private String lastName;
+	String lastName;
 
 	@Size(min = 3, message = "Tên người dùng không hợp lệ")
 	@Column(name = "user_name", unique=true)
-	private String userName;
+	String userName;
 
 	@Column(name = "phone_number")
-	private String phoneNumber;
+	String phoneNumber;
 
 	@Email
 	@Column(nullable = false, unique = true)
-	private String email;
-
-	@Column(name = "default_address_id")
-	private int defaultAddressId;
+	String email;
 
 	@NotNull(message = "Mật khẩu không được để trống")
 	@Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$", message = "Mật khẩu phải chứa ít nhất một chữ cái và một chữ số")
 	@Column(nullable = false)
-	private String password;
+	String password;
 
 	@Column(length = 500)
-	private String profileImg;
-
-	@OneToMany(mappedBy = "user")
-	private Set<Wishlist> wishlists;
-
-	@ManyToOne
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
+	String profileImg;
 	
-	@OneToMany(mappedBy = "user")
-	private Set<Order> orders;
-
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	private Cart cart;
-	
-	@ManyToMany()
-    @JoinTable(
-        name = "user_voucher",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "voucher_id")
-    )
-    private List<Voucher> usedVouchers;
+	public String getRole() {
+        return this.getClass().getSimpleName();
+    }
 
 }

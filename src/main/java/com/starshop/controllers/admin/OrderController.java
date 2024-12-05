@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Order;
+import com.starshop.entities.Shipper;
 import com.starshop.entities.User;
 import com.starshop.models.MonthlyReport;
 import com.starshop.models.ViewMessage;
@@ -52,7 +53,7 @@ public class OrderController {
 			orderStatus = OrderStatus.valueOf(status.toUpperCase());
 
 		if (orderStatus == OrderStatus.PREPARING) {
-			List<User> shippers = shipperService.findAllShippers();
+			List<Shipper> shippers = shipperService.findAllShippers();
 			model.addAttribute("shippers", shippers);
 		}
 		

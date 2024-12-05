@@ -72,14 +72,3 @@ INSERT INTO product_categories (product_id, category_id) VALUES
 
 -- 5 ('Hoa Tết', true),
 (13, 5), (14, 5), (15, 5), (16, 5);
-
-INSERT INTO roles (role_id, name) VALUES
-(1, 'ADMIN'),
-(2, 'USER'),
-(3, 'SHIPPER');
-
-
-
-
-
-

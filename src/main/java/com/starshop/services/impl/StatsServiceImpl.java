@@ -5,22 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.starshop.entities.Role;
 import com.starshop.models.MonthlyReport;
 import com.starshop.repositories.OrderRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.StatsService;
 import com.starshop.utils.OrderStatus;
-import com.starshop.utils.RoleName;
 
 @Service
 public class StatsServiceImpl implements StatsService {
 	@Autowired
 	private OrderRepository orderRepo;
 	
-	@Autowired
-	private UserRepository userRepo;
-
 	@Override
 	public List<MonthlyReport> getMonthlyReport() {
 		return orderRepo.getMonthlyReport();
@@ -28,7 +23,8 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public long getTotalRevenue() {
-		return orderRepo.getTotalRevenue();
+		Long revenue = orderRepo.getTotalRevenue();
+		return revenue == null ? 0 : revenue;
 	}
 
 	@Override
@@ -43,11 +39,15 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public long getTotalProfit() {
-		return orderRepo.getTotalProfit();
+		Long profit = orderRepo.getTotalProfit();
+		return profit == null ? 0 : profit;
 	}
 
 	@Override
 	public double getGrossProfitMargin() {
+		long revenue = getTotalRevenue();
+		if (revenue == 0)
+			return 0;
 		double res = getTotalProfit() / getTotalRevenue();
 		return Math.round(res * 100.0) / 100.0;
 	}

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.starshop.entities.Customer;
 import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
 import com.starshop.models.ViewMessage;
@@ -111,13 +112,13 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public String addUser(ModelMap model, @Valid @ModelAttribute("user") User user, BindingResult result,
+	public String addUser(ModelMap model, @Valid @ModelAttribute("user") Customer user, BindingResult result,
 			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			return "redirect:/auth/register";
 		}
 
-		boolean success = userService.addUser(user);
+		boolean success = userService.addCustomer(user);
 		if (!success) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", Constants.registerFailed));
 			return "redirect:/auth/register";

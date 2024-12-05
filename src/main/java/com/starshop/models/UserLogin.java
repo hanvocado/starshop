@@ -30,7 +30,7 @@ public class UserLogin implements UserDetails {
 		this.password = user.getPassword();
 
 		authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+		authorities.add(new SimpleGrantedAuthority(user.getRole()));
 	}
 
 	@Override
