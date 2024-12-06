@@ -13,9 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.starshop.entities.Order;
-import com.starshop.entities.TrackingOrder;
-import com.starshop.entities.User;
+import com.starshop.entities.*;
 import com.starshop.models.MonthlyReport;
 import com.starshop.models.ShipperRecord;
 import com.starshop.repositories.OrderRepository;
@@ -95,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order assignShipper(Long orderId, UUID shipperId) {
 		Order order = orderRepo.findById(orderId).orElse(null);
-		User shipper = userRepo.findById(shipperId).orElse(null);
+		Shipper shipper = (Shipper) userRepo.findById(shipperId).orElse(null);
 		if (order != null && shipper != null) {
 			TrackingOrder readyForShip = new TrackingOrder(order, OrderStatus.READY_FOR_SHIP, LocalDateTime.now());
 			order.addTrackingOrder(readyForShip);

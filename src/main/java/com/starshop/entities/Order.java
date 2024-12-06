@@ -29,7 +29,7 @@ public class Order implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	private Customer user;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductLine> lines = new ArrayList<>(); 
@@ -65,7 +65,7 @@ public class Order implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "shipper_id", nullable = true)
-	private User shipper;
+	private Shipper shipper;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<TrackingOrder> tracking = new ArrayList<>();
@@ -74,7 +74,7 @@ public class Order implements Serializable {
 	
 	private double profit;
 	
-	public Order(User user, List<ProductLine> lines, double shippingFee, Voucher voucher, PaymentType paymentType, String note) {
+	public Order(Customer user, List<ProductLine> lines, double shippingFee, Voucher voucher, PaymentType paymentType, String note) {
 		this.user = user;
 		this.lines = lines;
 		this.shippingFee = shippingFee;

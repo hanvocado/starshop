@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.starshop.entities.Customer;
 import com.starshop.entities.Product;
 import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
@@ -30,13 +31,11 @@ public interface UserService {
 
 	void addProductToWishlist(UUID userId, Long productId);
 
-	boolean addUser(User user);
+	boolean addCustomer(Customer user);
 
 	Optional<User> findByEmail(String email);
 
 	boolean checkUserLogin(UserLogin userLogin);
-
-	void assignRole(User user, String roleName);
 
 	String getUserRole(Authentication authentication);
 

@@ -23,15 +23,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.starshop.entities.Cart;
+import com.starshop.entities.Customer;
 import com.starshop.entities.Product;
-import com.starshop.entities.Role;
 import com.starshop.entities.User;
 import com.starshop.entities.Wishlist;
 import com.starshop.models.UserLogin;
 import com.starshop.models.ViewMessage;
 import com.starshop.repositories.CartRepository;
 import com.starshop.repositories.ProductRepository;
-import com.starshop.repositories.RoleRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.repositories.WishlistRepository;
 import com.starshop.services.UserService;
@@ -48,10 +47,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private RoleRepository roleRepository;
-
+	
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -78,12 +74,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean addUser(User user) {
+	public boolean addCustomer(Customer user) {
 		if (userRepository.existsByUserName(user.getUserName()) || userRepository.existsByEmail(user.getEmail())) {
 			return false;
 		}
 
-		assignRole(user, RoleName.USER.name());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		
@@ -130,12 +125,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findByEmail(String email) {
 		return userRepository.findByEmail(email);
-	}
-
-	@Override
-	public void assignRole(User user, String roleName) {
-		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found"));
-		user.setRole(role);
 	}
 	
 	@Override

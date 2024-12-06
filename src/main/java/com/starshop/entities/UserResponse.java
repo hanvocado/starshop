@@ -20,5 +20,4 @@ public class UserResponse {
 	private int defaultAddressId;
 	private String profileImg;
 	private int roleId;
-    private Role role;
 }

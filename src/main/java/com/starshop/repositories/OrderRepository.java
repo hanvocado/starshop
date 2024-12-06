@@ -47,12 +47,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	
 	@Query("SELECT SUM(o.finalTotal) FROM Order o " + 
 			"WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED")
-	long getTotalRevenue();
+	Long getTotalRevenue();
 	
-	long countByCurrentStatus(OrderStatus status);
+	Long countByCurrentStatus(OrderStatus status);
 
 	@Query("SELECT SUM(o.profit) FROM Order o " + 
 			"WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED")
-	long getTotalProfit();
+	Long getTotalProfit();
 
 }

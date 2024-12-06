@@ -41,7 +41,6 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import jakarta.servlet.DispatcherType;
 
-import com.starshop.entities.Role;
 import com.starshop.services.impl.JpaUserDetailsService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.RoleName;
