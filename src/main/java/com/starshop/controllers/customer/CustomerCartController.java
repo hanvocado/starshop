@@ -1,4 +1,4 @@
-package com.starshop.controllers.users;
+package com.starshop.controllers.customer;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -30,8 +30,8 @@ import com.starshop.services.ProductLineService;
 import com.starshop.services.VoucherService;
 
 @Controller
-@RequestMapping("/user/cart")
-public class UserCartController {
+@RequestMapping("/customer/cart")
+public class CustomerCartController {
 
 	@Autowired
 	private CartService cartService;
@@ -61,7 +61,7 @@ public class UserCartController {
 		model.addAttribute("discountVouchers", discountVouchers);
 		model.addAttribute("freeShipVouchers", freeShipVouchers);
 
-		return "user/cart";
+		return "customer/cart";
 	}
 
 	@PostMapping("/add/{product-id}")
@@ -69,7 +69,7 @@ public class UserCartController {
 			Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 		cartService.addToCart(userId, productId, quantity);
-		return "redirect:/user/cart";
+		return "redirect:/customer/cart";
 	}
 
 	@PostMapping("/update-quantity")
@@ -107,7 +107,7 @@ public class UserCartController {
 		redirectAttributes.addFlashAttribute("showModal", true);
 		if (voucherCode == null || voucherCode.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
-			return "redirect:/user/cart";
+			return "redirect:/customer/cart";
 		}
 
 		Voucher voucher = voucherService.findByCode(voucherCode);
@@ -127,7 +127,7 @@ public class UserCartController {
 		redirectAttributes.addFlashAttribute("showModal", false);
 		model.addAttribute("finalPrice", finalPrice);
 		model.addAttribute("discountAmount", discountAmount);
-		return "redirect:/user/cart";
+		return "redirect:/customer/cart";
 	}
 
 	@PostMapping("/update/{product-id}")
@@ -142,7 +142,7 @@ public class UserCartController {
 	public String removeFromCart(@PathVariable("product-id") Long productId, Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 		cartService.removeFromCart(userId, productId);
-		return "redirect:/user/cart";
+		return "redirect:/customer/cart";
 	}
 
 }

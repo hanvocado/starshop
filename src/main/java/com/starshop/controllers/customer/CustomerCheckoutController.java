@@ -1,12 +1,12 @@
-package com.starshop.controllers.users;
+package com.starshop.controllers.customer;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/user")
-public class UserCheckoutController {
+@RequestMapping("/customer")
+public class CustomerCheckoutController {
 
 	@GetMapping("/checkout")
 	public String checkout() {

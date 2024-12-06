@@ -1,4 +1,4 @@
-package com.starshop.controllers.users;
+package com.starshop.controllers.customer;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,9 +31,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/customer")
 @Slf4j
-public class UserProductController {
+public class CustomerProductController {
 
 	@Autowired
 	private ProductService productService;
@@ -76,7 +76,7 @@ public class UserProductController {
 	public String getProductDetails(@PathVariable("product-id") Long id, Model model) {
 		Product product = productService.getById(id);
 		model.addAttribute("product", product);
-		return "user/product-details";
+		return "customer/product-details";
 	}
 	
 //	@GetMapping("/categories/{categoryId}/products")

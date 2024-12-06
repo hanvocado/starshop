@@ -23,7 +23,7 @@
                     <h3 class="mb-4">Shopping Cart</h3>
                         <p>${productLines.size()} items</p>
 
-                        <form action="${pageContext.request.contextPath}/user/cart/update" method="POST">
+                        <form action="${pageContext.request.contextPath}/customer/cart/update" method="POST">
                             <div class="table-responsive">
                                 <table class="table align-middle">
                                     <thead class="bg-light">
@@ -92,7 +92,7 @@
                                                 <td class="text-danger fw-bold product-line-total" data-productline-id="${productLine.id}">đ${productLinePrice}</td>
                                                 <!-- Remove -->
                                                 <td>
-                                                    <a href="${pageContext.request.contextPath}/user/cart/remove/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
+                                                    <a href="${pageContext.request.contextPath}/customer/cart/remove/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -131,7 +131,7 @@
     </div>
 
     <!-- Voucher Modal -->
-    <%@include file="/views/user/vouchers.jsp"%>
+    <%@include file="/views/customer/vouchers.jsp"%>
     
 </nav>
 
@@ -168,7 +168,7 @@
         var quantity = $("#quantity-" + productLineId).val();  
 
         $.ajax({
-            url: '/user/cart/update-quantity',
+            url: '/customer/cart/update-quantity',
             type: 'POST',
             data: {
                 action: action,

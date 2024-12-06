@@ -1,4 +1,4 @@
-package com.starshop.controllers.users;
+package com.starshop.controllers.customer;
 
 import java.util.UUID;
 
@@ -24,8 +24,8 @@ import com.starshop.utils.Constants;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/customer")
+public class CustomerController {
 	@Autowired
 	private UserService userService;
 

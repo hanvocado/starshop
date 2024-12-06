@@ -9,8 +9,8 @@
 			    <!-- Logo -->
         		<div class="col-xl-2 col-lg-3 col-md-12">
                     <c:choose>
-		                <c:when test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-		                    <a href="${basePath}/user/products" class="brand--wrap text-decoration-none"><h1 class="logo">STAR SHOP</h1>
+		                <c:when test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
+		                    <a href="${basePath}/customer/products" class="brand--wrap text-decoration-none"><h1 class="logo">STAR SHOP</h1>
 		                    </a>
 		                </c:when>
 		                <c:otherwise>
@@ -35,7 +35,7 @@
                         <!-- Account -->
                         <div class="widget__header mr-2 dropdown">
                             <c:choose>
-                                <c:when test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
+                                <c:when test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
                                     <a class="nav-link widget__view text-decoration-none dropdown-toggle d-flex align-items-center" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 									    <div class="icon me-2">
 									        <i class="fas fa-user-circle fa-2x"></i>
@@ -61,8 +61,8 @@
                         </div>
                         <!-- Wishlist -->
                         <div class="widget__header mr-2">
-                            <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${basePath}/user/wishlist" class="widget__view text-decoration-none">
+                            <c:if test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
+                                <a href="${basePath}/customer/wishlist" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-heart"></i>
                                     </div>
@@ -72,8 +72,8 @@
                         </div>
                         <!-- Shopping Cart -->
                         <div class="widget__header">
-                            <c:if test="${not empty user and fn:contains(user.getRole().getName(), 'USER')}">
-                                <a href="${basePath}/user/cart" class="widget__view text-decoration-none">
+                            <c:if test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
+                                <a href="${basePath}/customer/cart" class="widget__view text-decoration-none">
                                     <div class="icon">
                                         <i class="fa fa-shopping-cart"></i>
                                     </div>

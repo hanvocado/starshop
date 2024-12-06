@@ -1,4 +1,4 @@
-package com.starshop.controllers.users;
+package com.starshop.controllers.customer;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +16,8 @@ import com.starshop.entities.Product;
 import com.starshop.services.UserService;
 
 @Controller
-@RequestMapping("/user")
-public class UserWishlistController {
+@RequestMapping("/customer")
+public class CustomerWishlistController {
 
 	@Autowired
 	private UserService userService;
@@ -26,7 +26,7 @@ public class UserWishlistController {
 	public String getWishlist(@PathVariable UUID userId, Model model) {
 		List<Product> wishlist = userService.getWishlist(userId);
 		model.addAttribute("wishlist", wishlist);
-		return "user/wishlist";
+		return "customer/wishlist";
 	}
 	
 //	@PostMapping("/wishlist/{product-id}")

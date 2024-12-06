@@ -14,7 +14,7 @@
     </script>
 </c:if>
 
-<form action="/user/cart/apply-voucher" method="post">
+<form action="/customer/cart/apply-voucher" method="post">
 	<input type="hidden" name="totalPrice" id="totalPriceNotVoucher" />
    <!-- Voucher Modal -->
     <div id="voucherModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
