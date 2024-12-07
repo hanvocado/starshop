@@ -35,7 +35,6 @@ public class OrderServiceImpl implements OrderService {
 		if (order != null) {
 			TrackingOrder newTracking = new TrackingOrder(order, newStatus, LocalDateTime.now());
 			order.addTrackingOrder(newTracking);
-			order.setCurrentStatus(newStatus);
 			orderRepo.save(order);
 		}
 		return order;
