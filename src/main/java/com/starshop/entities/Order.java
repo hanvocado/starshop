@@ -106,9 +106,20 @@ public class Order implements Serializable {
 		return this.voucher == null ? 0 : voucher.getDiscountAmount(this);
 	}
 
+	public void addProductLine(ProductLine newLine) {
+		lines.add(newLine);
+		newLine.setOrder(this);
+	}
+
+	public void removeProductLine(ProductLine line) {
+		lines.remove(line);
+		line.setOrder(null);
+	}
+	
 	public void addTrackingOrder(TrackingOrder trackingOrder) {
 		tracking.add(trackingOrder);
 		trackingOrder.setOrder(this);
+		this.currentStatus = trackingOrder.getStatus();
 	}
 
 	public void removeTrackingOrder(TrackingOrder trackingOrder) {

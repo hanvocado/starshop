@@ -113,12 +113,10 @@ public class ApplicationInitConfig {
             order.setUser(user);
             order.setOrderDate(LocalDateTime.now().minusDays(i));
           
-            order.setPayMethod(PaymentType.CASH);  // Example payment method
-            order.setPayed(false);  // Alternate payment status
-            List<ProductLine> lines = new ArrayList<>();
+            order.setPayMethod(PaymentType.CASH);  
+            order.setPayed(false);  
             Product product = productRepository.findById((long) i).get();
-            lines.add(new ProductLine(product, order, 2));
-            order.setLines(lines);
+            order.addProductLine(new ProductLine(product, order, 2));
             order.setShippingFee(i*2000);
             orderService.add(order);        
         });
