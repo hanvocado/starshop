@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.starshop.entities.ProductLine;
 import com.starshop.entities.Voucher;
 import com.starshop.models.ViewMessage;
 import com.starshop.services.CartService;
+import com.starshop.services.CustomerService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductLineService;
 import com.starshop.services.VoucherService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/customer/cart")
@@ -45,8 +50,11 @@ public class CustomerCartController {
 	@Autowired
 	private ProductLineService productLineService;
 
-	@GetMapping()
-	public String viewCart(Model model, Principal principal) {
+	@Autowired
+	private CustomerService customerService;
+
+	@GetMapping
+	public String viewCart(Model model, Principal principal,HttpServletRequest request) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 
 		Optional<List<ProductLine>> productLines = cartService.getProductLines(userId);
@@ -60,6 +68,17 @@ public class CustomerCartController {
 		List<Voucher> freeShipVouchers = voucherService.getFreeshipVoucher();
 		model.addAttribute("discountVouchers", discountVouchers);
 		model.addAttribute("freeShipVouchers", freeShipVouchers);
+
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		if(inputFlashMap != null) {
+			Double finalPrice = (Double) inputFlashMap.get("finalPrice");
+			Double discount = (Double) inputFlashMap.get("discount");
+			Double freeShip = (Double) inputFlashMap.get("freeShip");
+			
+			model.addAttribute("finalPrice", finalPrice != null ? finalPrice : 0);
+			model.addAttribute("discount", discount != null ? discount : 0);
+			model.addAttribute("freeShip", freeShip != null ? freeShip : 0);
+		}
 
 		return "customer/cart";
 	}
@@ -102,8 +121,10 @@ public class CustomerCartController {
 	}
 
 	@PostMapping("/apply-voucher")
-	public String applyVoucher(Model model, String voucherCode, int totalPrice, RedirectAttributes redirectAttributes) {
-		
+	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") int totalPrice,
+			Principal principal, RedirectAttributes redirectAttributes) {
+		UUID userId = jwtService.getUserIdFromPrincipal(principal);
+
 		redirectAttributes.addFlashAttribute("showModal", true);
 		if (voucherCode == null || voucherCode.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
@@ -113,20 +134,28 @@ public class CustomerCartController {
 		Voucher voucher = voucherService.findByCode(voucherCode);
 		if (voucher == null) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Voucher không tồn tại"));
+		} else {
+			double discountValue = totalPrice * voucher.getDiscountPercent() / 100;
+			double discountAmount = Math.min(discountValue, voucher.getMaxDiscountAmount());
+			double finalPrice = totalPrice - discountAmount;
+
+			if (discountAmount <= 0) {
+				redirectAttributes.addFlashAttribute("result",
+						new ViewMessage("danger", "Voucher áp dụng không thành công!"));
+			} else {
+//				customerService.addVoucherToCustomer(userId, voucherCode);
+				redirectAttributes.addFlashAttribute("result",
+						new ViewMessage("success", "Voucher áp dụng thành công!"));
+				redirectAttributes.addFlashAttribute("showModal", false);
+
+				redirectAttributes.addFlashAttribute("finalPrice", finalPrice);
+				if (voucher.isFreeship()) {
+					redirectAttributes.addFlashAttribute("freeShip", discountAmount);
+
+				} else
+					redirectAttributes.addFlashAttribute("discount", discountAmount);
+			}
 		}
-
-		double discountValue = totalPrice * voucher.getDiscountPercent() / 100;
-		double discountAmount = Math.min(discountValue, voucher.getMaxDiscountAmount());
-		double finalPrice = totalPrice - discountAmount;
-
-		if (discountAmount <= 0) {
-			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Voucher không tồn tại"));
-		}
-
-		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Voucher áp dụng thành công!"));
-		redirectAttributes.addFlashAttribute("showModal", false);
-		model.addAttribute("finalPrice", finalPrice);
-		model.addAttribute("discountAmount", discountAmount);
 		return "redirect:/customer/cart";
 	}
 
@@ -138,10 +167,10 @@ public class CustomerCartController {
 		return "redirect:/cart";
 	}
 
-	@PostMapping("/delete/{product-id}")
-	public String removeFromCart(@PathVariable("product-id") Long productId, Principal principal) {
+	@RequestMapping("/delete/{productline-id}")
+	public String removeFromCart(@PathVariable("productline-id") Long productLineId, Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
-		cartService.removeFromCart(userId, productId);
+		cartService.removeFromCart(userId, productLineId);
 		return "redirect:/customer/cart";
 	}
 

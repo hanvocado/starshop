@@ -4,6 +4,8 @@
     
 <title>Carts</title>
 
+<%@include file="/common/flash-message.jsp"%>
+
 <body>
 
 <nav class="navbar navbar-main navbar-expand-lg border__bottom">
@@ -40,7 +42,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    	<c:set var="finalPrice" value="0" />
                                         <c:forEach var="productLine" items="${productLines}" varStatus="loop">
                                         	<c:set var="productLinePrice" value="${productLine.quantity * productLine.product.getDisplayPrice()}" />
                                             <tr>
@@ -92,7 +93,7 @@
                                                 <td class="text-danger fw-bold product-line-total" data-productline-id="${productLine.id}">đ${productLinePrice}</td>
                                                 <!-- Remove -->
                                                 <td>
-                                                    <a href="${pageContext.request.contextPath}/customer/cart/remove/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
+                                                    <a href="${pageContext.request.contextPath}/customer/cart/delete/${productLine.id}" class="btn btn-link text-danger">Xóa</a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -116,13 +117,23 @@
                             </div>
 
                             <!-- Total Payment Section -->
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <div></div>
-                                <div class="text-end d-flex align-items-center">
-                                    <p class="mb-0 me-4 fs-4 fw-bold">Tổng thanh toán: <span class="text-danger" id="total-price">đ${finalPrice}</span></p>
-                                    <button class="btn btn-primary btn-lg">Mua Hàng</button>
-                                </div>
-                            </div>
+								<div class="mt-3">
+								    <div class="text-end">
+								        <c:if test="${freeShip != null || discount != null}">
+								            <p class="mb-0 fs-4 fw-bold">
+								                Miễn phí vận chuyển: <span class="text-success">đ${freeShip}</span>
+								            </p>
+								            <p class="mb-0 fs-4 fw-bold">
+								                Giảm giá đơn hàng: <span class="text-primary">đ${discount}</span>
+								            </p>
+								        </c:if>
+								        <p class="mb-0 fs-4 fw-bold">
+								            Tổng thanh toán: <span class="text-danger" id="total-price">đ${finalPrice != null ? finalPrice : 0}</span>
+								        </p>
+								        <button class="btn btn-primary btn-lg mt-2">Thanh toán</button>
+								    </div>
+								</div>
+
                         </div>
                     </div>
                 </div>

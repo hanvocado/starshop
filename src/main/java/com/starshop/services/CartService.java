@@ -10,7 +10,7 @@ import com.starshop.entities.ProductLine;
 
 public interface CartService {
 
-	void removeFromCart(UUID userId, Long productId);
+	void removeFromCart(UUID userId, Long productLineId);
 
 	void updateCartItem(UUID userId, Long productId, int quantity);
 
