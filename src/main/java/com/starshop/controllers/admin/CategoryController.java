@@ -39,7 +39,7 @@ public class CategoryController {
         ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);
         
-        return "/admin/categories";
+        return "admin/categories";
     }
 
     @PostMapping("/save")

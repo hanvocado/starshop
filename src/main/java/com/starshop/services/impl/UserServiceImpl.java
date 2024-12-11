@@ -1,7 +1,5 @@
 package com.starshop.services.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -22,20 +20,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.starshop.entities.Cart;
-import com.starshop.entities.Customer;
-import com.starshop.entities.Product;
-import com.starshop.entities.User;
-import com.starshop.entities.Wishlist;
+import com.starshop.entities.*;
 import com.starshop.models.UserLogin;
-import com.starshop.models.ViewMessage;
-import com.starshop.repositories.CartRepository;
-import com.starshop.repositories.ProductRepository;
-import com.starshop.repositories.UserRepository;
-import com.starshop.repositories.WishlistRepository;
+import com.starshop.repositories.*;
 import com.starshop.services.UserService;
-import com.starshop.utils.Constants;
-import com.starshop.utils.RoleName;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -164,4 +152,5 @@ public class UserServiceImpl implements UserService {
         return user.map(UserLogin::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User name not found: " + username));
 	}
+
 }

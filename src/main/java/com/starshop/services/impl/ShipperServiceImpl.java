@@ -1,6 +1,7 @@
 package com.starshop.services.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,19 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Override
 	public List<Shipper> findAllShippers() {
-		return shipperRepository.findAll();
+		return shipperRepository.findByOrderByIsActiveDesc();
+	}
+
+	@Override
+	public Shipper save(Shipper shipper) {
+		return shipperRepository.save(shipper);
+	}
+
+	@Override
+	public void changeStatus(UUID shipperId) {
+		Shipper shipper = shipperRepository.findById(shipperId).orElseThrow();
+		shipper.setActive(!shipper.isActive());
+		shipperRepository.save(shipper);
 	}
 
 }
