@@ -76,22 +76,8 @@
 
 							<!-- USERS -->
                             <li class="nav-item">
-                                <small class="nav-subtitle" title="Users">Users</small>
+                                <small class="nav-subtitle" title="Staff">Staff</small>
                                 <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                            </li>
-
-                            <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="customers" title="Customers" data-placement="left">
-                                    <i class="tio-user nav-icon"></i>
-                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Customers</span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item ">
-                                <a class="js-nav-tooltip-link nav-link" href="admins" title="Admins" data-placement="left">
-                                    <i class="tio-settings-outlined nav-icon"></i>
-                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Admins</span>
-                                </a>
                             </li>
                             
                             <li class="nav-item ">

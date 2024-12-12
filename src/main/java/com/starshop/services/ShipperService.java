@@ -8,7 +8,9 @@ import com.starshop.entities.Shipper;
 public interface ShipperService {
 	List<Shipper> findAllShippers();
 	
-	Shipper save(Shipper shipper);
+	Shipper add(Shipper shipper);
 	
 	void changeStatus(UUID shipperId);
+	
+	boolean isExisted(String email);
 }

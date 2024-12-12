@@ -181,7 +181,7 @@
 	                <!-- End Header -->
 	                <!-- Body -->
 	                <div class="modal-body">
-	                <form id="categoryForm" action="<c:url value="/admin/category/save"/>" method="post">
+	                <form id="categoryForm" action="<c:url value="/admin/categories/save"/>" method="post">
 						<input name="id" id="categoryId" type="hidden" />
 		                <input name="name" id="categoryName" type="text" class="form-control mb-3" placeholder="Tên" />
 						<div id="cate-modal-text"></div>

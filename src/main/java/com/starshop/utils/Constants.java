@@ -26,5 +26,7 @@ public class Constants {
 	public static String validateLoginFailed = "Tên người dùng hoặc mật khẩu không chính xác"; 
 	
 	public static String notFound = "Không tìm thấy";
+	
+	public static String emailExisted = "Email đã tồn tại";
 
 }

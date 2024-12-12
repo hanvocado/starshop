@@ -17,4 +17,6 @@ public interface StatsService {
 	long getNumbersOfOrders();
 	
 	long getNumberOfDeliveredOrders();
+
+	long getNumbersOfCustomers();
 }

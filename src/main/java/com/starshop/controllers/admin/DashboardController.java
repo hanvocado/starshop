@@ -30,6 +30,7 @@ public class DashboardController {
 	            .map(MonthlyReport::getProfit)
 	            .collect(Collectors.toList());
 		
+		model.addAttribute("numberOfCustomers", statsService.getNumbersOfCustomers());
 		model.addAttribute("numberOfOrders", statsService.getNumbersOfOrders());
 		model.addAttribute("numberOfDeliveredOrders", statsService.getNumberOfDeliveredOrders());
 		model.addAttribute("totalRevenue", statsService.getTotalRevenue());
@@ -42,6 +43,6 @@ public class DashboardController {
 		model.addAttribute("profit", profit);
 		
 				
-		return "admin/report";
+		return "admin/dashboard";
 	}
 }
