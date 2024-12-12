@@ -31,12 +31,8 @@
                                             <div class="tab-content" id="myTabContent">
                                                 <div class="tab-pane fade show active" id="Open" role="tabpanel" aria-labelledby="Open-tab">
                                                     <!-- chat-list -->
-                                                    <div class="chat-list">
-                                                        <a href="javascript:;" onclick="selectRecipient('testbuyer')" class="recipient" class="d-flex align-items-center">
-                                                            <div class="flex-grow-1 ms-3">
-                                                                <h3>testbuyer</h3>
-                                                            </div>
-                                                        </a>
+                                                    <div class="chat-list" id="active-user-list">
+                                                        
                                                     </div>
                                                     <!-- chat-list -->
                                                 </div>

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.starshop.configs.ChatQueue;
 import com.starshop.models.ChatMessage;
-import com.starshop.services.ChatQueue;
 
 @Controller
 public class ChatController {
