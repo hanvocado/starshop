@@ -111,7 +111,8 @@
                <th class="table-column-pr-0">Shipper</th>
                <th>Email</th>
                <th>Hoạt động từ</th>
-               <th class="text-center">Tổng số đơn được giao</th>
+               <th class="text-center">Tổng số đơn</th>
+               <th class="text-center">Tỷ lệ thành công (%)</th>
                <th class="text-center">Hành động</th>
              </tr>
            </thead>
@@ -131,6 +132,8 @@
                 <td>${shipper.formattedCreatedAt }</td>
                 
                 <td class="text-center">${shipper.getNumberOfOrders() }</td>
+                
+                <td class="text-center">${shipper.getSuccessRate() }</td>
 			
 				<td class="text-center">
 				  <a class="btn btn-soft-danger btn-xs" href="<c:url value="/admin/shippers/change-status/${shipper.id }"/>">
