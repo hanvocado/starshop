@@ -12,10 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.starshop.entities.Customer;
 import com.starshop.entities.Product;
+import com.starshop.entities.Shipper;
 import com.starshop.entities.User;
 import com.starshop.models.UserLogin;
-import com.starshop.models.ViewMessage;
-import com.starshop.utils.RoleName;
 
 public interface UserService {
 
@@ -44,5 +43,4 @@ public interface UserService {
 	User getUserByUserName(String userName);
 
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
-
 }

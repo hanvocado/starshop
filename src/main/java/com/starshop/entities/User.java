@@ -57,5 +57,9 @@ public abstract class User {
 	public String getRole() {
         return this.getClass().getSimpleName();
     }
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 
 }
