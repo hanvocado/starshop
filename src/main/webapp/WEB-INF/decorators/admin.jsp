@@ -24,6 +24,7 @@
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="/exec/css/theme.min.css?v=1.0">
+    <link rel="stylesheet" href="/chat.css">
     
 </head>
 
