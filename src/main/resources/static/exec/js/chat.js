@@ -1,5 +1,7 @@
 let stompClient = null;
-let currentRecipient = null; // Keeps track of the current recipient
+let currentRecipient = null;
+let conversations = {};
+let chatContainer = document.getElementById('msg-body');
 
 function connect() {
 	const socket = new SockJS('/chat');
@@ -49,8 +51,10 @@ function displayMessage(message, style) {
 	time.textContent = formatDateTime(message.timestamp);
 	time.classList.add('time');
 	messageElement.appendChild(time);
+	
+	const id = message.recipient == 'admin' ? message.sender : message.recipient;
 
-	document.getElementById('msg-list').appendChild(messageElement);
+	document.getElementById(`msg-list-${id}`).appendChild(messageElement);
 }
 
 
@@ -71,7 +75,23 @@ function sendPrivateMessage() {
 
 function selectRecipient(username) {
 	currentRecipient = username;
-	document.getElementById('currentRecipient').textContent = currentRecipient;
+	document.getElementById('currentRecipient').textContent = username;
+	
+	for (let key in conversations) {
+		if (!key.includes(username)) {
+			conversations[key].style.display = 'none';
+		}
+	}
+	
+	if (!conversations[username]) {
+        // Create a new conversation for the recipient
+        const conversation = document.createElement("ul");
+        conversation.id = `msg-list-${username}`;
+        chatContainer.appendChild(conversation);
+        conversations[username] = conversation;
+    } else {
+		conversations[username].style.display = '';
+	}
 }
 
 function formatDateTime(time) {
