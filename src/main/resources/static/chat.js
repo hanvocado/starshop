@@ -1,34 +1,63 @@
-    let stompClient = null;
+let stompClient = null;
 
-    function connect() {
-        const socket = new SockJS('/chat'); // Connects to /chat WebSocket endpoint
-        stompClient = Stomp.over(socket);  // Wraps WebSocket with STOMP protocol
+function connect() {
+	const socket = new SockJS('/chat');
+	stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, () => {
-            console.log("Connected to WebSocket");
+	stompClient.connect({}, () => {
+		console.log("Connected to WebSocket");
 
-            // Subscribe to private messages for the current user
-            stompClient.subscribe('/user/queue/messages', (message) => {
-                const messageBody = JSON.parse(message.body);
-                const messageElement = document.createElement('li');
-                messageElement.textContent = `From ${messageBody.sender}: ${messageBody.content}`;
-                document.getElementById('messages').appendChild(messageElement);
-            });
-        });
-    }
+		stompClient.subscribe('/user/queue/messages', (message) => {
+			displayMessage(JSON.parse(message.body));
+		});
+	});
+}
 
-    function sendPrivateMessage() {
-        const recipientInput = document.getElementById('recipientInput').value;
-        const messageInput = document.getElementById('messageInput').value;
+function displayMessage(message) {
+    const chatWindow = document.getElementById("chatWindow");
 
-        if (recipientInput && messageInput && stompClient) {
-            const message = {
-                sender: "Customer", // Replace with dynamically set sender
-                recipient: recipientInput,
-                content: messageInput
-            };
-            stompClient.send('/app/private-message', {}, JSON.stringify(message)); // Send message to /app/private-message
-        }
-    }
+    // Create a new message element
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
 
-    connect(); // Initiate WebSocket connection
+    // Add sender name
+    const senderElement = document.createElement("span");
+    senderElement.classList.add("message-sender");
+    senderElement.textContent = message.sender + ": ";
+
+    // Add message content
+    const contentElement = document.createElement("span");
+    contentElement.classList.add("message-content");
+    contentElement.textContent = message.content;
+
+    messageElement.appendChild(senderElement);
+    messageElement.appendChild(contentElement);
+
+    chatWindow.appendChild(messageElement);
+
+    // Scroll to the bottom of the chat window
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+
+function sendPrivateMessage() {
+	const recipientInput = document.getElementById('recipientInput');
+
+	const sender = document.getElementById('senderInput').value;
+	const recipient = (recipientInput === null) ? "admin" : recipientInput.value;
+	const content = document.getElementById('messageInput').value;
+
+	if (recipient && content && stompClient) {
+		const message = {
+			sender: sender,
+			recipient: recipient,
+			content: content,
+			timestamp: new Date()
+		};
+		stompClient.send('/app/private-message', {}, JSON.stringify(message));
+		messageInput.value = '';
+		displayMessage(message);
+	}
+}
+
+connect();

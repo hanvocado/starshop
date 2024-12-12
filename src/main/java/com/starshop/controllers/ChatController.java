@@ -27,12 +27,10 @@ public class ChatController {
 
 		model.addAttribute("currentUser", currentUsername);
 		return "chat";
-	}
-
+	}	
 
 	@MessageMapping("/private-message") // /app/private-message
 	public void sendPrivateMessage(ChatMessage message) {
-		message.setTimestamp(LocalDateTime.now());
 		// Send message to a specific user's queue /user/{username}/queue/messages
 		messagingTemplate.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
 	}
