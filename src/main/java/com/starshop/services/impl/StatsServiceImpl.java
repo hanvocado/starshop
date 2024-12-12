@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.starshop.models.MonthlyReport;
+import com.starshop.repositories.CustomerRepository;
 import com.starshop.repositories.OrderRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.StatsService;
@@ -15,6 +16,9 @@ import com.starshop.utils.OrderStatus;
 public class StatsServiceImpl implements StatsService {
 	@Autowired
 	private OrderRepository orderRepo;
+	
+	@Autowired
+	private CustomerRepository customerRepo;
 	
 	@Override
 	public List<MonthlyReport> getMonthlyReport() {
@@ -30,6 +34,11 @@ public class StatsServiceImpl implements StatsService {
 	@Override
 	public long getNumbersOfOrders() {
 		return orderRepo.count();
+	}
+	
+	@Override
+	public long getNumbersOfCustomers() {
+		return customerRepo.count();
 	}
 
 	@Override

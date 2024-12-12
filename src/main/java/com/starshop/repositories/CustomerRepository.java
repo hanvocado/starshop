@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.starshop.entities.Customer;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, UUID>{
+public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
 }

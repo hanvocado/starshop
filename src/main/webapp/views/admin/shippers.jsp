@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-sm-auto">
-          <a class="btn btn-primary" href="<c:url value="/admin/shippers/add"/>">
+          <a class="btn btn-primary" data-toggle="modal" data-target="#shipperModal">
               <i class="tio-add mr-1"></i> Tạo mới
           </a>
         </div>
@@ -111,7 +111,8 @@
                <th class="table-column-pr-0">Shipper</th>
                <th>Email</th>
                <th>Hoạt động từ</th>
-               <th class="text-center">Tổng số đơn được giao</th>
+               <th class="text-center">Tổng số đơn</th>
+               <th class="text-center">Tỷ lệ thành công (%)</th>
                <th class="text-center">Hành động</th>
              </tr>
            </thead>
@@ -131,6 +132,8 @@
                 <td>${shipper.formattedCreatedAt }</td>
                 
                 <td class="text-center">${shipper.getNumberOfOrders() }</td>
+                
+                <td class="text-center">${shipper.getSuccessRate() }</td>
 			
 				<td class="text-center">
 				  <a class="btn btn-soft-danger btn-xs" href="<c:url value="/admin/shippers/change-status/${shipper.id }"/>">
@@ -158,6 +161,44 @@
 
      </div>
      <!-- End Card -->
+     
+     <div class="modal fade" id="shipperModal" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered" role="document">
+	            <div class="modal-content">
+	                <!-- Header -->
+	                <div class="modal-header">
+	                    <h4 id="inviteUserModalTitle" class="modal-title">Nhân viên giao hàng</h4>
+	
+	                    <button type="button" class="btn btn-icon btn-sm btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+	                        <i class="tio-clear tio-lg"></i>
+	                    </button>
+	                </div>
+	                <!-- End Header -->
+	                <!-- Body -->
+	                <div class="modal-body">
+	                <form id="shipperForm" action="<c:url value="/admin/shippers/add"/>" method="post">
+						<input name="id" id="shipperId" type="hidden" />
+						<div class="row">
+							<div class="col-md-6">
+								<input name="lastName" type="text" class="form-control mb-3" placeholder="Họ" />
+							</div>
+							<div class="col-md-6">							
+				                <input name="firstName" type="text" class="form-control mb-3" placeholder="Tên" />					     
+							</div>
+						</div>
+						<input name="email" type="text" class="form-control mb-3" placeholder="Email" />
+						<input name="password" type="password" value="12345fast" class="form-control mb-3" placeholder="Mật khẩu" />	
+		                
+		                <div class="d-flex justify-content-center">
+	                  		<button id="modalSubmitButton" type="submit" class="btn btn-outline-primary">Submit</button>	                
+		                </div>
+					 </form>
+	                </div>
+	                <!-- End Body -->
+	            </div>
+	        </div>
+	    </div>
+	    <!-- End Modal -->
      
   
 	<script src="/exec/js/shippers.js"></script>

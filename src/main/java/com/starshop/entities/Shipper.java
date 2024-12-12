@@ -1,9 +1,12 @@
 package com.starshop.entities;
 
+import com.starshop.utils.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.starshop.utils.Converter;
+import com.starshop.utils.OrderStatus;
 import com.starshop.utils.RoleName;
 
 import jakarta.persistence.Column;
@@ -41,5 +44,16 @@ public class Shipper extends User {
 	
 	public String getFormattedCreatedAt() {
 		return Converter.localDateTimeToDateWithSlash(createdAt);
+	}
+	
+	public int getSuccessRate() {
+		float totalOrders = orders.size();		
+		if (totalOrders == 0) 
+			return 0;
+		
+		float successOrders = orders.stream().filter(o -> o.getCurrentStatus() == OrderStatus.DELIVERED)
+					.collect(Collectors.toList()).size();
+		int rate = Math.round((successOrders / totalOrders) * 100);
+		return rate;
 	}
 }
