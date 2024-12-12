@@ -2,6 +2,8 @@ package com.starshop.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.starshop.utils.RoleName;
 
 import jakarta.persistence.CascadeType;
@@ -17,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -28,27 +31,29 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Customer extends User {
 	@Column(name = "default_address_id")
-	private int defaultAddressId;
+	private Long defaultAddressId;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Address> addresses;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "user")
 	private List<Wishlist> wishlists;
-	
+
+	@JsonManagedReference
 	@OneToMany(mappedBy = "user")
 	private List<Order> orders;
-	
+
+	@JsonManagedReference
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Cart cart;
-	
+
 	@ManyToMany()
-    @JoinTable(
-        name = "user_voucher",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "voucher_id")
-    )
-    private List<Voucher> usedVouchers;
-	
+	@JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "voucher_id"))
+	private List<Voucher> usedVouchers;
+
 	@Override
-    public String getRole() {
-        return RoleName.CUSTOMER.name();
-    }
+	public String getRole() {
+		return RoleName.CUSTOMER.name();
+	}
 }

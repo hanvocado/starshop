@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,6 +26,8 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.starshop.entities.Customer;
+import com.starshop.entities.User;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.JwtService;
 import com.starshop.utils.Constants;
@@ -40,6 +43,7 @@ public class JwtServiceImpl implements JwtService {
 	@Autowired
 	private UserRepository userRepository;
 	
+
 	@Override
 	public String generateToken(Authentication authentication) {
 		JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
@@ -139,11 +143,35 @@ public class JwtServiceImpl implements JwtService {
 		JWTClaimsSet claims = extractAllClaims(token);
 		return claims.getSubject();
 	}
-	
+
 	@Override
 	public UUID getUserIdFromPrincipal(Principal principal) {
-        return userRepository.findByUserName(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found")).getId();
-    }
+		return userRepository.findByUserName(principal.getName())
+				.orElseThrow(() -> new RuntimeException("User not found")).getId();
+	}
 
+	@Override
+	public String getRoleFromPrincipal(Principal principal) {
+		Authentication authentication = (Authentication) principal;
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		String role = authorities.iterator().next().getAuthority();
+		return role;
+	}
+	
+	@Override
+	public User getUserFromPrincipal(Principal principal) {
+		return userRepository.findByUserName(principal.getName())
+				.orElseThrow(() -> new RuntimeException("User not found"));
+	}
+	
+	@Override
+	public Customer getCustomerFromPrincipal(Principal principal) {
+        User user = getUserFromPrincipal(principal);
+        if (user instanceof Customer) {
+            return (Customer) user;
+        }
+        throw new RuntimeException("User is not a Customer");
+    }
+	
+	
 }

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.starshop.entities.ProductLine;
+import com.starshop.entities.User;
 import com.starshop.entities.Voucher;
 import com.starshop.models.ViewMessage;
 import com.starshop.services.CartService;
@@ -55,9 +56,10 @@ public class CustomerCartController {
 
 	@GetMapping
 	public String viewCart(Model model, Principal principal,HttpServletRequest request) {
-		UUID userId = jwtService.getUserIdFromPrincipal(principal);
+		User user = jwtService.getUserFromPrincipal(principal);
+		model.addAttribute("user", user);
 
-		Optional<List<ProductLine>> productLines = cartService.getProductLines(userId);
+		Optional<List<ProductLine>> productLines = cartService.getProductLines(user.getId());
 		if (productLines.isPresent()) {
 			model.addAttribute("productLines", productLines.get());
 		} else {

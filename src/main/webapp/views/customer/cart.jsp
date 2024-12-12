@@ -83,10 +83,10 @@
                                                 </td>
                                                 <!-- Quantity -->
                                                 <td>
-												    <div class="input-group">
-												        <button class="btn btn-outline-secondary update-quantity-btn" data-action="decrease" data-productline-id="${productLine.id}" type="button">-</button>
-												        <input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" class="quantity-input form-control text-center">
-												        <button class="btn btn-outline-secondary update-quantity-btn" data-action="increase" data-productline-id="${productLine.id}" type="button">+</button>
+												    <div class="btn-group" role="group" >
+												        <button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="decrease" data-productline-id="${productLine.id}">-</button>
+												        <input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" style="width: 60px;" class="quantity-input  form-control text-center">
+												        <button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="increase" data-productline-id="${productLine.id}">+</button>
 												    </div>
 												</td>
                                                 <!-- Total Price -->
@@ -130,7 +130,7 @@
 								        <p class="mb-0 fs-4 fw-bold">
 								            Tổng thanh toán: <span class="text-danger" id="total-price">đ${finalPrice != null ? finalPrice : 0}</span>
 								        </p>
-								        <button class="btn btn-primary btn-lg mt-2">Thanh toán</button>
+								        <button class="btn btn-primary btn-lg mt-2">Đặt hàng</button>
 								    </div>
 								</div>
 

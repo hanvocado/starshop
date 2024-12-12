@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.starshop.entities.Customer;
+import com.starshop.entities.User;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,5 +36,11 @@ public interface JwtService {
 	String generateToken(Authentication authentication);
 
 	UUID getUserIdFromPrincipal(Principal principal);
+
+	String getRoleFromPrincipal(Principal principal);
+
+	User getUserFromPrincipal(Principal principal);
+
+	Customer getCustomerFromPrincipal(Principal principal);
 
 }
