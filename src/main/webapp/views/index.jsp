@@ -62,7 +62,7 @@
           <div class="row">
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
-          <a href="${pageContext.request.contextPath}/user/products/${product.id}" style="text-decoration: none; color: inherit;">
+          <a href="${pageContext.request.contextPath}/customer/products/${product.id}" style="text-decoration: none; color: inherit;">
             <div class="card product-card">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
@@ -78,7 +78,7 @@
                     <div class="d-flex justify-content-start">
 					    <!-- Add to Cart Button -->
 					    <div class="mr-2">
-						    <form action="${pageContext.request.contextPath}/user/cart/add/${product.id}" method="POST">
+						    <form action="${pageContext.request.contextPath}/customer/cart/add/${product.id}" method="POST">
 						        <button class="fs__button custom-btn btn w-max mt-2" type="submit" style="width: 140px; height: 40px;">
 						            Add to Cart
 						        </button>

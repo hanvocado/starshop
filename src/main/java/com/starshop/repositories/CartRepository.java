@@ -10,7 +10,8 @@ import com.starshop.entities.Cart;
 import com.starshop.entities.User;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Long>{
+public interface CartRepository extends JpaRepository<Cart, Long> {
 	Optional<Cart> findByUserId(UUID userId);
+
 	Cart findByUser(User user);
 }

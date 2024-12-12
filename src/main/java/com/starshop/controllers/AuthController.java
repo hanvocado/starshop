@@ -96,8 +96,8 @@ public class AuthController {
 		switch (role) {
 		case "ADMIN":
 			return "redirect:/admin/categories";
-		case "USER":
-			return "redirect:/user/products";
+		case "CUSTOMER":
+			return "redirect:/customer/products";
 		default:
 			log.warn("Unknown role: {}", role);
 			return "redirect:/";

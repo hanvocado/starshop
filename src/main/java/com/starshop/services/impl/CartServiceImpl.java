@@ -69,13 +69,22 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void removeFromCart(UUID userId, Long productId) {
-		Cart cart = getCartByUserId(userId);
+	public void removeFromCart(UUID userId, Long productLineId) {
+		Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
+        if (optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            ProductLine productLineToRemove = cart.getProductLines().stream()
+                .filter(pl -> pl.getId().equals(productLineId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("ProductLine not found in cart"));
 
-		ProductLine productLine = productLineRepository.findByCartIdAndProductId(cart.getId(), productId)
-				.orElseThrow(() -> new RuntimeException("Product not in cart"));
-		productLineRepository.delete(productLine);
-	}
+            cart.getProductLines().remove(productLineToRemove);
+            productLineRepository.delete(productLineToRemove);
+            cartRepository.save(cart);
+        } else {
+            throw new IllegalArgumentException("Cart not found for user");
+        }
+    }
 
 	@Override
 	public Optional<List<ProductLine>> getProductLines(UUID userId) {
@@ -94,7 +103,7 @@ public class CartServiceImpl implements CartService {
 				.orElseThrow(() -> new RuntimeException("ProductLine not found"));
 		int newQuantity = productLine.getQuantity() + change;
 		productLine.setQuantity(newQuantity);
-		
+
 		if (newQuantity > 0 || productLine.getQuantity() > 0) {
 			productLineRepository.save(productLine);
 		} else {

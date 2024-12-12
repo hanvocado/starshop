@@ -10,8 +10,10 @@ import com.starshop.entities.Product;
 import com.starshop.entities.ProductLine;
 
 public interface ProductLineRepository extends JpaRepository<ProductLine, Long> {
-	
+
 	Optional<ProductLine> findByCartIdAndProductId(Long cartId, Long productId);
+
 	ProductLine findByCartAndProduct(Cart cart, Product product);
+
 	List<ProductLine> findByCartId(Long cartId);
 }
