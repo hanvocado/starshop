@@ -13,12 +13,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.starshop.entities.User;
+import com.starshop.models.ChatMessage;
+import com.starshop.models.WSConnectMessage;
+import com.starshop.services.TaskService;
+import com.starshop.utils.WSAction;
 
 @Service
 public class ChatQueue {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+	
+	@Autowired
+	private TaskService taskService;
 	
 	private List<String> store = new LinkedList<>();	
 	
@@ -29,6 +35,12 @@ public class ChatQueue {
         if (username != null && !username.contains("admin")) {
             this.store.add(username);
         }
+        taskService.executeWithDelay(() -> {
+        	for (String user : this.store) {
+        		WSConnectMessage message = new WSConnectMessage(user, WSAction.CONNECTED);
+        		messagingTemplate.convertAndSend("/topic/active-users", message);  
+        	}
+        }, (long) 3000);
     }
 
     @EventListener
@@ -37,11 +49,8 @@ public class ChatQueue {
         String username = accessor.getUser().getName();
         if (username != null && !username.contains("admin")) {
         	this.store.remove(username);
+        	WSConnectMessage message = new WSConnectMessage(username, WSAction.DISCONNECTED);
+        	messagingTemplate.convertAndSend("/topic/active-users", message);
         }
-    }
-    
-    @Scheduled(fixedRate = 5000)
-    public void broadcastActiveUsers() {
-    	messagingTemplate.convertAndSend("/topic/active-users", this.store);
     }
 }

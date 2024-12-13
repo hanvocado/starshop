@@ -148,15 +148,20 @@ a.add img {
     text-decoration: none;
 }
 
-.chat-list .active {
+.active {
+    font-weight: bold;
+}
+
+.chat-list .new-msg {
     display: block;
-    content: '';
+    content: '+';
+    color:black;
     clear: both;
-    position: absolute;
-    bottom: 3px;
-    left: 34px;
-    height: 12px;
-    width: 12px;
+    position: relative;
+    top: -3px;
+    left: -8px;
+    height: 15px;
+    width: 15px;
     background: #00DB75;
     border-radius: 50%;
     border: 2px solid #fff;
