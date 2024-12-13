@@ -5,54 +5,6 @@
 <title>Product Details</title>
 
 <body>
-    <%-- <section class="section__content section__product">
-        <div class="container">
-            <!-- Product details -->
-            <div class="row">
-                <div class="card col-6">
-                    <img src="${product.image}" class="card-img-top" alt="${product.name}">
-                    <div class="card-header">
-                        <h4 class="card-title">${product.name}</h4>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text text-justify">${product.description}</p>
-                        <p><strong>Weight:</strong> ${product.weight} kg</p>
-	                 </div>
-                    <div class="card-footer">
-                        <p><strong>Sale Price:</strong> &#8377;${product.salePrice}</p>
-                		<p><strong>Discount:</strong> ${product.discountPercent}%</p>
-                		<p><strong>Display Price:</strong> &#8377;${product.getDisplayPrice()}</p>   
-                    </div>
-                </div>
-                <div class="card col-6">
-                    <div class="card-body">
-                        <h4>Product Information</h4>
-                        <p class="card-text text-justify">${product.productInfo}</p>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-text strong">Delivery Information</h4>
-                        <p class="card-text text-justify">${product.deliveryInfo}</p>
-                    </div>
-                    <div class="card-footer">
-                        Delivery Charge &#8377;${product.deliveryCharge}
-                        <a href="${pageContext.request.contextPath}/add-to-cart/${product.id}">
-                            <button class="fs__button custom-btn btn w-max mt-2" type="button">Add to Cart</button>
-                        </a>
-                        <a href="${pageContext.request.contextPath}/add-to-wishlist/${product.id}">
-                            <button class="fs__button custom-btn btn w-max mt-2" type="button">Wishlist
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                </svg>
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product images carousel -->
-        </div>
-    </section> --%>
-    
-    
     <section class="section__content section__product">
     <div class="container">
         <!-- Product details -->
@@ -108,16 +60,32 @@
                     </div>
 
                     <!-- Quantity Section -->
-                    <p class="mt-3"><strong>Số lượng:</strong></p>
-                    <input type="number" value="1" min="1" class="form-control w-25">
+                    <div class="mt-3 row mx-0" >
+                    	<p ><strong>Số lượng:</strong></p>
+                    	<div class="btn-group mx-3" role="group" >
+							<button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="decrease" data-productline-id="${productLine.id}">-</button>
+							<input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" style="width: 100px;" class="quantity-input text-center">
+							<button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="increase" data-productline-id="${productLine.id}">+</button>
+						</div>					        
+                    </div>
+
 
                     <!-- Buttons -->
                     <div class="mt-4">
+                    	<button class="fs__button custom-btn btn w-max ms-2" type="button" >
+					            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
+					                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+					            </svg>
+					            Wishlist
+					        </button>
                         <a href="${pageContext.request.contextPath}/add-to-cart/${product.id}">
-                            <button class="btn btn-primary me-2" style="width: 150px;">ĐẶT HÀNG</button>
+                            <button class="btn btn-outline-primary me-2">
+							    <i class="fa fa-shopping-cart"></i> Thêm Vào Giỏ Hàng
+							</button>
+
                         </a>
                         <a href="${pageContext.request.contextPath}/add-to-wishlist/${product.id}">
-                            <button class="btn btn-warning" style="width: 150px;">YÊU THÍCH</button>
+                            <button class="btn btn-warning">Mua Ngay</button>
                         </a>
                     </div>
 

@@ -30,4 +30,9 @@ public class AddressServiceImpl implements AddressService{
         customer.setDefaultAddressId(address.getId());
         customerRepository.save(customer);
     }
+	
+	@Override
+	public Address getDefaultAddress(Customer customer) {
+        return addressRepository.findById(customer.getDefaultAddressId()).orElse(null);
+    }
 }
