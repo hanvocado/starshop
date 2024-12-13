@@ -33,9 +33,6 @@
      <!-- Slick Slider -->
      <link rel="stylesheet" type="text/css" href="/shop/css/slick.css" />
      <script type="text/javascript" src="/shop/js/slick.min.js"></script>
-     <!-- Bootstrap Bundle JS (với Popper.js) -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 	
 	<meta charset="UTF-8">
 	
