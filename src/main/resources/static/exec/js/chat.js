@@ -53,6 +53,21 @@ function removeActiveUser(username) {
 	}
 }
 
+function sendPrivateMessage() {
+	const content = document.getElementById('messageInput').value;
+
+	if (currentRecipient && content && stompClient) {
+		const message = {
+			recipient: currentRecipient,
+			content: content,
+			timestamp: new Date().toISOString()
+		};
+		stompClient.send('/app/admin/private-message', {}, JSON.stringify(message));
+		messageInput.value = '';
+		displayMessage(message, 'repaly');
+	}
+}
+
 function indicateNewMessage(user) {
 	if (user != currentRecipient) {
 		const chat_user = document.getElementById(`chat-${user}`);
@@ -80,7 +95,7 @@ function displayMessage(message, style) {
 	messageElement.appendChild(content);
 
 	const time = document.createElement('span');
-	time.textContent = formatDateTime(message.timestamp);
+	time.textContent = formatISOString(message.timestamp);
 	time.classList.add('time');
 	messageElement.appendChild(time);
 
@@ -102,20 +117,6 @@ function createConversation(username) {
 }
 
 
-function sendPrivateMessage() {
-	const content = document.getElementById('messageInput').value;
-
-	if (currentRecipient && content && stompClient) {
-		const message = {
-			recipient: currentRecipient,
-			content: content,
-			timestamp: new Date()
-		};
-		stompClient.send('/app/admin/private-message', {}, JSON.stringify(message));
-		messageInput.value = '';
-		displayMessage(message, 'repaly');
-	}
-}
 
 function selectRecipient(username) {
 	updateCurrentRecipient(username);
@@ -149,17 +150,12 @@ function updateCurrentRecipient(newRecipient) {
 	currentRecipient = newRecipient;
 }
 
-function formatDateTime(time) {
-	if (!(time instanceof Date)) {
-		time = new Date(time);
+function formatISOString(isoString) {
+	if (!isoString.includes('Z')) {
+		isoString += 'Z';
 	}
-	const year = time.getFullYear();
-	const month = String(time.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-	const day = String(time.getDate()).padStart(2, '0');
-	const hours = String(time.getHours()).padStart(2, '0');
-	const minutes = String(time.getMinutes()).padStart(2, '0');
-
-	return `${day}-${month}-${year} ${hours}:${minutes}`;
+	const date = new Date(isoString);
+	return date.toLocaleString();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
