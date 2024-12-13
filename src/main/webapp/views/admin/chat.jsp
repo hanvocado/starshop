@@ -32,7 +32,7 @@
                                                 <div class="tab-pane fade show active" id="Open" role="tabpanel" aria-labelledby="Open-tab">
                                                     <!-- chat-list -->
                                                     <div class="chat-list" id="active-user-list">
-                                                        
+														
                                                     </div>
                                                     <!-- chat-list -->
                                                 </div>
