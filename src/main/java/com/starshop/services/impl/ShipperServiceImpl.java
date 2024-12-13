@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.starshop.entities.Shipper;
 import com.starshop.models.AppException;
+import com.starshop.models.MonthlyShipperRecord;
+import com.starshop.models.ShipperRecord;
+import com.starshop.repositories.OrderRepository;
 import com.starshop.repositories.ShipperRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.ShipperService;
@@ -24,6 +27,9 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Autowired
 	private ShipperRepository shipperRepository;
+	
+	@Autowired
+	private OrderRepository orderRepository;
 
 	@Override
 	public List<Shipper> findAllShippers() {
@@ -49,11 +55,21 @@ public class ShipperServiceImpl implements ShipperService {
 		shipperRepository.save(shipper);
 	}
 	
+	@Override
 	public boolean isExisted(String email) {
 		if (userRepository.existsByEmail(email)) {
 			return true;
 		}
 		return false;
 	}
+	
+	@Override
+	public ShipperRecord getRecordByShipperUsername(String username) {
+		return orderRepository.findShipperRecordByShipperUsername(username).orElseThrow();
+	}
 
+	@Override
+	public List<MonthlyShipperRecord> getMonthlyRecordByShipperUsername(String username, int year) {
+		return orderRepository.getMonthlyRecordByUsername(username, year);
+	}
 }

@@ -1,13 +1,13 @@
 package com.starshop.models;
 
-import com.starshop.entities.User;
+import com.starshop.entities.Shipper;
 import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShipperRecord {
-	private User shipper;
+	private Shipper shipper;
 	
 	private Long successCount;
 	

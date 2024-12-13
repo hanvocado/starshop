@@ -66,16 +66,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<ShipperRecord> getShipperRecords() {
-		return orderRepo.getShipperRecords();
-	}
-
-	@Override
-	public Optional<ShipperRecord> findShipperRecordByShipperId(UUID shipperId) {
-		return orderRepo.findShipperRecordByShipperId(shipperId);
-	}
-
-	@Override
 	public Long count() {
 		return orderRepo.count();
 	}
