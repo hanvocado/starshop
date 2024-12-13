@@ -5,6 +5,7 @@ message-area
 ******************************** */
 
 .message-area {
+	padding-top:20px;
     height: 100vh;
     overflow: hidden;
 }
@@ -43,7 +44,7 @@ message-area
     width: auto;
     overflow: hidden;
     height: 100%;
-    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 .chatbox .modal-dialog,

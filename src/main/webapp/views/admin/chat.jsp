@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Chat cùng khách hàng</title>
+<title>Chat</title>
 </head>
 <body>
 <!-- char-area -->

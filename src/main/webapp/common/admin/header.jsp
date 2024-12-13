@@ -7,8 +7,8 @@
             <div class="navbar-brand-wrapper">
                 <!-- Logo -->
                 <a class="navbar-brand" href="/" aria-label="Front">
-                    <img class="navbar-brand-logo" src="~/theme/front-dashboard/assets/svg/logos/logo.svg" alt="Logo">
-                    <img class="navbar-brand-logo-mini" src="~/theme/front-dashboard/assets/svg/logos/logo-short.svg" alt="Logo">
+                    <img class="navbar-brand-logo" src="/logo.svg" alt="Logo">
+                    <img class="navbar-brand-logo-mini" src="/logo.svg" alt="Logo">
                 </a>
                 <!-- End Logo -->
             </div>
