@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.starshop.entities.Address;
 import com.starshop.entities.Customer;
+import com.starshop.entities.Product;
 
 public interface CustomerService {
 
@@ -14,5 +15,11 @@ public interface CustomerService {
 	List<Address> getOtherAddresses(Customer customer);
 
 	Optional<Address> getDefaultAddress(Customer customer);
+
+	void addToWishlist(Customer customer, Long productId);
+
+	List<Product> getWishlist(String userName);
+
+	void removeFromWishlist(Customer customer, Long productId);
 
 }

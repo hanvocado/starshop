@@ -33,6 +33,9 @@
      <!-- Slick Slider -->
      <link rel="stylesheet" type="text/css" href="/shop/css/slick.css" />
      <script type="text/javascript" src="/shop/js/slick.min.js"></script>
+     
+     <!-- Toast Message Style -->
+	<link href="/shop/css/toast-message.css" type="text/css" rel="stylesheet">
 	
 	<meta charset="UTF-8">
 	
@@ -46,6 +49,8 @@
 	<sitemesh:write property="body" />
 	
 	<%@include file="/common/footer.jsp"%>
+     
+	
 </body>
 
 </html>

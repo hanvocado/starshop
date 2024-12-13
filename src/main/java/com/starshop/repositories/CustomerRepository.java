@@ -9,5 +9,5 @@ import com.starshop.entities.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, UUID> {
-
+	Customer findByUserName(String userName);
 }

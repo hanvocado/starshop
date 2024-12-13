@@ -74,9 +74,6 @@ public class Product implements Serializable {
 	                     .collect(Collectors.joining(", "));
 	}
 	
-	@OneToMany(mappedBy = "product")
-	Set<Wishlist> wishlists;
-	
 	public void addCategory(Category category) {
         categories.add(category);
         category.getProducts().add(this);

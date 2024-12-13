@@ -38,28 +38,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ProductRepository productRepository;
-
-	@Autowired
-	private WishlistRepository wishlistRepository;
 	
 	@Autowired
 	private CartRepository cartRepository;
-
-	@Override
-	public void addProductToWishlist(UUID userId, Long productId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		Product product = productRepository.findById(productId)
-				.orElseThrow(() -> new RuntimeException("Product not found"));
-
-		Wishlist wishlist = new Wishlist(user, product);
-		wishlistRepository.save(wishlist);
-	}
-
-	@Override
-	public List<Product> getWishlist(UUID userId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		return wishlistRepository.findByUser(user).stream().map(Wishlist::getProduct).collect(Collectors.toList());
-	}
 
 	@Override
 	public boolean addCustomer(Customer user) {

@@ -26,10 +26,6 @@ public interface UserService {
 
 	User updateUser(UUID id, User updatedUser);
 
-	List<Product> getWishlist(UUID userId);
-
-	void addProductToWishlist(UUID userId, Long productId);
-
 	boolean addCustomer(Customer user);
 
 	Optional<User> findByEmail(String email);

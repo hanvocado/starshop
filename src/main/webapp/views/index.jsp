@@ -3,8 +3,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <title>index page</title>
-
+ 
 <body>
+ <!-- Toast message -->
+<%@include file="/common/toast-message.jsp"%>
+
  	<section class="section__slider">
         <section class="hero-text">
             <div class="hero" data-arrows="true" data-autoplay="true">
@@ -86,14 +89,14 @@
 					    </div>
 					
 					    <!-- Wishlist Button -->
-					    <a href="${pageContext.request.contextPath}/add_to_wishlist?p_id=${product.id}">
-					        <button class="fs__button custom-btn btn w-max mt-2 ms-2" type="button" style="width: 140px; height: 40px;">
+					    <form action="${pageContext.request.contextPath}/customer/add-wishlist/${product.id}" method="post" class="wishlist-form">
+					        <button class="fs__button custom-btn btn w-max mt-2 ms-2" type="submit" style="width: 140px; height: 40px;">
 					            Wishlist
 					            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
 					                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
 					            </svg>
 					        </button>
-					    </a>
+					    </form>
 					</div>
 
                 </div>
@@ -167,4 +170,23 @@
         </div>
     </section>
     <!-- section__about.// -->
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lưu vị trí scroll vào localStorage khi nhấn Wishlist
+        document.querySelectorAll(".wishlist-form").forEach(function (form) {
+            form.addEventListener("submit", function () {
+                localStorage.setItem("scrollPosition", window.scrollY);
+            });
+        });
+
+        // Khôi phục vị trí scroll khi tải lại trang
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            localStorage.removeItem("scrollPosition"); // Xóa sau khi sử dụng
+        }
+    });
+</script>
+    
 </body>

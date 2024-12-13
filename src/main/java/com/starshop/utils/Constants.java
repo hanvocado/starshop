@@ -28,5 +28,14 @@ public class Constants {
 	public static String notFound = "Không tìm thấy";
 	
 	public static String emailExisted = "Email đã tồn tại";
+	
+	public static String addWishlistSuccess = "Thêm sản phẩm vào yêu thích thành công!";
+	
+	public static String existedWishlist = "Sản phẩm đã được thêm vào yêu thích!";
+	
+	public static String removeWishlistSuccess = "Xóa sản phẩm khỏi yêu thích thành công!";
+	
+	public static String notExistWishlist = "Sản phẩm không có trong danh sách yêu thích!";
+	
 
 }
