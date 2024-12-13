@@ -72,10 +72,12 @@ public class CustomerProductController {
 		return "index";
 	}
 	
-	@GetMapping("/products/{product-id}")
-	public String getProductDetails(@PathVariable("product-id") Long id, Model model) {
+	@GetMapping("/products/details/{product-id}")
+	public String getProductDetails(@PathVariable("product-id") Long id, Model model, Principal principal) {
+		User user = jwtService.getUserFromPrincipal(principal);
 		Product product = productService.getById(id);
 		model.addAttribute("product", product);
+		model.addAttribute("user", user);
 		return "customer/product-details";
 	}
 	

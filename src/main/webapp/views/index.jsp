@@ -62,7 +62,7 @@
           <div class="row">
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
-          <a href="${pageContext.request.contextPath}/customer/products/${product.id}" style="text-decoration: none; color: inherit;">
+          <a href="${pageContext.request.contextPath}/customer/products/details/${product.id}" style="text-decoration: none; color: inherit;">
             <div class="card product-card">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>

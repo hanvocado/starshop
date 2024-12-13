@@ -76,10 +76,12 @@ public class CustomerCartController {
 			Double finalPrice = (Double) inputFlashMap.get("finalPrice");
 			Double discount = (Double) inputFlashMap.get("discount");
 			Double freeShip = (Double) inputFlashMap.get("freeShip");
+			String voucherCode = (String) inputFlashMap.get("voucherCode");
 			
 			model.addAttribute("finalPrice", finalPrice != null ? finalPrice : 0);
 			model.addAttribute("discount", discount != null ? discount : 0);
 			model.addAttribute("freeShip", freeShip != null ? freeShip : 0);
+			model.addAttribute("voucherCode", voucherCode);
 		}
 
 		return "customer/cart";
@@ -125,8 +127,6 @@ public class CustomerCartController {
 	@PostMapping("/apply-voucher")
 	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") int totalPrice,
 			Principal principal, RedirectAttributes redirectAttributes) {
-		UUID userId = jwtService.getUserIdFromPrincipal(principal);
-
 		redirectAttributes.addFlashAttribute("showModal", true);
 		if (voucherCode == null || voucherCode.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
@@ -154,8 +154,11 @@ public class CustomerCartController {
 				if (voucher.isFreeship()) {
 					redirectAttributes.addFlashAttribute("freeShip", discountAmount);
 
-				} else
+				} else {
 					redirectAttributes.addFlashAttribute("discount", discountAmount);
+				}
+				redirectAttributes.addFlashAttribute("voucherCode", voucherCode);
+					
 			}
 		}
 		return "redirect:/customer/cart";
