@@ -9,4 +9,6 @@ public interface AddressService {
 
 	void setDefaultAddress(Customer customer, Long addressId);
 
+	Address getDefaultAddress(Customer customer);
+
 }

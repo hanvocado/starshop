@@ -77,7 +77,7 @@
                                                 <!-- Product Price -->
                                                 <td>
                                                     <div class="row">
-                                                        <span class="text-muted text-decoration-line-through mr-2">đ${productLine.product.salePrice}</span><br>
+                                                        <span class="text-muted text-decoration-line-through mr-3">đ${productLine.product.salePrice}</span><br>
                                                         <span class="fw-bold">đ${productLine.product.getDisplayPrice()}</span>
                                                     </div>
                                                 </td>
@@ -85,7 +85,7 @@
                                                 <td>
 												    <div class="btn-group" role="group" >
 												        <button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="decrease" data-productline-id="${productLine.id}">-</button>
-												        <input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" style="width: 60px;" class="quantity-input  form-control text-center">
+												        <input type="number" name="quantity-${productLine.id}" value="${productLine.quantity}" min="1" id="quantity-${productLine.id}" data-productline-id="${productLine.id}" style="width: 60px;" class="quantity-input text-center">
 												        <button type="button" class="btn btn-outline-dark update-quantity-btn" data-action="increase" data-productline-id="${productLine.id}">+</button>
 												    </div>
 												</td>
@@ -107,12 +107,12 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- Voucher Section -->
                                 <div>
-                                    <button 
+                                    <a type="button"
                                     	id="voucherButton"
 						                class="mt-4 bg-primary text-primary-foreground p-2 rounded hover:bg-primary/80" 
 						                onclick="checkAndToggleVoucherInputs()">
 						                Chọn hoặc nhập mã
-						            </button>
+						            </a>
                                 </div>
                             </div>
 
@@ -130,10 +130,16 @@
 								        <p class="mb-0 fs-4 fw-bold">
 								            Tổng thanh toán: <span class="text-danger" id="total-price">đ${finalPrice != null ? finalPrice : 0}</span>
 								        </p>
-								        <button class="btn btn-primary btn-lg mt-2">Đặt hàng</button>
+								       <form action="/customer/order" method="POST">
+										    <input type="hidden" name="selectedProductLineIds" id="selectedProductLineIds" value="">
+										    <input type="hidden" name="voucherCode" id="voucherCode" value="${voucherCode != null ? voucherCode : null}">
+										    <input type="hidden" name="freeShip" id="freeShip" value="${freeShip != null ? freeShip : 0}">
+										    <input type="hidden" name="discount" id="discount" value="${discount  != null ? discount : 0}">
+										    <input type="hidden" name="finalPrice" id="finalPrice" value="${finalPrice != null ? finalPrice : 0}">
+										    <button type="submit" class="btn btn-primary btn-lg mt-2">Đặt hàng</button>
+										</form>
 								    </div>
 								</div>
-
                         </div>
                     </div>
                 </div>
@@ -189,6 +195,7 @@
             success: function(response) {
                 $('input[name="quantity-' + productLineId + '"]').val(response.newQuantity);
                 $('.product-line-total[data-productline-id="' + productLineId + '"]').text('đ' + response.plTotalPrice);
+                updateTotalPrice();
             },
             error: function(xhr, status, error) {
                 console.error('Error updating quantity:', error);
@@ -223,6 +230,8 @@
 	
 	    // Cập nhật giá trị tổng tiền hiển thị
 	    document.getElementById('total-price').innerText = 'đ' + totalOrderPrice.toLocaleString('vi-VN');
+	    
+	    document.getElementById('finalPrice').value = totalOrderPrice;
 		
 	    //Cập nhật giá trị vào hidden input
 	    document.getElementById('totalPriceNotVoucher').value = totalOrderPrice;
@@ -328,9 +337,62 @@
 
 </script>
 
+<!-- Giữ trạng thái productLine đã chọn và cập nhật giá tiền mỗi khi load lại trang -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Lấy trạng thái từ localStorage
+    const selectedIds = JSON.parse(localStorage.getItem("selectedProductLineIds")) || [];
 
+    // Duyệt qua các checkbox và cập nhật trạng thái
+    document.querySelectorAll(".selectItem").forEach(function (checkbox) {
+        if (selectedIds.includes(checkbox.value)) {
+            checkbox.checked = true;
+        }
+    });
     
-    <script>
+    var finalPriceFromServer = ${finalPrice != null ? finalPrice : 'null'}; 
+    if (finalPriceFromServer !== null) {
+        document.getElementById("total-price").textContent = 'đ' + finalPriceFromServer;
+    } else {
+        updateTotalPrice(); 
+    }
+
+    // Lưu trạng thái khi checkbox thay đổi
+    document.querySelectorAll(".selectItem").forEach(function (checkbox) {
+        checkbox.addEventListener("change", function () {
+            const updatedSelectedIds = Array.from(document.querySelectorAll(".selectItem:checked")).map(cb => cb.value);
+            localStorage.setItem("selectedProductLineIds", JSON.stringify(updatedSelectedIds));
+        });
+    });
+});
+</script>
+
+<!-- Cập nhật giá trị các hidden input productLine khi tiến hành đặt hàng -->
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    // Hàm cập nhật danh sách các ProductLineId đã chọn
+	    function updateSelectedProductLineIds() {
+	        const selectedIds = Array.from(document.querySelectorAll('.selectItem:checked'))
+	            .map(cb => cb.value);
+
+	        // Loại bỏ dấu ngoặc vuông và dấu nháy kép
+	        const cleanedIds = selectedIds.map(id => id.replace(/["\[\]]/g, ''));
+
+	        // Cập nhật giá trị cho hidden input
+	        document.getElementById("selectedProductLineIds").value = cleanedIds.join(',');
+	    }
+	
+	    // Gọi hàm khi checkbox thay đổi
+	    document.querySelectorAll(".selectItem").forEach(function (checkbox) {
+	        checkbox.addEventListener("change", updateSelectedProductLineIds);
+	    });
+	
+	    // Gọi hàm để cập nhật giá trị ban đầu
+	    updateSelectedProductLineIds();
+	});
+</script>
+ 
+    <!-- <script>
         $(document).ready(function() {
             $("#pay-button").click(function(e) {
                 e.preventDefault();
@@ -401,5 +463,5 @@
         .custom-btn:hover {
             background-color: #ff66a3;
         }
-    </style>
+    </style> -->
 </body>
