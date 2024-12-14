@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -127,27 +128,17 @@ public class AuthController {
 		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", Constants.registerSuccess));
 		return "redirect:/auth/login";
 	}
-//	
-//	@Autowired
-//  private AuthenticationManager authenticationManager;
-//	 @PostMapping("/login")
-//	    public ResponseEntity<?> login(@RequestBody UserLogin userLogin) throws IllegalAccessException {
-//	        Authentication authentication =
-//	                authenticationManager
-//	                        .authenticate(new UsernamePasswordAuthenticationToken(
-//	                                userLogin.getUsername(),
-//	                                userLogin.getPassword()));
-//	        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//	        UserLogin userDetails = (UserLogin) authentication.getPrincipal();
-//
-//
-//	        log.info("Token requested for user :{}", authentication.getAuthorities());
-//	        String token = jwtService.generateToken(authentication);
-//
-////	        AuthDTO.Response response = new AuthDTO.Response("User logged in successfully", token);
-//
-//	        return ResponseEntity.ok(token);
-//	    }
+
+	@PostMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true); 
+        cookie.setSecure(true); 
+        cookie.setPath("/"); 
+        cookie.setMaxAge(0); 
+        response.addCookie(cookie);
+
+        return "redirect:/auth/login";
+    }
 
 }

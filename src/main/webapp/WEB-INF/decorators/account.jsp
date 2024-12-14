@@ -52,12 +52,12 @@
                 <div class="row py-3">
                     <aside class="col-md-2">
                         <nav class="list-group">
-                            <a class="list-group-item active" href="profile.html"> Profile </a>
-                            <a class="list-group-item" href="address.html"> Address Book</a>
-                            <a class="list-group-item" href="orders.html"> My Orders </a>
-                            <a class="list-group-item" href="wishlist.html"> Wishlist </a>
-                            <a class="list-group-item" href="setting.html"> Change password </a>
-                            <a class="list-group-item" href="home.html"> Log Out </a>
+                            <a class="list-group-item active" href="profile.html"> Hồ sơ cá nhân </a>
+                            <a class="list-group-item" href="address.html">Địa chỉ của tôi</a>
+                            <a class="list-group-item" href="orders.html"> Đơn mua </a>
+                            <a class="list-group-item" href="wishlist.html"> Yêu thích </a>
+                            <a class="list-group-item" href="setting.html"> Thay đổi mật khẩu</a>
+                            <a class="list-group-item" href="home.html"> Đăng xuất </a>
                         </nav>
                     </aside>
                     <main class="col-md-10">
@@ -73,6 +73,16 @@
     </div>
 	
 	<%@include file="/common/footer.jsp"%>
+	
+	<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </body>
 
 </html>
