@@ -3,8 +3,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <title>index page</title>
-
+ 
 <body>
+ <!-- Toast message -->
+<%@include file="/common/toast-message.jsp"%>
+
  	<section class="section__slider">
         <section class="hero-text">
             <div class="hero" data-arrows="true" data-autoplay="true">
@@ -63,7 +66,7 @@
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
           <a href="${pageContext.request.contextPath}/customer/products/details/${product.id}" style="text-decoration: none; color: inherit;">
-            <div class="card product-card">
+            <div class="card product-card my-1">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
 				  </c:if>
@@ -78,22 +81,18 @@
                     <div class="d-flex justify-content-start">
 					    <!-- Add to Cart Button -->
 					    <div class="mr-2">
-						    <form action="${pageContext.request.contextPath}/customer/cart/add/${product.id}" method="POST">
-						        <button class="fs__button custom-btn btn w-max mt-2" type="submit" style="width: 140px; height: 40px;">
+						        <button class="fs__button custom-btn btn w-max mt-2 add-to-cart" data-product-id="${product.id}" type="submit" style="width: 140px; height: 40px;">
 						            Add to Cart
 						        </button>
-						    </form>
 					    </div>
 					
 					    <!-- Wishlist Button -->
-					    <a href="${pageContext.request.contextPath}/add_to_wishlist?p_id=${product.id}">
-					        <button class="fs__button custom-btn btn w-max mt-2 ms-2" type="button" style="width: 140px; height: 40px;">
+					        <button class="fs__button custom-btn btn w-max mt-2 ms-2 add-to-wishlist" data-product-id="${product.id}" type="button" style="width: 140px; height: 40px;">
 					            Wishlist
 					            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
 					                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
 					            </svg>
 					        </button>
-					    </a>
 					</div>
 
                 </div>
@@ -167,4 +166,5 @@
         </div>
     </section>
     <!-- section__about.// -->
+    
 </body>

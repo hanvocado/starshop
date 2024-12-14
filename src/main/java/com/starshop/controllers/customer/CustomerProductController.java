@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Product;
 import com.starshop.entities.User;
+import com.starshop.models.ViewMessage;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
@@ -59,7 +60,9 @@ public class CustomerProductController {
 			pageSize = 21;
 
 		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
-
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		
+		model.addAttribute("message", message);
 		model.addAttribute("user", user);
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());

@@ -35,10 +35,6 @@ public class Customer extends User {
 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses;
-	
-	@JsonManagedReference
-	@OneToMany(mappedBy = "user")
-	private List<Wishlist> wishlists;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user")
@@ -51,6 +47,10 @@ public class Customer extends User {
 	@ManyToMany()
 	@JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "voucher_id"))
 	private List<Voucher> usedVouchers;
+	
+	@ManyToMany()
+	@JoinTable(name = "wishlist", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+	private List<Product> wishlist;
 
 	@Override
 	public String getRole() {

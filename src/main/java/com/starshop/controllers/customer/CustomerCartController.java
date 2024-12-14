@@ -32,6 +32,7 @@ import com.starshop.services.CustomerService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductLineService;
 import com.starshop.services.VoucherService;
+import com.starshop.utils.Constants;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -55,7 +56,7 @@ public class CustomerCartController {
 	private CustomerService customerService;
 
 	@GetMapping
-	public String viewCart(Model model, Principal principal,HttpServletRequest request) {
+	public String viewCart(Model model, Principal principal, HttpServletRequest request) {
 		User user = jwtService.getUserFromPrincipal(principal);
 		model.addAttribute("user", user);
 
@@ -72,12 +73,12 @@ public class CustomerCartController {
 		model.addAttribute("freeShipVouchers", freeShipVouchers);
 
 		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-		if(inputFlashMap != null) {
+		if (inputFlashMap != null) {
 			Double finalPrice = (Double) inputFlashMap.get("finalPrice");
 			Double discount = (Double) inputFlashMap.get("discount");
 			Double freeShip = (Double) inputFlashMap.get("freeShip");
 			String voucherCode = (String) inputFlashMap.get("voucherCode");
-			
+
 			model.addAttribute("finalPrice", finalPrice != null ? finalPrice : 0);
 			model.addAttribute("discount", discount != null ? discount : 0);
 			model.addAttribute("freeShip", freeShip != null ? freeShip : 0);
@@ -88,11 +89,12 @@ public class CustomerCartController {
 	}
 
 	@PostMapping("/add/{product-id}")
-	public String addToCart(@PathVariable("product-id") Long productId, @RequestParam(defaultValue = "1") int quantity,
-			Principal principal) {
+	@ResponseBody
+	public ResponseEntity<ViewMessage> addToCart(@PathVariable("product-id") Long productId,
+			@RequestParam(defaultValue = "1") int quantity, Principal principal) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 		cartService.addToCart(userId, productId, quantity);
-		return "redirect:/customer/cart";
+		return ResponseEntity.ok(new ViewMessage("success", Constants.addCartSuccess));
 	}
 
 	@PostMapping("/update-quantity")
@@ -158,7 +160,7 @@ public class CustomerCartController {
 					redirectAttributes.addFlashAttribute("discount", discountAmount);
 				}
 				redirectAttributes.addFlashAttribute("voucherCode", voucherCode);
-					
+
 			}
 		}
 		return "redirect:/customer/cart";
