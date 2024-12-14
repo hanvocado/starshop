@@ -35,7 +35,7 @@
      <script type="text/javascript" src="/shop/js/slick.min.js"></script>
      
      <!-- Toast Message Style -->
-	<link href="/shop/css/toast-message.css" type="text/css" rel="stylesheet">
+	<link href="/shop/css/bootoast.min.css" type="text/css" rel="stylesheet">	
 	
 	<meta charset="UTF-8">
 	

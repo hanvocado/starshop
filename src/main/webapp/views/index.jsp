@@ -66,7 +66,7 @@
     <c:forEach var="product" items="${products}">
         <div class="col-md-4">
           <a href="${pageContext.request.contextPath}/customer/products/details/${product.id}" style="text-decoration: none; color: inherit;">
-            <div class="card product-card">
+            <div class="card product-card my-1">
             	<c:if test="${product.image.substring(0,5)=='https'}">
 					<c:url value="${product.image }" var="imgUrl"></c:url>
 				  </c:if>
@@ -81,22 +81,18 @@
                     <div class="d-flex justify-content-start">
 					    <!-- Add to Cart Button -->
 					    <div class="mr-2">
-						    <form action="${pageContext.request.contextPath}/customer/cart/add/${product.id}" method="POST">
-						        <button class="fs__button custom-btn btn w-max mt-2" type="submit" style="width: 140px; height: 40px;">
+						        <button class="fs__button custom-btn btn w-max mt-2 add-to-cart" data-product-id="${product.id}" type="submit" style="width: 140px; height: 40px;">
 						            Add to Cart
 						        </button>
-						    </form>
 					    </div>
 					
 					    <!-- Wishlist Button -->
-					    <form action="${pageContext.request.contextPath}/customer/add-wishlist/${product.id}" method="post" class="wishlist-form">
-					        <button class="fs__button custom-btn btn w-max mt-2 ms-2" type="submit" style="width: 140px; height: 40px;">
+					        <button class="fs__button custom-btn btn w-max mt-2 ms-2 add-to-wishlist" data-product-id="${product.id}" type="button" style="width: 140px; height: 40px;">
 					            Wishlist
 					            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart-fill" viewBox="0 0 16 16">
 					                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
 					            </svg>
 					        </button>
-					    </form>
 					</div>
 
                 </div>
@@ -170,23 +166,5 @@
         </div>
     </section>
     <!-- section__about.// -->
-    
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lưu vị trí scroll vào localStorage khi nhấn Wishlist
-        document.querySelectorAll(".wishlist-form").forEach(function (form) {
-            form.addEventListener("submit", function () {
-                localStorage.setItem("scrollPosition", window.scrollY);
-            });
-        });
-
-        // Khôi phục vị trí scroll khi tải lại trang
-        const scrollPosition = localStorage.getItem("scrollPosition");
-        if (scrollPosition) {
-            window.scrollTo(0, parseInt(scrollPosition, 10));
-            localStorage.removeItem("scrollPosition"); // Xóa sau khi sử dụng
-        }
-    });
-</script>
     
 </body>
