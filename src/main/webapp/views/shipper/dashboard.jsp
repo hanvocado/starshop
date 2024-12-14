@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Thông kê doanh thu</title>
+<title>Thông kê</title>
 </head>
 <body>
 	<div class="content container-fluid">
@@ -22,37 +22,16 @@
 		
 		<!-- Stats -->
             <div class="row gx-2 gx-lg-3">
-                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-                    <!-- Card -->
-                    <a class="card card-hover-shadow h-100" href="#">
-                        <div class="card-body">
-                            <h6 class="card-subtitle">Số người dùng</h6>
-
-                            <div class="row align-items-center gx-2 mb-1">
-                                <div class="col-6">
-                                    <span class="card-title h2">${numberOfCustomers }</span>
-                                </div>
-
-                                <div class="col-6">
-                                    
-                                </div>
-                            </div>
-                            <!-- End Row -->
-
-                        </div>
-                    </a>
-                    <!-- End Card -->
-                </div>
 
                 <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
                     <!-- Card -->
                     <a class="card card-hover-shadow h-100" href="#">
                         <div class="card-body">
-                            <h6 class="card-subtitle">Số đơn đặt hàng</h6>
+                            <h6 class="card-subtitle">Tổng số đơn</h6>
 
                             <div class="row align-items-center gx-2 mb-1">
                                 <div class="col-6">
-                                    <span class="card-title h2">${numberOfOrders }</span>
+                                    <span class="card-title h2">${record.shipper.getNumberOfOrders() }</span>
                                 </div>
 
                             </div>
@@ -66,11 +45,11 @@
                     <!-- Card -->
                     <a class="card card-hover-shadow h-100" href="#">
                         <div class="card-body">
-                            <h6 class="card-subtitle">Doanh thu</h6>
+                            <h6 class="card-subtitle">Giao thành công</h6>
 
                             <div class="row align-items-center gx-2 mb-1">
                                 <div class="col-12">
-                                    <span class="card-title h2"><fmt:formatNumber value = "${totalRevenue }" type = "currency"/></span>
+                                    <span class="card-title h2">${record.successCount }</span>
                                 </div>
                             </div>
                             <!-- End Row -->
@@ -84,11 +63,30 @@
                     <!-- Card -->
                     <a class="card card-hover-shadow h-100" href="#">
                         <div class="card-body">
-                            <h6 class="card-subtitle">Lợi nhuận</h6>
+                            <h6 class="card-subtitle">Đang giao</h6>
 
                             <div class="row align-items-center gx-2 mb-1">
                                 <div>
-                                    <span class="card-title h2"><fmt:formatNumber value = "${totalProfit }" type = "currency"/></span>
+                                    <span class="card-title h2">${record.shippingCount }</span>
+                                </div>
+
+                            </div>
+                            <!-- End Row -->
+
+                        </div>
+                    </a>
+                    <!-- End Card -->
+                </div>
+                
+                <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+                    <!-- Card -->
+                    <a class="card card-hover-shadow h-100" href="#">
+                        <div class="card-body">
+                            <h6 class="card-subtitle">Giao thất bại</h6>
+
+                            <div class="row align-items-center gx-2 mb-1">
+                                <div>
+                                    <span class="card-title h2">${record.failedCount }</span>
                                 </div>
 
                             </div>
@@ -106,9 +104,21 @@
 			<!-- Card -->
 			<div class="card h-100">
 				<!-- Header -->
-				<div class="card-header">
-					<h5 class="card-header-title">Doanh thu và lợi nhuận</h5>
-
+				<div class="card-header container">
+					<div class="row container">
+						<div class="col-4 d-flex align-items-center"><h5 class="card-header-title">Biểu đồ</h5></div>
+						<div class="col-8">
+							<form action="<c:url value="/shipper/dashboard"/>" method="get">
+								<div class="input-group" id="yearInput">
+						            <input type="text" class="form-control" name="year" value="${selectedYear }" placeholder="Enter Year" >
+						            <span class="input-group-text">
+						                <i class="tio-clock"></i>
+						            </span>							
+						        </div>
+							</form>
+						</div>
+					</div>
+					
 				</div>
 				<!-- End Header -->
 				<!-- Body -->
@@ -116,9 +126,7 @@
 					<div class="row mb-4">
 						<div class="col-sm mb-2 mb-sm-0">
 							<div class="d-flex align-items-center">
-								<span class="h1 mb-0">${grossProfitMargin } %</span> <span class="text-success ml-2">
-									(GPM)
-								</span>
+								
 							</div>
 						</div>
 
@@ -126,10 +134,10 @@
 							<!-- Legend Indicators -->
 							<div class="row font-size-sm">
 								<div class="col-auto">
-									<span class="legend-indicator bg-primary"></span> Doanh thu
+									<span class="legend-indicator bg-primary"></span> Tổng số đơn
 								</div>
 								<div class="col-auto">
-									<span class="legend-indicator bg-info"></span> Lợi nhuận
+									<span class="legend-indicator bg-info"></span> Số đơn thành công
 								</div>
 							</div>
 							<!-- End Legend Indicators -->
@@ -144,13 +152,13 @@
                             "data": {
                               "labels": ${labels },
                               "datasets": [{
-                                "data": ${revenue },
+                                "data": ${totalCounts },
                                 "backgroundColor": "#dd3577",
                                 "hoverBackgroundColor": "#dd3577",
                                 "borderColor": "#dd3577"
                               },
                               {
-                                "data": ${profit },
+                                "data": ${successCounts },
                                 "backgroundColor": "#00c9db",
                                 "borderColor": "#00c9db"
                               }]

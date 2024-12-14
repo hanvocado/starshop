@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Chat cùng khách hàng</title>
+<title>Chat</title>
 </head>
 <body>
 <!-- char-area -->
@@ -12,9 +12,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="chat-area">
+                    <div class="row chat-area">
                         <!-- chatlist -->
-                        <div class="chatlist">
+                        <div class="col-3 chatlist">
                             <div class="modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="chat-header">
@@ -32,7 +32,7 @@
                                                 <div class="tab-pane fade show active" id="Open" role="tabpanel" aria-labelledby="Open-tab">
                                                     <!-- chat-list -->
                                                     <div class="chat-list" id="active-user-list">
-                                                        
+														
                                                     </div>
                                                     <!-- chat-list -->
                                                 </div>
@@ -49,12 +49,12 @@
 
 
                         <!-- chatbox -->
-                        <div class="chatbox">
+                        <div class="col-9 chatbox">
                             <div class="modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="msg-head">
                                         <div class="row">
-                                            <div class="col-8">
+                                            <div class="col-12">
                                                 <div class="d-flex align-items-center">
                                                     <span class="chat-icon"><img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/arroleftt.svg" alt="image title"></span>
                                                 
@@ -62,21 +62,6 @@
                                                         <h3 id="currentRecipient" ></h3>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <ul class="moreoption">
-                                                    <li class="navbar nav-item dropdown">
-                                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" href="#">Action</a></li>
-                                                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                                                            <li>
-                                                                <hr class="dropdown-divider">
-                                                            </li>
-                                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                     </div>

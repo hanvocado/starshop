@@ -33,46 +33,17 @@
                     <li class="nav-item">
                         <!-- Account -->
                         <div class="hs-unfold">
-                            <!-- @if (!string.IsNullOrEmpty(User.Claims.FirstOrDefault(c => c.Type.Equals("Email"))?.Value))
-                            { -->
                                 <a class="js-hs-unfold-invoker navbar-dropdown-account-wrapper" href="javascript:;" data-hs-unfold-options='{
                                                 "target": "#accountNavbarDropdown",
                                                 "type": "css-animation"
                                             }'>
                                     <span class="avatar avatar-sm avatar-circle">
-                                        <img class="avatar-img" src="/exec/img/160x160/img6.jpg" alt="Image Description">
+                                        <img class="avatar-img" src="/exec/img/160x160/img1.jpg" alt="Image Description">
                                         <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                     </span>
                                 </a>
-                            <!-- }
-                            else
-                            { -->
-<!--                                 <a class="js-hs-unfold-invoker navbar-dropdown-account-wrapper" asp-action="Login" asp-controller="Authentication">Đăng Nhập</a>
- -->                            <!-- } -->
                             <div id="accountNavbarDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account" style="width: 16rem;">
-                                <!-- <a class="dropdown-item" href="#">
-                                    <div class="media align-items-center">
-                                        <div class="avatar avatar-sm avatar-dark avatar-circle mr-2">
-                                            <span class="avatar-initials">H</span>
-                                        </div>
-                                        <div class="media-body">
-                                            <span class="card-title h5">email</span>
-                                        </div>
-                                    </div>
-                                </a> -->
-<!-- 
-                                <div class="dropdown-divider"></div>
-
-                                <a class="dropdown-item" asp-action="Detail" asp-controller="Profile">
-                                    <span class="text-truncate pr-2" title="Tài Khoản">Tài Khoản</span>
-                                </a>
-
-                                <a class="dropdown-item" asp-action="ChangePassword" asp-controller="Account">
-                                    <span class="text-truncate pr-2" title="Đổi mật Khẩu">Đổi mật Khẩu</span>
-                                </a> -->
-
-<!--                                 <div class="dropdown-divider"></div>
- -->                                <a class="dropdown-item" asp-action="Logout" asp-controller="Authentication">
+                                                                <a class="dropdown-item" asp-action="Logout" asp-controller="Authentication">
                                     <span class="text-truncate pr-2" title="Đăng Xuất">Đăng Xuất</span>
                                 </a>
                             </div>

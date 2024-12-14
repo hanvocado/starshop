@@ -37,8 +37,8 @@ public class Order implements Serializable {
 	@Column(name = "order_date", nullable = false)
 	private LocalDateTime orderDate;
 
-	@Column(name = "deliver_date", nullable = true)
-	private LocalDateTime deliverDate;
+	@Column(name = "updated_date", nullable = true)
+	private LocalDateTime updatedDate;
 
 	@Column(name = "products_total", nullable = false)
 	private double productsTotal;
@@ -119,6 +119,7 @@ public class Order implements Serializable {
 	public void addTrackingOrder(TrackingOrder trackingOrder) {
 		tracking.add(trackingOrder);
 		trackingOrder.setOrder(this);
+		updatedDate = LocalDateTime.now();
 		this.currentStatus = trackingOrder.getStatus();
 	}
 

@@ -26,6 +26,8 @@
  
      <!-- Custom Style -->
      <link href="/shop/css/style.css" type="text/css" rel="stylesheet">
+     
+     <link rel="stylesheet" href="/chat.css">
  
      <!-- Custom JavaScript -->
      <script src="/shop/js/script.js" type="text/javascript"></script>

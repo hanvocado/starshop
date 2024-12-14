@@ -23,10 +23,6 @@ public interface OrderService {
 
 	List<Order> findByShipperId(UUID shipperId);
 
-	List<ShipperRecord> getShipperRecords();
-
-	Optional<ShipperRecord> findShipperRecordByShipperId(UUID shipperId);
-
 	Long count();
 
 	Page<Order> findByStatus(OrderStatus status, Integer pageNo, Integer pageSize);

@@ -18,20 +18,15 @@ public class ChatController {
 	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
 
-	@Autowired
-	private ChatQueue chatQueue;
-
 	@GetMapping("/chat")
 	public String index(Model model) {
 		String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-
 		model.addAttribute("currentUser", currentUsername);
-		return "chat";
+		return "customer/chat";
 	}	
 
 	@MessageMapping("/private-message") // /app/private-message
 	public void sendPrivateMessage(ChatMessage message) {
-		// Send message to a specific user's queue /user/{username}/queue/messages
 		messagingTemplate.convertAndSendToUser(message.getRecipient(), "/queue/messages", message);
 	}
 }

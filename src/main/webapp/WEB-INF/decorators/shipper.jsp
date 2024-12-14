@@ -32,9 +32,9 @@
 
     <script src="/exec/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
 
-	<%@include file="/common/admin/header.jsp"%>
+	<%@include file="/common/shipper/header.jsp"%>
     
-	<%@include file="/common/admin/sidebar.jsp"%>    
+	<%@include file="/common/shipper/sidebar.jsp"%>    
     
     <script src="/exec/js/demo.js"></script>
 

@@ -5,6 +5,7 @@ message-area
 ******************************** */
 
 .message-area {
+	padding-top:20px;
     height: 100vh;
     overflow: hidden;
 }
@@ -25,7 +26,7 @@ message-area
     overflow: hidden;
     width: 300px;
     float: left;
-    padding: 15px;
+    padding: 5px;
 }
 
 .chat-area .modal-content {
@@ -43,7 +44,7 @@ message-area
     width: auto;
     overflow: hidden;
     height: 100%;
-    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 .chatbox .modal-dialog,
@@ -143,20 +144,25 @@ a.add img {
 }
 
 .chat-list a.d-flex {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     position: relative;
     text-decoration: none;
 }
 
-.chat-list .active {
+.active {
+    font-weight: bold;
+}
+
+.chat-list .new-msg {
     display: block;
-    content: '';
+    content: '+';
+    color:black;
     clear: both;
-    position: absolute;
-    bottom: 3px;
-    left: 34px;
-    height: 12px;
-    width: 12px;
+    position: relative;
+    top: -3px;
+    left: -8px;
+    height: 15px;
+    width: 15px;
     background: #00DB75;
     border-radius: 50%;
     border: 2px solid #fff;
@@ -168,6 +174,7 @@ a.add img {
     font-weight: 600;
     line-height: 1.5;
     margin-bottom: 0;
+    text-transform: uppercase;
 }
 
 .msg-head p {
@@ -513,22 +520,7 @@ button:focus {
 
 
 @media (max-width: 767px) {
-    .chat-icon {
-        display: block;
-        margin-right: 5px;
-    }
-    .chatlist {
-        width: 100%;
-    }
-    .chatbox {
-        width: 100%;
-        position: absolute;
-        left: 1000px;
-        right: 0;
-        background: #fff;
-        transition: all 0.5s ease;
-        border-left: none;
-    }
+
     .showbox {
         left: 0 !important;
         transition: all 0.5s ease;
@@ -547,9 +539,6 @@ button:focus {
     }
     .send-box .form-control {
         width: 70%;
-    }
-    .chat-list h3 {
-        font-size: 14px;
     }
     .chat-list p {
         font-size: 12px;
