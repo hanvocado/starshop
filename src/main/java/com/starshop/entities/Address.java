@@ -1,17 +1,16 @@
 package com.starshop.entities;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "address")
 public class Address {
 	@Id
@@ -27,4 +26,14 @@ public class Address {
     private String ward;
     private String district;
     private String city;
+    
+    private Double latitude;
+    private Double longitude;
+    
+	@Override
+	public String toString() {
+		return houseNumber + " " + street + " " + ward + " "
+				+ district + " " + city;
+	}  
+    
 }

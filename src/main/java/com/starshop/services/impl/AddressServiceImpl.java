@@ -8,6 +8,7 @@ import com.starshop.entities.Customer;
 import com.starshop.repositories.AddressRepository;
 import com.starshop.repositories.CustomerRepository;
 import com.starshop.services.AddressService;
+import com.starshop.services.GeoService;
 
 @Service
 public class AddressServiceImpl implements AddressService{
@@ -16,10 +17,18 @@ public class AddressServiceImpl implements AddressService{
 	
 	@Autowired
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private GeoService geoService;
 
 	@Override
-	public <S extends Address> S save(S entity) {
-		return addressRepository.save(entity);
+	public Address save(Address address) {
+		double[] latLong = geoService.getLatLongFromAddress(address);
+		if (latLong != null) {
+			address.setLatitude(latLong[0]);
+			address.setLongitude(latLong[1]);			
+		}
+		return addressRepository.save(address);
 	}
 	
 	@Override
