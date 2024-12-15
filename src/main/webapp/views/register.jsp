@@ -58,18 +58,10 @@
                 <form class="js-validate" action="/auth/register" method="post">
                   <div class="text-center">
                     <div class="mb-5">
-                      <h1 class="display-4">Create your account</h1>
-                      <p>Already have an account? <a href="authentication-signin-basic.html">Sign in here</a></p>
+                      <h1 class="display-4">Đăng ký</h1>
+                      <p>Đã có tài khoản? <a href="<c:url value='/auth/login' />">Đăng nhập</a></p>
                     </div>
 
-                    <a class="btn btn-lg btn-block btn-white mb-4" href="#">
-                      <span class="d-flex justify-content-center align-items-center">
-                        <img class="avatar avatar-xss mr-2" src="/exec/svg/brands/google.svg" alt="Image Description">
-                        Sign up with Google
-                      </span>
-                    </a>
-
-                    <span class="divider text-muted mb-4">OR</span>
                   </div>
 
                   <!-- Form Group -->
@@ -175,39 +167,14 @@
                   </div>
                   <!-- End Checkbox -->
 
-                  <button type="submit" class="btn btn-lg btn-block btn-primary mb-2">Create an account</button>
+                  <button type="submit" class="btn btn-lg btn-block btn-primary mb-2">Đăng ký</button>
 
-                  <button type="submit" class="btn btn-block btn-link">
-                    or Start your 30-day trial <i class="tio-chevron-right"></i>
-                  </button>
                 </form>
                 <!-- End Form -->
               </div>
             </div>
             <!-- End Card -->
 
-            <!-- Footer -->
-            <div class="text-center">
-              <small class="text-cap mb-4">Trusted by the world's best teams</small>
-
-              <div class="w-85 mx-auto">
-                <div class="row justify-content-between">
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/gitlab-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/fitbit-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/flow-xo-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/layar-gray.svg" alt="Image Description">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End Footer -->
           </div>
         </div>
       </div>

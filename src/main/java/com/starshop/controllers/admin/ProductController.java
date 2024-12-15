@@ -54,14 +54,14 @@ public class ProductController {
 		
 		ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);
-		return "/admin/products";
+		return "/admin/products/products";
 	}
 	
 	@GetMapping("/add")
 	public String add(Model model) {
 		List<Category> categories = categoryService.findAll();
 		model.addAttribute("categories", categories);
-		return "/admin/add-product";		
+		return "/admin/products/add-product";		
 	}
 	
 	@PostMapping("/save")
@@ -102,7 +102,7 @@ public class ProductController {
 		List<Category> categories = categoryService.findAll();
 		model.addAttribute("categories", categories);
 		model.addAttribute("product", product);
-		return "/admin/update-product";		
+		return "/admin/products/update-product";		
 	}
 	
 	@RequestMapping("/delete/{id}")

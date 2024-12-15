@@ -32,7 +32,7 @@ public class ShipperController {
 		model.addAttribute("shippers", shippers);
 		ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);
-		return "admin/shippers";
+		return "admin/shippers/shippers";
 	}
 	
 	@RequestMapping("/change-status/{id}")

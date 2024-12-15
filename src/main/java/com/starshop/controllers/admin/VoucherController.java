@@ -37,13 +37,13 @@ public class VoucherController {
 		
 		ViewMessage message  = (ViewMessage) model.asMap().get("result");
         model.addAttribute("message", message);
-		return "/admin/vouchers";
+		return "/admin/vouchers/vouchers";
 	}
 	
 	@GetMapping("/add")
 	public String add(Model model) {
 		model.addAttribute("type", "Tạo");
-		return "/admin/add-voucher";
+		return "/admin/vouchers/voucher";
 	}
 	
 	@GetMapping("/update/{code}")
@@ -52,7 +52,7 @@ public class VoucherController {
 		if (voucher != null) {
 			model.addAttribute("voucher", voucher);
 			model.addAttribute("type", "Cập nhật");
-			return "/admin/add-voucher";
+			return "/admin/vouchers/voucher";
 		}
 		attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.invalidVoucher));
 		return "redirect:/admin/vouchers";
