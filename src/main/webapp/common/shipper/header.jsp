@@ -43,7 +43,7 @@
                                     </span>
                                 </a>
                             <div id="accountNavbarDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account" style="width: 16rem;">
-                                                                <a class="dropdown-item" asp-action="Logout" asp-controller="Authentication">
+                                <a class="dropdown-item" href="<c:url value="/auth/logout" />">
                                     <span class="text-truncate pr-2" title="Đăng Xuất">Đăng Xuất</span>
                                 </a>
                             </div>

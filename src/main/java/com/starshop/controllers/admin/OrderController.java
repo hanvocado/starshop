@@ -69,7 +69,7 @@ public class OrderController {
 		model.addAttribute("isLast", orders.isLast());
 		model.addAttribute("status", orderStatus.name().toLowerCase());
 
-		return "admin/orders";
+		return "admin/orders/orders";
 	}
 
 	@GetMapping("/update/{id}/{newStatus}")
@@ -108,7 +108,7 @@ public class OrderController {
 			Address address = orderService.getAddress(order);
 			model.addAttribute("order", order);
 			model.addAttribute("address", address);
-			return "admin/order-details";			
+			return "admin/orders/order-details";			
 		} else {
 			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));
 			String referer = request.getHeader("Referer"); 

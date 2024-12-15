@@ -50,6 +50,10 @@
 	
 	<sitemesh:write property="body" />
 	
+	<c:if test="${not empty user }">
+		<a class="btn btn-primary open-chat-btn" target="_blank" href="<c:url value='/chat' />">Chat</a>
+	</c:if>
+	
 	<%@include file="/common/footer.jsp"%>
      
 <!-- jQuery -->

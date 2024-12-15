@@ -58,18 +58,10 @@
                 <form class="js-validate" action="/auth/register" method="post">
                   <div class="text-center">
                     <div class="mb-5">
-                      <h1 class="display-4">Create your account</h1>
-                      <p>Already have an account? <a href="authentication-signin-basic.html">Sign in here</a></p>
+                      <h1 class="display-4">Đăng ký</h1>
+                      <p>Đã có tài khoản? <a href="<c:url value='/auth/login' />">Đăng nhập</a></p>
                     </div>
 
-                    <a class="btn btn-lg btn-block btn-white mb-4" href="#">
-                      <span class="d-flex justify-content-center align-items-center">
-                        <img class="avatar avatar-xss mr-2" src="/exec/svg/brands/google.svg" alt="Image Description">
-                        Sign up with Google
-                      </span>
-                    </a>
-
-                    <span class="divider text-muted mb-4">OR</span>
                   </div>
 
                   <!-- Form Group -->
@@ -99,11 +91,30 @@
                   <!-- End Form Group -->
 
                   <!-- Form Group -->
-                  <div class="js-form-message form-group">
-                    <label class="input-label" for="signupSrEmail">Your email</label>
-
-                    <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com" required="" data-msg="Please enter a valid email address.">
-                  </div>
+                  <div class="form-row">
+                    <div class="col-sm-6">
+	                  <div class="js-form-message form-group">
+	                    <label class="input-label" for="signupSrEmail">Email</label>
+	
+	                    <input type="email" class="form-control form-control-lg" name="email" id="signUpEmail" placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com" required="" data-msg="Please enter a valid email address.">
+	                  </div>
+                    </div>
+                    
+                    <div class="col-sm-2 d-flex align-items-center">
+                    	<div class="d-flex align-items-center">
+                    	<button class="btn btn-soft-primary" onClick="sendOTP()">Gửi</button>
+                    	</div>
+                    </div>
+                    
+                    <div class="col-sm-4">
+                    	
+                    	<div class="js-form-message form-group">
+	                    	<label class="input-label" for="signupSrEmail">OTP</label>
+	
+	                    	<input type="text" class="form-control form-control-lg" name="otp" id="signupSrEmail" placeholder="OTP" aria-label="OTP" required="" data-msg="Nhập mã xác thực của bạn.">
+	                  	</div>
+                    </div>
+                   </div>
                   <!-- End Form Group -->
                   
 
@@ -156,39 +167,14 @@
                   </div>
                   <!-- End Checkbox -->
 
-                  <button type="submit" class="btn btn-lg btn-block btn-primary mb-2">Create an account</button>
+                  <button type="submit" class="btn btn-lg btn-block btn-primary mb-2">Đăng ký</button>
 
-                  <button type="submit" class="btn btn-block btn-link">
-                    or Start your 30-day trial <i class="tio-chevron-right"></i>
-                  </button>
                 </form>
                 <!-- End Form -->
               </div>
             </div>
             <!-- End Card -->
 
-            <!-- Footer -->
-            <div class="text-center">
-              <small class="text-cap mb-4">Trusted by the world's best teams</small>
-
-              <div class="w-85 mx-auto">
-                <div class="row justify-content-between">
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/gitlab-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/fitbit-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/flow-xo-gray.svg" alt="Image Description">
-                  </div>
-                  <div class="col">
-                    <img class="img-fluid" src="/exec/svg/brands/layar-gray.svg" alt="Image Description">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End Footer -->
           </div>
         </div>
       </div>
@@ -203,33 +189,7 @@
     <!-- JS Front -->
     <script src="/exec/js/theme.min.js"></script>
 
-    <!-- JS Plugins Init. -->
-    <script>
-      $(document).on('ready', function () {
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
-        $('.js-toggle-password').each(function () {
-          new HSTogglePassword(this).init()
-        });
+    <script src="/shop/js/auth.js"></script>
 
-
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
-        $('.js-validate').each(function() {
-          $.HSCore.components.HSValidation.init($(this), {
-            rules: {
-              confirmPassword: {
-                equalTo: '#signupSrPassword'
-              }
-            }
-          });
-        });
-      });
-    </script>
-
-    <!-- IE Support -->
-    <script>
-      if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src=".//exec/vendor/babel-polyfill/polyfill.min.js"><\/script>');
-    </script>
   </body>
 </html>
