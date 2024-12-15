@@ -31,6 +31,9 @@ public class Order implements Serializable {
 	@JoinColumn(name = "user_id", nullable = false)
 	private Customer user;
 
+	@JoinColumn(name = "address_id", nullable = false)
+	private Long addressId;
+
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductLine> lines = new ArrayList<>(); 
 
