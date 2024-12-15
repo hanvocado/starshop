@@ -14,22 +14,21 @@
 
 	<!-- Address Section -->
 	<div class="row mt-4">
-		<div class="col-md-6">
-			<div class="bg-light p-3 border rounded">
-				<h5 class="text-danger">
-					<i class="fas fa-map-marker-alt"></i> Địa Chỉ Nhận Hàng
-				</h5>
-				<p>
-					<strong>${order.address.houseNumber}
-						${order.address.street}</strong><br> ${order.address.ward},
-					${order.address.district}, ${order.address.city}
-				</p>
-				<div>
-					<span class="badge badge-danger">Mặc Định</span> <a href="#"
-						class="text-primary ml-2">Thay Đổi</a>
-				</div>
-			</div>
-		</div>
+    	<div class="col-md-6">
+        	<div class="bg-light p-3 border rounded">
+            <h5 class="text-danger">
+                <i class="fas fa-map-marker-alt"></i> Địa Chỉ Nhận Hàng
+            </h5>
+            <label for="addressSelect">Chọn địa chỉ nhận hàng:</label>
+            <select id="addressSelect" class="form-control" onchange="updateAddress(this.value)">
+                <c:forEach items="${order.customer.addresses}" var="address">
+                    <option value="${address.id}" ${address.id == order.address.id ? 'selected' : ''}>
+                        ${address.houseNumber} ${address.street}, ${address.ward}, ${address.district}, ${address.city}
+                    </option>
+                </c:forEach>
+            </select>
+        </div>
+    </div>
 
 		<!-- User Info Section -->
 		<div class="col-md-6">
@@ -197,6 +196,7 @@
 				    <input type="hidden" id="payMethodHidden" name="payMethod" value="">
 				    <input type="hidden" id="noteHidden" name="note" value="">
 				    <input type="hidden" id="selectedProductLineIds" name="selectedProductLineIds" value="${selectedProductLineIds}">
+				    <input type="hidden" id="addressIdHidden" name="addressId">
 				    <button type="submit" class="btn btn-danger">Đặt Hàng</button>
 			</form>
 			</div>
@@ -309,6 +309,14 @@ document.querySelector(".orderForm").addEventListener("submit", function (e) {
 
 });
 </script>
+
+<script>
+    function updateAddress(selectedAddressId) {
+        document.getElementById('addressIdHidden').value = selectedAddressId;
+        console.log('Selected Address ID:', selectedAddressId);
+    }
+</script>
+
 
 </body>
 
