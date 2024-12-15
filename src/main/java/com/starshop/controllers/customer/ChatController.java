@@ -1,4 +1,4 @@
-package com.starshop.controllers;
+package com.starshop.controllers.customer;
 
 import java.time.LocalDateTime;
 

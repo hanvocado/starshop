@@ -57,17 +57,14 @@ public class Product implements Serializable {
 	@Column(name = "is_published", columnDefinition = "boolean default true")
 	private boolean isPublished;
 	
-	@Transient	
 	public double getDisplayPrice() {
 		return (salePrice - salePrice * discountPercent / 100);
 	}
 	
-	@Transient	
 	public double getProfit() {
 		return salePrice - getDisplayPrice();
 	}
 	
-	@Transient	
 	public String getCategoryNames() {
 	    return categories.stream()
 	                     .map(Category::getName)  // Assuming Category has a getName() method
@@ -84,7 +81,6 @@ public class Product implements Serializable {
         category.getProducts().remove(this);
     }
     
- // Avoid referencing `categories` in `hashCode` and `equals`
     @Override
     public int hashCode() {
         return Objects.hash(id, name); // use only primary fields
