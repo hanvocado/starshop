@@ -37,8 +37,19 @@
 					    <!-- Product Details -->
 					    <div class="row py-3">
 					        <div class="col-md-2">
-					            <img src="${pageContext.request.contextPath}/img/product-${line.product.id}.jpg" 
-					                 alt="${line.product.name}" class="img-fluid rounded">
+					            <c:set var="imageUrl">
+										<c:choose>
+											<c:when
+												test="${productLine.product.image.startsWith('https')}">
+													            ${line.product.image}
+													        </c:when>
+											<c:otherwise>
+													            /img/${line.product.image}
+													        </c:otherwise>
+										</c:choose>
+									</c:set>
+									<img src="${imageUrl}" alt="${line.product.name}"
+										class="img-fluid mr-2" style="width: 80px; height: 80px;">
 					        </div>
 					        <div class="col-md-8">
 					            <!-- Product Name -->
