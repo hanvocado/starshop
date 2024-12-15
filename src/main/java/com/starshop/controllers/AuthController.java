@@ -96,6 +96,8 @@ public class AuthController {
 		switch (role) {
 		case "ADMIN":
 			return "redirect:/admin/categories";
+		case "SHIPPER":
+			return "redirect:/shipper/orders";
 		case "CUSTOMER":
 			return "redirect:/customer/products";
 		default:

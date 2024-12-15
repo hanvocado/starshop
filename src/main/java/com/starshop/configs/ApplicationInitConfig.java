@@ -111,7 +111,7 @@ public class ApplicationInitConfig {
         IntStream.rangeClosed(1, numberOfOrders).forEach(i -> {
             Order order = new Order();
             order.setUser(user);
-            order.setOrderDate(LocalDateTime.now().minusDays(i));
+            order.setOrderDate(LocalDateTime.now().minusMonths(i));
           
             order.setPayMethod(PaymentType.CASH);  
             order.setPayed(false);  

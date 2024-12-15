@@ -72,7 +72,7 @@
                 <!-- End Row -->
                 
                 <label class="input-label">Mô tả <span class="input-label-secondary">(Optional)</span></label>
- 				<textarea class="form-control" name="description" aria-label="With textarea"></textarea>
+ 				<textarea class="form-control" name="description" aria-label="With textarea">${product.description }</textarea>
               </div>
               <!-- Body -->
             </div>

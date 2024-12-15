@@ -17,6 +17,7 @@ import com.starshop.entities.*;
 import com.starshop.models.MonthlyReport;
 import com.starshop.models.ShipperRecord;
 import com.starshop.repositories.OrderRepository;
+import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.UserRepository;
 import com.starshop.services.OrderService;
 import com.starshop.utils.OrderStatus;
@@ -29,12 +30,30 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private ProductRepository productRepo;
 
 	public Order updateOrderStatus(Long orderId, OrderStatus newStatus) {
 		Order order = orderRepo.findById(orderId).orElse(null);
 		if (order != null) {
 			TrackingOrder newTracking = new TrackingOrder(order, newStatus, LocalDateTime.now());
 			order.addTrackingOrder(newTracking);
+			if (newStatus == OrderStatus.DELIVERED) {
+				order.setPayed(true);
+			} else if (newStatus == OrderStatus.PREPARING) {
+				for (ProductLine line : order.getLines()) {
+					Product product = line.getProduct();
+					product.setCurrentQuantity(product.getCurrentQuantity() - line.getQuantity());
+					productRepo.save(product);
+				}
+			} else if (newStatus == OrderStatus.CANCELLED) {
+				for (ProductLine line : order.getLines()) {
+					Product product = line.getProduct();
+					product.setCurrentQuantity(product.getCurrentQuantity() + line.getQuantity());
+					productRepo.save(product);
+				}
+			}
 			orderRepo.save(order);
 		}
 		return order;
