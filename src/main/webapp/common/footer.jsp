@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<footer class="section__footer">
+<footer class="section__footer" style="position: relative; z-index: -1;">
     <section class="footer__top py-5">
         <div class="container">
             <div class="row">
@@ -43,7 +43,7 @@
     </section>
     <!-- footer__top.// -->
 
-    <section class="footer__bottom text-center">
+    <section class="footer__bottom text-center" >
         <div class="container-fluid">
             <p class="text-muted">© 2024 — Flower Shop </p>
         </div>

@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
+<body>
+
 <div class="container my-4">
 	<!-- Header Section -->
 	<div class="row">
@@ -20,8 +22,7 @@
 				<p>
 					<strong>${order.address.houseNumber}
 						${order.address.street}</strong><br> ${order.address.ward},
-					${order.address.district}, ${order.address.city}<br> Phone:
-					${order.customer.phoneNumber}
+					${order.address.district}, ${order.address.city}
 				</p>
 				<div>
 					<span class="badge badge-danger">Mặc Định</span> <a href="#"
@@ -120,28 +121,55 @@
 					<a type="button" class="text-primary" id="voucherButton"
 						onclick="checkAndToggleVoucherInputs()">Chọn Voucher</a>
 				</div>
+				
+				<div id="selectedVoucher" class="text-muted mt-2">
+			        <c:if test="${not empty order.voucherCode}">
+			            <i class="fas fa-tag"></i><strong>${order.getVoucherName()}</strong>
+			        </c:if>
+			        <c:if test="${empty order.voucherCode}">
+			            <i class="fas fa-info-circle"></i> Chưa áp dụng voucher
+			        </c:if>
+			    </div>
+				
 			</div>
 			<!-- Voucher Modal -->
 			<%@include file="/views/customer/vouchers.jsp"%>
 			
 			<!-- Payment Method Section -->
 			<div class="bg-white p-3 border rounded">
-				<div class="d-flex justify-content-between">
-					<h5>Phương thức thanh toán</h5>
-					<a href="#" class="text-primary">Thay Đổi</a>
-				</div>
-				<p class="text-muted">Thanh toán khi nhận hàng</p>
+			    <div class="form-group">
+			        <label for="paymentMethod">Chọn phương thức thanh toán:</label>
+			        <select id="paymentMethod" name="payMethod" class="form-control">
+			            <option value="CASH" selected>Thanh toán khi nhận hàng</option>
+			            <option value="VNPAY">Thanh toán qua VNPAY</option>
+			        </select>
+			    </div>
 			</div>
+
+			
+			<!-- Note Section -->
+			<div class="bg-white p-3 border rounded mt-3 bg-light">
+			    <div class="form-group">
+			        <label for="orderNote">Lời nhắn:</label>
+			        <textarea id="orderNote" name="note" class="form-control" rows="3" placeholder="Lưu ý cho cửa hàng..."></textarea>
+			    </div>
+			</div>
+			
+
 		</div>
 
 		<!-- Total Section -->
-		<div class="col-md-6">
+		<div class="col-md-6 bg-light p-3">
 			<div class="bg-white p-3 border rounded">
 				<table class="table table-borderless">
 					<tbody>
 						<tr>
 							<td>Tổng tiền hàng</td>
 							<td class="text-right">${order.getSubtotal()}₫</td>
+						</tr>
+						<tr>
+							<td>Phí vận chuyển</td>
+							<td class="text-right">${order.getShippingFee()}₫</td>
 						</tr>
 						<tr>
 							<td>Phiếu giảm giá của cửa hàng</td>
@@ -153,21 +181,27 @@
 						</tr>
 						<tr>
 							<th>Tổng thanh toán</th>
-							<th class="text-right text-danger">${order.getFinalPrice()}₫</th>
+							<th class="text-right text-danger" id="finalPrice">${order.getFinalPrice()}₫</th>
 						</tr>
 					</tbody>
 				</table>
 			</div>
+			
+			<!-- Place Order Section -->
+			<div class="mt-4 d-flex justify-content-end">
+				<form action="/customer/order/submit" method="POST" class="orderForm">
+				    <input type="hidden" id="finalTotal" name="finalTotal" value="${order.getFinalPrice()}">
+				    <input type="hidden" id="isPayed" name="isPayed" value="false">
+				    <input type="hidden" id="shippingFee" name="shippingFee" value="${order.getShippingFee()}">
+				    <input type="hidden" id="voucherCode" name="voucherCode" value="${order.getVoucherCode()}">
+				    <input type="hidden" id="payMethodHidden" name="payMethod" value="">
+				    <input type="hidden" id="noteHidden" name="note" value="">
+				    <input type="hidden" id="selectedProductLineIds" name="selectedProductLineIds" value="${selectedProductLineIds}">
+				    <button type="submit" class="btn btn-danger">Đặt Hàng</button>
+			</form>
+			</div>
+			
 		</div>
-	</div>
-
-	<!-- Place Order Section -->
-	<div class="mt-4 d-flex justify-content-end">
-
-		<form action="/customer/order/submit" method="POST">
-			<button type="submit" class="btn btn-danger">Đặt
-				Hàng</button>
-		</form>
 	</div>
 </div>
 
@@ -179,75 +213,102 @@
 
     // Hàm kiểm tra và hiển thị thông báo nếu không có sản phẩm nào được chọn
     function checkAndToggleVoucherInputs() {
-        let anyProductSelected = false; 
-
-        document.querySelectorAll('.selectItem:checked').forEach(function (checkbox) {
-            anyProductSelected = true;
-        });
-        
-        const voucherCodeInput = document.getElementById('voucherCodeInput');
-        const inputVoucherButton = document.getElementById('inputVoucherButton');
-        const applyVoucherButton = document.getElementById('applyVoucherButton');
-        const voucherRadioButtons = document.querySelectorAll('input[name="voucherCode"]');
-        const messageElement = document.getElementById('minPriceMessage');
-
-        if (!anyProductSelected) {
-            voucherCodeInput.disabled = true;
-            inputVoucherButton.disabled = true;
-            applyVoucherButton.disabled = true;
-            voucherRadioButtons.forEach(rb => rb.disabled = true);
-
-            messageElement.classList.remove('hidden');
-        } else {
-            voucherCodeInput.disabled = false;
-            inputVoucherButton.disabled = false;
-            applyVoucherButton.disabled = false;
-            voucherRadioButtons.forEach(rb => rb.disabled = false);
-
-            messageElement.classList.add('hidden');
-        }
 		
-        minPriceCondition();
+       minPriceCondition();
         toggleModal();
     }
 </script>
 
-<script>
-    const vouchers = [
-        <c:forEach items="${discountVouchers}" var="voucher">
-            {
-                code: "${voucher.code}",
-                description: "${voucher.description}",
-                discountPercent: "${voucher.discountPercent}",
-                minItemsTotal: ${voucher.minOrderItemsTotal},
-                expiredAt: "${voucher.getFormattedExpiredAt()}"
-            }<c:if test="${voucher != discountVouchers[discountVouchers.size() - 1]}">,</c:if>
-        </c:forEach>
-    ];
-    
-    function minPriceCondition() {
-        // Lấy giá trị totalPrice từ input
-        const totalPrice = parseFloat(document.getElementById('totalPriceNotVoucher').value);
 
-        // Lặp qua tất cả các vouchers
-        vouchers.forEach((voucher, index) => {
-            // Lấy radio button của voucher
-			const radioButton = document.querySelector('input[name="voucherCode"][value="' + voucher.code + '"]');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('color__main');
-            messageElement.style.display = 'none';  
+	<script>
+	const vouchers = [
+	    // Discount Vouchers
+	    <c:forEach items="${discountVouchers}" var="voucher" varStatus="status">
+	        {
+	            code: "${voucher.code}",
+	            description: "${voucher.description}",
+	            discountPercent: ${voucher.discountPercent}, 
+	            minItemsTotal: ${voucher.minOrderItemsTotal}, 
+	            expiredAt: "${voucher.getFormattedExpiredAt()}"
+	        }<c:if test="${!status.last || not empty freeShipVouchers}">,</c:if>
+	    </c:forEach>
+	    // Free Ship Vouchers
+	    <c:forEach items="${freeShipVouchers}" var="voucher" varStatus="status">
+	        {
+	            code: "${voucher.code}",
+	            description: "${voucher.description}",
+	            discountPercent: ${voucher.discountPercent}, 
+	            minItemsTotal: ${voucher.minOrderItemsTotal}, 
+	            expiredAt: "${voucher.getFormattedExpiredAt()}"
+	        }<c:if test="${!status.last}">,</c:if>
+	    </c:forEach>
+	];
 
-            if (totalPrice < voucher.minItemsTotal) {
-                // Nếu không đủ điều kiện, hiển thị thông báo và disable radio button
-                messageElement.innerText = 'Giá trị đơn hàng không đủ điều kiện áp dụng';
-                radioButton.disabled = true;
 
-                // Thêm thông báo dưới voucher
-                radioButton.closest('.flex').appendChild(messageElement);
-                messageElement.style.display = 'block';  // Hiển thị thông báo
-            }
-        });
-    };
+	function minPriceCondition() {
+	    // Lấy giá trị totalPrice từ input
+	   // Lấy giá trị từ nội dung text của phần tử
+		const finalPrice = ${order.getFinalPrice()} - ${order.getShippingFee()};
+		document.getElementById('totalPriceNotVoucher').value = finalPrice ;
+	    
+	    // Lặp qua từng voucher để xử lý thông báo
+	    for (let i = 0; i < vouchers.length; i++) {
+	        const voucher = vouchers[i];
+
+	        const radioButton = document.querySelector(
+	            'input[name="voucherCode"][value="' + voucher.code + '"]'
+	        );
+
+	        // Tạo hoặc lấy messageElement gắn trực tiếp vào radioButton.closest('.voucher-content')
+	        let messageElement = radioButton.closest('.flex').querySelector('.color__main');
+	        if (!messageElement) {
+	            messageElement = document.createElement('p');
+	            messageElement.classList.add('color__main', 'text-sm'); // Thêm style hiển thị lỗi
+	            radioButton.closest('.flex').appendChild(messageElement);
+	        }
+
+	        // Ẩn thông báo trước khi kiểm tra
+	        messageElement.style.display = 'none';
+
+	        // Kiểm tra điều kiện minItemsTotal và trạng thái đã sử dụng
+	        if (finalPrice < voucher.minItemsTotal) {
+	        	messageElement.innerText = 'Giá trị đơn hàng không đủ điều kiện áp dụng';
+	            radioButton.disabled = true; // Vô hiệu hóa radio button
+	            messageElement.style.display = 'block'; // Hiển thị thông báo
+	        } else {
+	            // Nếu đủ điều kiện
+	            radioButton.disabled = false; // Kích hoạt lại radio button
+	            messageElement.style.display = 'none'; // Ẩn thông báo
+	        }
+	        
+	    }
+	    
+	}
 
 </script>
+
+<!-- JavaScript for handling selection -->
+<script>
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+        const selectedMethod = this.value;
+        if (selectedMethod === 'bank') {
+            // Điều hướng sang trang thanh toán
+            window.location.href = '<c:url value="/customer/payment"/>';
+        }
+    });
+</script>
+
+<script>
+document.querySelector(".orderForm").addEventListener("submit", function (e) {
+    const payMethod = document.getElementById("paymentMethod").value;
+    const note = document.getElementById("orderNote").value;
+
+    // Đặt giá trị vào các trường ẩn
+    document.getElementById("payMethodHidden").value = payMethod;
+    document.getElementById("noteHidden").value = note;
+
+});
+</script>
+
+</body>
 

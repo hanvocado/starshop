@@ -42,6 +42,9 @@ public class CustomerProfileController {
 	public String customerProfile(Model model, Principal principal) {
 		User user = jwtService.getUserFromPrincipal(principal);
 		Customer customer = getCustomer(principal);
+		Optional<Address> optionalAddress  = customerService.getDefaultAddress(customer);
+		Address defaultAddress = optionalAddress.orElse(null); 
+		model.addAttribute("defaultAddress", defaultAddress);
 		model.addAttribute("customer", customer);
 		model.addAttribute("user", user);
 		return "customer/profile";
@@ -50,8 +53,8 @@ public class CustomerProfileController {
 	@GetMapping("/addresses")
 	public String getAddress(Principal principal, Model model) {
 		User user = jwtService.getUserFromPrincipal(principal);
-		model.addAttribute("user",user);
-		
+		model.addAttribute("user", user);
+
 		Customer customer = getCustomer(principal);
 		Optional<Address> defaultAddress = customerService.getDefaultAddress(customer);
 		List<Address> otherAddresses = customerService.getOtherAddresses(customer);
@@ -65,8 +68,7 @@ public class CustomerProfileController {
 			RedirectAttributes redirectAttributes, BindingResult result) {
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Thêm địa chỉ không thành công"));
-		}
-		else {
+		} else {
 			Customer customer = getCustomer(principal);
 			address.setCustomer(customer);
 			addressService.save(address);
@@ -74,21 +76,21 @@ public class CustomerProfileController {
 		}
 		return "redirect:/customer/account/addresses";
 	}
-	
+
 	@PostMapping("/addresses/set-default")
-	public String setDefaultAddress(@ModelAttribute("addressId") Long addressId, Principal principal, RedirectAttributes redirectAttributes) {
-	    Customer customer = getCustomer(principal);
+	public String setDefaultAddress(@ModelAttribute("addressId") Long addressId, Principal principal,
+			RedirectAttributes redirectAttributes) {
+		Customer customer = getCustomer(principal);
 
-	    try {
-	        addressService.setDefaultAddress(customer, addressId);
-	        redirectAttributes.addFlashAttribute("successMessage", "Đặt địa chỉ mặc định thành công.");
-	    } catch (Exception e) {
-	        redirectAttributes.addFlashAttribute("errorMessage", "Không thể đặt địa chỉ mặc định.");
-	    }
+		try {
+			addressService.setDefaultAddress(customer, addressId);
+			redirectAttributes.addFlashAttribute("successMessage", "Đặt địa chỉ mặc định thành công.");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Không thể đặt địa chỉ mặc định.");
+		}
 
-	    return "redirect:/customer/account/addresses"; 
+		return "redirect:/customer/account/addresses";
 	}
-
 
 	public Customer getCustomer(Principal principal) {
 		return jwtService.getCustomerFromPrincipal(principal);

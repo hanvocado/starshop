@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "address")
 public class Address {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer; 
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
 
     private String houseNumber;
     private String street;

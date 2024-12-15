@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
-<%@include file="/common/flash-message.jsp"%>
+<%@include file="/common/toast-message.jsp"%>
 
 <c:if test="${not empty result}">
     <script>
@@ -14,8 +14,11 @@
     </script>
 </c:if>
 
-<form action="/customer/cart/apply-voucher" method="post">
+<form action="/customer/cart/apply-voucher" method="post" style="position: relative; z-index: 9999;">
 	<input type="hidden" name="totalPrice" id="totalPriceNotVoucher" />
+	<input type="hidden" name="selectedProductLineIds" value="${selectedProductLineIds}">
+	<input type="hidden" name="productId" value="${productId}">
+	<input type="hidden" name="quantity" value="${quantity}">
    <!-- Voucher Modal -->
     <div id="voucherModal" tabindex="-1" class="fixed inset-0 bg-black bg-opacity-50 hidden">
         <div class="fixed inset-0 flex items-center justify-center">
@@ -45,10 +48,10 @@
                 	<h3 class="text-md font-semibold text-gray-600 mb-2">Mã Miễn Phí Vận Chuyển</h3>
                     <c:forEach items="${freeShipVouchers}" var="voucher">
                         <div class="flex items-center justify-between p-2 border border-gray-300 rounded bg-white <c:if test='${productLinePrice < voucher.minOrderItemsTotal}'>voucher-disabled</c:if>'">
-                            <div>
-                                <span class="text-primary font-bold">FREE SHIP</span>
+                            <div class="voucher-content">
+                                <span class="text-primary font-bold" id="freeShipContent">FREE SHIP</span>
                                 <p class="text-sm text-gray-700">${voucher.description}</p>
-                                <p class="text-xs text-gray-500">HSD: ${voucher.getFormattedExpiredAt()}</p>
+                                <p class="text-xs text-gray-500" id="hsd" >HSD: ${voucher.getFormattedExpiredAt()}</p>
                             </div>
                             <input type="radio" name="voucherCode" value="${voucher.code}" <c:if test='${productLinePrice < voucher.minOrderItemsTotal}'>disabled</c:if>/>
                         </div>
@@ -60,10 +63,11 @@
                     <div class="space-y-2">
                         <c:forEach items="${discountVouchers}" var="voucher">
                             <div class="flex items-center justify-between p-2 border border-gray-300 rounded bg-white <c:if test='${productLinePrice < voucher.minOrderItemsTotal || totalPrice == 0 }'>voucher-disabled</c:if>'">
-                                <div>
-                                    <span class="text-primary font-bold">${voucher.discountPercent}% OFF</span>
+                                <div class="voucher-content">
+                                    <span class="text-primary font-bold" id="discountContent">${voucher.discountPercent}% OFF</span>
                                     <p class="text-sm text-gray-700">${voucher.description}</p>
-                                    <p class="text-xs text-gray-500">HSD: ${voucher.getFormattedExpiredAt()}</p>
+                                    <p class="text-xs text-gray-500 " id="hsd">HSD: ${voucher.getFormattedExpiredAt()}</p>
+                                    <p class="voucher-message text-xs text-red-500 "></p>
                                 </div>
                                 <input type="radio" name="voucherCode" value="${voucher.code}" <c:if test='${productLinePrice < voucher.minOrderItemsTotal}'>disabled</c:if>/>
                             </div>

@@ -2,6 +2,7 @@ package com.starshop.services;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 
@@ -20,7 +21,7 @@ public interface VoucherService {
 
 	void delete(String code);
 
-	List<Voucher> getFreeshipVoucher();
+	List<Voucher> getAvailableFreeShipVouchers(UUID customerId);
 
-	List<Voucher> getDiscountVoucher();
+	List<Voucher> getAvailableDiscountVouchers(UUID customerId);
 }
