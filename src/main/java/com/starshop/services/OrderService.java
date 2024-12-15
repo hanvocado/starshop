@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.starshop.entities.Address;
 import com.starshop.entities.Customer;
 import com.starshop.entities.Order;
 import com.starshop.models.MonthlyReport;
@@ -36,5 +37,7 @@ public interface OrderService {
 	Page<Order> findOrdersByCustomerAndStatus(Customer customer, OrderStatus status, int page, int size);
 
 	Map<String, Long> getOrderCountsByStatus(Customer customer);
+
+	Address getAddress(Order order);
 
 }

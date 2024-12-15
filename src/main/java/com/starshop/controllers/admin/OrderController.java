@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.starshop.entities.Address;
 import com.starshop.entities.Order;
 import com.starshop.entities.Shipper;
 import com.starshop.models.ViewMessage;
@@ -104,7 +105,9 @@ public class OrderController {
 	public String details(@PathVariable("id") Long orderId, String status, Model model, RedirectAttributes attributes, HttpServletRequest request) {
 		Order order = orderService.findByOrderId(orderId);
 		if (order != null) {
+			Address address = orderService.getAddress(order);
 			model.addAttribute("order", order);
+			model.addAttribute("address", address);
 			return "admin/order-details";			
 		} else {
 			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));

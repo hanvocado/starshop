@@ -43,7 +43,7 @@
             <div class="card mb-3 mb-lg-5">
               <!-- Header -->
               <div class="card-header">
-                <h4 class="card-header-title">Chi tiết đơn hàng <span class="badge badge-soft-dark rounded-circle ml-1">${order.numberOfProducts }</span></h4>
+                <h4 class="card-header-title">Địa chỉ: <span>${address.toString() }</span></h4>
               </div>
               <!-- End Header -->
           

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.starshop.entities.*;
 import com.starshop.models.MonthlyReport;
 import com.starshop.models.ShipperRecord;
+import com.starshop.repositories.AddressRepository;
 import com.starshop.repositories.OrderRepository;
 import com.starshop.repositories.ProductRepository;
 import com.starshop.repositories.UserRepository;
@@ -37,6 +38,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private ProductRepository productRepo;
+	
+	@Autowired
+	private AddressRepository addressRepo;
 
 	public Order updateOrderStatus(Long orderId, OrderStatus newStatus) {
 		Order order = orderRepo.findById(orderId).orElse(null);
@@ -145,6 +149,11 @@ public class OrderServiceImpl implements OrderService {
 	    counts.put("ALL", orderRepo.countByUser(customer));
 
 	    return counts;
+	}
+	
+	@Override
+	public Address getAddress(Order order) {
+		return addressRepo.findById(order.getAddressId()).orElse(null);
 	}
 
 }
