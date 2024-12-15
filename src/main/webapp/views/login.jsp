@@ -29,6 +29,9 @@
   <%@include file="/common/flash-message.jsp"%>
   
     <body>
+     <!-- Flash message -->
+  <%@include file="/common/flash-message.jsp"%>
+	
       <!-- ========== MAIN CONTENT ========== -->
       <main id="content" role="main" class="main">
         <div class="position-fixed top-0 right-0 left-0 bg-img-hero" style="height: 32rem; background-image: url(/exec/svg/components/abstract-bg-4.svg);">

@@ -99,11 +99,30 @@
                   <!-- End Form Group -->
 
                   <!-- Form Group -->
-                  <div class="js-form-message form-group">
-                    <label class="input-label" for="signupSrEmail">Your email</label>
-
-                    <input type="email" class="form-control form-control-lg" name="email" id="signupSrEmail" placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com" required="" data-msg="Please enter a valid email address.">
-                  </div>
+                  <div class="form-row">
+                    <div class="col-sm-6">
+	                  <div class="js-form-message form-group">
+	                    <label class="input-label" for="signupSrEmail">Email</label>
+	
+	                    <input type="email" class="form-control form-control-lg" name="email" id="signUpEmail" placeholder="Markwilliams@example.com" aria-label="Markwilliams@example.com" required="" data-msg="Please enter a valid email address.">
+	                  </div>
+                    </div>
+                    
+                    <div class="col-sm-2 d-flex align-items-center">
+                    	<div class="d-flex align-items-center">
+                    	<button class="btn btn-soft-primary" onClick="sendOTP()">Gửi</button>
+                    	</div>
+                    </div>
+                    
+                    <div class="col-sm-4">
+                    	
+                    	<div class="js-form-message form-group">
+	                    	<label class="input-label" for="signupSrEmail">OTP</label>
+	
+	                    	<input type="text" class="form-control form-control-lg" name="otp" id="signupSrEmail" placeholder="OTP" aria-label="OTP" required="" data-msg="Nhập mã xác thực của bạn.">
+	                  	</div>
+                    </div>
+                   </div>
                   <!-- End Form Group -->
                   
 
@@ -203,33 +222,7 @@
     <!-- JS Front -->
     <script src="/exec/js/theme.min.js"></script>
 
-    <!-- JS Plugins Init. -->
-    <script>
-      $(document).on('ready', function () {
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
-        $('.js-toggle-password').each(function () {
-          new HSTogglePassword(this).init()
-        });
+    <script src="/shop/js/auth.js"></script>
 
-
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
-        $('.js-validate').each(function() {
-          $.HSCore.components.HSValidation.init($(this), {
-            rules: {
-              confirmPassword: {
-                equalTo: '#signupSrPassword'
-              }
-            }
-          });
-        });
-      });
-    </script>
-
-    <!-- IE Support -->
-    <script>
-      if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src=".//exec/vendor/babel-polyfill/polyfill.min.js"><\/script>');
-    </script>
   </body>
 </html>
