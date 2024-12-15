@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,7 @@ import com.starshop.services.JwtService;
 import com.starshop.services.OrderService;
 import com.starshop.services.ProductLineService;
 import com.starshop.services.ProductService;
+import com.starshop.services.VNPayService;
 import com.starshop.services.VoucherService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.OrderStatus;
@@ -70,6 +72,9 @@ public class CustomerOrderController {
 
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private VNPayService vnPayService;
 
 //	@GetMapping("/orders")
 //	public String listUserOrders() {  }
@@ -138,10 +143,9 @@ public class CustomerOrderController {
 		model.addAttribute("selectedProductLineIds", selectedProductLineIds);
 
 		if (order.getVoucherCode() != null && !order.getVoucherCode().isEmpty()) {
-		    Voucher voucher = voucherService.findByCode(order.getVoucherCode());
-		    order.setVoucherName(voucher.getName());
+			Voucher voucher = voucherService.findByCode(order.getVoucherCode());
+			order.setVoucherName(voucher.getName());
 		}
-
 
 		List<Voucher> discountVouchers = voucherService.getAvailableDiscountVouchers(customer.getId());
 		List<Voucher> freeShipVouchers = voucherService.getAvailableFreeShipVouchers(customer.getId());
@@ -152,9 +156,10 @@ public class CustomerOrderController {
 	}
 
 	@PostMapping("/order/submit")
-	public String submitOrder(@Valid @ModelAttribute Order order, @RequestParam(value = "selectedProductLineIds", required = false) String productLineIds,
+	public String submitOrder(@Valid @ModelAttribute Order order,
+			@RequestParam(value = "selectedProductLineIds", required = false) String productLineIds,
 			@RequestParam(value = "voucherCode", required = false) String voucherCode, Principal principal, Model model,
-			RedirectAttributes redirectAttributes, BindingResult result) {
+			RedirectAttributes redirectAttributes, BindingResult result, HttpServletRequest request) {
 
 		if (result.hasErrors()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Dữ liệu không hợp lệ!"));
@@ -162,26 +167,34 @@ public class CustomerOrderController {
 		}
 
 		Customer customer = jwtService.getCustomerFromPrincipal(principal);
-		Voucher voucher = voucherService.findByCode(voucherCode);
 
-		customerService.addVoucherToCustomer(customer.getId(), voucherCode);
+		if (voucherCode != null && !voucherCode.isEmpty()) {
+			Voucher voucher = voucherService.findByCode(voucherCode);
+			customerService.addVoucherToCustomer(customer.getId(), voucherCode);
+			order.setVoucher(voucher);
+		}
 
 		order.setUser(customer);
 		order.setOrderDate(LocalDateTime.now());
-		order.setVoucher(voucher);
-		
-		
+
 		List<ProductLine> productLines = productLineService.getProductLinesByIds(productLineIds);
 		List<ProductLine> productLinesCopy = new ArrayList<>(productLines);
 		for (ProductLine pdl : productLinesCopy) {
-		    pdl.setOrder(order);
-		    order.addProductLine(pdl);
+			pdl.setOrder(order);
+			order.addProductLine(pdl);
 		}
-
 
 		orderService.add(order);
 
-		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Đặt hàng thành công"));
+		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Đơn hàng được tạo thành công"));
+
+		if (order.getPayMethod() != null && "VNPAY".equals(order.getPayMethod().name())) {
+			String orderInfo = "THANH TOAN DON HANG " + order.getOrderDate().toLocalDate();
+			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+	        String vnpayUrl = vnPayService.createOrder((int) order.getFinalTotal(), orderInfo, baseUrl, request);
+	        return "redirect:" + vnpayUrl;
+		}
+
 		return "redirect:/customer/orders";
 	}
 
@@ -198,22 +211,37 @@ public class CustomerOrderController {
 
 		Map<String, Long> orderCounts = orderService.getOrderCountsByStatus(customer);
 
-		 List<OrderStatus> orderStatuses = Arrays.asList(
-	                OrderStatus.WAITING_PAYMENT,
-	                OrderStatus.SHIPPING,
-	                OrderStatus.DELIVERED,
-	                OrderStatus.CANCELLED
-	        );
+//		 List<OrderStatus> orderStatuses = Arrays.asList(
+//	                OrderStatus.WAITING_PAYMENT,
+//	                OrderStatus.SHIPPING,
+//	                OrderStatus.DELIVERED,
+//	                OrderStatus.CANCELLED
+//	        );
+		List<OrderStatus> orderStatuses = Arrays.asList(OrderStatus.values());
+
 		model.addAttribute("orderStatuses", orderStatuses);
 		model.addAttribute("orderPage", orderPage);
 		model.addAttribute("currentStatus", status);
 		model.addAttribute("orderCounts", orderCounts);
 		model.addAttribute("user", user);
-		
+
 		return "customer/orders";
 	}
 
-//	@PostMapping("/orders/{order-id}/return-request")
-//	public String requestReturn(@PathVariable Long orderId) { }
+
+	@GetMapping("/order/details/{id}")
+	public String details(@PathVariable("id") Long orderId, String status, Model model, Principal principal, RedirectAttributes attributes, HttpServletRequest request) {
+		User user = jwtService.getUserFromPrincipal(principal);
+		Order order = orderService.findByOrderId(orderId);
+		if (order != null) {
+			model.addAttribute("order", order);
+			model.addAttribute("user", user);
+			return "customer/order-details";			
+		} else {
+			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));
+			String referer = request.getHeader("Referer"); 
+			return "redirect:" + referer;
+		}
+	}
 
 }

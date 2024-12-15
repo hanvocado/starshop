@@ -62,18 +62,26 @@
 					            <p class="text-danger mt-2">Tổng: đ${line.subTotal}</p>
 					        </div>
 					        <div class="col-md-2">
-                                <p class="mb-1 text-muted"><del>${order.productsTotal} ₫</del></p>
-                                <p class="text-danger font-weight-bold">${order.finalTotal} ₫</p>
+                                <p class="mb-1 text-muted"><del>${line.product.salePrice} ₫</del></p>
+                                <p class="text-danger font-weight-bold">${line.product.getDisplayPrice()} ₫</p>
 					        </div>
 					    </div>
 					    <hr>
 					</c:forEach>
 
                     <!-- Payment Info -->
-                    <div class="border-top pt-2">
+                    <div class="pt-1">
                         <div class="d-flex justify-content-end align-items-center">
-                            <div class="text-right">
-                                <p class="text-muted mb-1">Số tiền phải trả:</p>
+                            <div class="row text-right mr-2">
+                                <p class="text-muted mb-1 mr-1">Phí vận chuyển:</p>
+                                <p class="text-danger font-weight-bold">${order.shippingFee} ₫</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <div class="row text-right mr-2">
+                                <p class="text-muted mb-1 mr-1">Số tiền phải trả:</p>
                                 <p class="text-danger font-weight-bold">${order.finalTotal} ₫</p>
                             </div>
                         </div>

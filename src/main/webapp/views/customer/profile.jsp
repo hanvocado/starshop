@@ -30,7 +30,7 @@
 	<hr>
 	<p>
 		<i class="fa fa-map-marker text-muted"></i>&nbsp; 
-				Địa chỉ: ${defaultAddress.getAddress()}&nbsp; <a
+				Địa chỉ: ${defaultAddress.toString()}&nbsp; <a
 			href="${pageContext.request.contextPath}/customer/account/address/edit/${customer.id}">Chỉnh sửa</a>
 	</p>
 	<article class="card-group card-stat">
