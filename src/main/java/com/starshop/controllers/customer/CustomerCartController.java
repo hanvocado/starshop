@@ -59,6 +59,9 @@ public class CustomerCartController {
 	public String viewCart(Model model, Principal principal, HttpServletRequest request) {
 		User user = jwtService.getUserFromPrincipal(principal);
 		model.addAttribute("user", user);
+		
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		model.addAttribute("message", message);
 
 		Optional<List<ProductLine>> productLines = cartService.getProductLines(user.getId());
 		if (productLines.isPresent()) {
@@ -67,8 +70,8 @@ public class CustomerCartController {
 			model.addAttribute("productLines", null);
 		}
 
-		List<Voucher> discountVouchers = voucherService.getDiscountVoucher();
-		List<Voucher> freeShipVouchers = voucherService.getFreeshipVoucher();
+		List<Voucher> discountVouchers = voucherService.getAvailableDiscountVouchers(user.getId());
+		List<Voucher> freeShipVouchers = voucherService.getAvailableFreeShipVouchers(user.getId());
 		model.addAttribute("discountVouchers", discountVouchers);
 		model.addAttribute("freeShipVouchers", freeShipVouchers);
 
@@ -127,13 +130,14 @@ public class CustomerCartController {
 	}
 
 	@PostMapping("/apply-voucher")
-	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") int totalPrice,
-			Principal principal, RedirectAttributes redirectAttributes) {
+	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") int totalPrice,@RequestParam(value="productId",required = false) Long productId,
+			@RequestParam(value ="selectedProductLineIds", required = false) String selectedProductLineIds, Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		redirectAttributes.addFlashAttribute("showModal", true);
 		if (voucherCode == null || voucherCode.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
 			return "redirect:/customer/cart";
 		}
+		
 
 		Voucher voucher = voucherService.findByCode(voucherCode);
 		if (voucher == null) {
@@ -163,9 +167,23 @@ public class CustomerCartController {
 
 			}
 		}
-		return "redirect:/customer/cart";
+		redirectAttributes.addFlashAttribute("productId", productId);
+		redirectAttributes.addFlashAttribute("selectedProductLineIds", selectedProductLineIds);
+
+		String referrer = request.getHeader("Referer");
+	    
+	    if (referrer != null && referrer.contains("/customer/cart")) {
+	        return "redirect:/customer/cart";
+	    }
+	    
+	    if (referrer != null && referrer.contains("/customer/order")) {
+	        return "redirect:/customer/order";
+	    }
+
+	    return "redirect:/customer/cart";
 	}
 
+	
 	@PostMapping("/update/{product-id}")
 	public String updateCartItem(@PathVariable("product-id") Long productId, @RequestParam Integer quantity,
 			Principal principal) {

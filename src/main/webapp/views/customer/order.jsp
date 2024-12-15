@@ -135,7 +135,7 @@
 		</div>
 
 		<!-- Total Section -->
-		<div class="col-md-6">
+		<div class="col-md-6" style="position: relative; z-index: -1;">
 			<div class="bg-white p-3 border rounded">
 				<table class="table table-borderless">
 					<tbody>
@@ -153,7 +153,7 @@
 						</tr>
 						<tr>
 							<th>Tổng thanh toán</th>
-							<th class="text-right text-danger">${order.getFinalPrice()}₫</th>
+							<th class="text-right text-danger" id="finalPrice">${order.getFinalPrice()}₫</th>
 						</tr>
 					</tbody>
 				</table>
@@ -179,75 +179,77 @@
 
     // Hàm kiểm tra và hiển thị thông báo nếu không có sản phẩm nào được chọn
     function checkAndToggleVoucherInputs() {
-        let anyProductSelected = false; 
-
-        document.querySelectorAll('.selectItem:checked').forEach(function (checkbox) {
-            anyProductSelected = true;
-        });
-        
-        const voucherCodeInput = document.getElementById('voucherCodeInput');
-        const inputVoucherButton = document.getElementById('inputVoucherButton');
-        const applyVoucherButton = document.getElementById('applyVoucherButton');
-        const voucherRadioButtons = document.querySelectorAll('input[name="voucherCode"]');
-        const messageElement = document.getElementById('minPriceMessage');
-
-        if (!anyProductSelected) {
-            voucherCodeInput.disabled = true;
-            inputVoucherButton.disabled = true;
-            applyVoucherButton.disabled = true;
-            voucherRadioButtons.forEach(rb => rb.disabled = true);
-
-            messageElement.classList.remove('hidden');
-        } else {
-            voucherCodeInput.disabled = false;
-            inputVoucherButton.disabled = false;
-            applyVoucherButton.disabled = false;
-            voucherRadioButtons.forEach(rb => rb.disabled = false);
-
-            messageElement.classList.add('hidden');
-        }
 		
-        minPriceCondition();
+       minPriceCondition();
         toggleModal();
     }
 </script>
 
-<script>
-    const vouchers = [
-        <c:forEach items="${discountVouchers}" var="voucher">
-            {
-                code: "${voucher.code}",
-                description: "${voucher.description}",
-                discountPercent: "${voucher.discountPercent}",
-                minItemsTotal: ${voucher.minOrderItemsTotal},
-                expiredAt: "${voucher.getFormattedExpiredAt()}"
-            }<c:if test="${voucher != discountVouchers[discountVouchers.size() - 1]}">,</c:if>
-        </c:forEach>
-    ];
-    
-    function minPriceCondition() {
-        // Lấy giá trị totalPrice từ input
-        const totalPrice = parseFloat(document.getElementById('totalPriceNotVoucher').value);
 
-        // Lặp qua tất cả các vouchers
-        vouchers.forEach((voucher, index) => {
-            // Lấy radio button của voucher
-			const radioButton = document.querySelector('input[name="voucherCode"][value="' + voucher.code + '"]');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('color__main');
-            messageElement.style.display = 'none';  
+	<script>
+	const vouchers = [
+	    // Discount Vouchers
+	    <c:forEach items="${discountVouchers}" var="voucher" varStatus="status">
+	        {
+	            code: "${voucher.code}",
+	            description: "${voucher.description}",
+	            discountPercent: ${voucher.discountPercent}, 
+	            minItemsTotal: ${voucher.minOrderItemsTotal}, 
+	            expiredAt: "${voucher.getFormattedExpiredAt()}"
+	        }<c:if test="${!status.last || not empty freeShipVouchers}">,</c:if>
+	    </c:forEach>
+	    // Free Ship Vouchers
+	    <c:forEach items="${freeShipVouchers}" var="voucher" varStatus="status">
+	        {
+	            code: "${voucher.code}",
+	            description: "${voucher.description}",
+	            discountPercent: ${voucher.discountPercent}, 
+	            minItemsTotal: ${voucher.minOrderItemsTotal}, 
+	            expiredAt: "${voucher.getFormattedExpiredAt()}"
+	        }<c:if test="${!status.last}">,</c:if>
+	    </c:forEach>
+	];
 
-            if (totalPrice < voucher.minItemsTotal) {
-                // Nếu không đủ điều kiện, hiển thị thông báo và disable radio button
-                messageElement.innerText = 'Giá trị đơn hàng không đủ điều kiện áp dụng';
-                radioButton.disabled = true;
 
-                // Thêm thông báo dưới voucher
-                radioButton.closest('.flex').appendChild(messageElement);
-                messageElement.style.display = 'block';  // Hiển thị thông báo
-            }
-        });
-    };
+	function minPriceCondition() {
+	    // Lấy giá trị totalPrice từ input
+	   // Lấy giá trị từ nội dung text của phần tử
+		const finalPrice = parseFloat(document.getElementById('finalPrice').textContent.replace(/[^\d.-]/g, ''));
+		document.getElementById('totalPriceNotVoucher').value = finalPrice;
+	    
+	    // Lặp qua từng voucher để xử lý thông báo
+	    for (let i = 0; i < vouchers.length; i++) {
+	        const voucher = vouchers[i];
+
+	        const radioButton = document.querySelector(
+	            'input[name="voucherCode"][value="' + voucher.code + '"]'
+	        );
+
+	        // Tạo hoặc lấy messageElement gắn trực tiếp vào radioButton.closest('.voucher-content')
+	        let messageElement = radioButton.closest('.flex').querySelector('.color__main');
+	        if (!messageElement) {
+	            messageElement = document.createElement('p');
+	            messageElement.classList.add('color__main', 'text-sm'); // Thêm style hiển thị lỗi
+	            radioButton.closest('.flex').appendChild(messageElement);
+	        }
+
+	        // Ẩn thông báo trước khi kiểm tra
+	        messageElement.style.display = 'none';
+
+	        // Kiểm tra điều kiện minItemsTotal và trạng thái đã sử dụng
+	        if (finalPrice < voucher.minItemsTotal) {
+	        	messageElement.innerText = 'Giá trị đơn hàng không đủ điều kiện áp dụng';
+	            radioButton.disabled = true; // Vô hiệu hóa radio button
+	            messageElement.style.display = 'block'; // Hiển thị thông báo
+	        } else {
+	            // Nếu đủ điều kiện
+	            radioButton.disabled = false; // Kích hoạt lại radio button
+	            messageElement.style.display = 'none'; // Ẩn thông báo
+	        }
+	        
+	    }
+	    
+	}
 
 </script>
 
