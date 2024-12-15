@@ -40,7 +40,7 @@ public class ChatQueue {
         		WSConnectMessage message = new WSConnectMessage(user, WSAction.CONNECTED);
         		messagingTemplate.convertAndSend("/topic/active-users", message);  
         	}
-        }, (long) 3000);
+        }, (long) 1500);
     }
 
     @EventListener

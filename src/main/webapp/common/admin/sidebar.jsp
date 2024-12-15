@@ -68,6 +68,13 @@
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Dashboard</span>
                                 </a>
                             </li>
+                            
+                            <li class="nav-item ">
+                                <a class="js-nav-tooltip-link nav-link" href="<c:url value="/admin/chat"/>" title="Chat" data-placement="left">
+                                    <i class="tio-chat nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Chat</span>
+                                </a>
+                            </li>
                             <!-- END E-COMMERCE  -->
 
                             <li class="nav-item">
