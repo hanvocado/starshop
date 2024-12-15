@@ -27,7 +27,7 @@ public class Cart implements Serializable {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+	private Customer user;
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<ProductLine> productLines = new ArrayList<>();

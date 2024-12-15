@@ -1,5 +1,7 @@
 package com.starshop.utils;
 
+import com.starshop.entities.Address;
+
 public class Constants {
 	public static String success = "Thành công";
 
@@ -39,4 +41,9 @@ public class Constants {
 
 	public static String addCartSuccess = "Thêm sản phẩm vào giỏ hàng thành công!";
 
+	public static Address storeAddress = Address.builder().houseNumber("1").street("Võ Văn Ngân").district("Thủ Đức").build();
+		
+	public static Double storeLatitude = 10.85279065;
+
+	public static Double storeLongitude = 106.77255839168646;
 }

@@ -5,7 +5,7 @@ import com.starshop.entities.Customer;
 
 public interface AddressService {
 
-	<S extends Address> S save(S entity);
+	Address save(Address entity);
 
 	void setDefaultAddress(Customer customer, Long addressId);
 

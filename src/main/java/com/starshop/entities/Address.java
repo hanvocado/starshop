@@ -1,17 +1,16 @@
 package com.starshop.entities;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "address")
 public class Address {
 	@Id
@@ -22,17 +21,19 @@ public class Address {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	private String houseNumber;
-	private String street;
-	private String ward;
-	private String district;
-	private String city;
-
-	public String getAddress() {
-		return String
-				.join(", ", houseNumber == null ? "" : houseNumber, street == null ? "" : street,
-						ward == null ? "" : ward, district == null ? "" : district, city == null ? "" : city)
-				.replaceAll(",\\s*,", ",").replaceAll("(^,\\s*|,\\s*$)", "");
-	}
-
+    private String houseNumber;
+    private String street;
+    private String ward;
+    private String district;
+    private String city;
+    
+    private Double latitude;
+    private Double longitude;
+    
+	@Override
+	public String toString() {
+		return houseNumber + " " + street + " " + ward + " "
+				+ district + " " + city;
+	}  
+    
 }

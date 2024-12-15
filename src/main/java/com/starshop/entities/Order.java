@@ -60,7 +60,6 @@ public class Order implements Serializable {
 	@Column(name = "is_payed", nullable = false)
 	private boolean isPayed;
 
-	@Column(name = "note", columnDefinition = " NVARCHAR(500)")
 	private String note;
 
 	@ManyToOne
