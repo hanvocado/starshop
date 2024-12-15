@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
-<%@include file="/common/flash-message.jsp"%>
+<%@include file="/common/toast-message.jsp"%>
 
 <c:if test="${not empty result}">
     <script>
@@ -14,10 +14,11 @@
     </script>
 </c:if>
 
-<form action="/customer/cart/apply-voucher" method="post">
+<form action="/customer/cart/apply-voucher" method="post" style="position: relative; z-index: 9999;">
 	<input type="hidden" name="totalPrice" id="totalPriceNotVoucher" />
 	<input type="hidden" name="selectedProductLineIds" value="${selectedProductLineIds}">
 	<input type="hidden" name="productId" value="${productId}">
+	<input type="hidden" name="quantity" value="${quantity}">
    <!-- Voucher Modal -->
     <div id="voucherModal" tabindex="-1" class="fixed inset-0 bg-black bg-opacity-50 hidden">
         <div class="fixed inset-0 flex items-center justify-center">

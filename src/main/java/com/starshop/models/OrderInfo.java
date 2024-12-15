@@ -20,6 +20,7 @@ public class OrderInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String voucherCode;
+	private String voucherName;
 	private double freeShip;
 	private double discount;
 	private double finalPrice;

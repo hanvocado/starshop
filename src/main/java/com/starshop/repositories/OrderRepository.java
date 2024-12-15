@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.starshop.entities.Customer;
 import com.starshop.entities.Order;
 import com.starshop.models.MonthlyReport;
 import com.starshop.models.MonthlyShipperRecord;
@@ -57,5 +58,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT SUM(o.profit) FROM Order o " + 
 			"WHERE o.currentStatus = com.starshop.utils.OrderStatus.DELIVERED")
 	Long getTotalProfit();
+	
+	Page<Order> findByUser(Customer customer, Pageable pageable);
+
+    Page<Order> findByUserAndCurrentStatus(Customer customer, OrderStatus status, Pageable pageable);
+
+    long countByUser(Customer customer);
+
+    long countByUserAndCurrentStatus(Customer customer, OrderStatus status);
 
 }

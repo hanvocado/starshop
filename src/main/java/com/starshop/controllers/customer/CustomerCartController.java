@@ -130,8 +130,9 @@ public class CustomerCartController {
 	}
 
 	@PostMapping("/apply-voucher")
-	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") int totalPrice,@RequestParam(value="productId",required = false) Long productId,
-			@RequestParam(value ="selectedProductLineIds", required = false) String selectedProductLineIds, Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+	public String applyVoucher(Model model, String voucherCode, @RequestParam("totalPrice") Integer totalPrice,@RequestParam(value="productId",required = false) Long productId,
+			@RequestParam(value ="selectedProductLineIds", required = false) String selectedProductLineIds, @RequestParam(value="quantity",required = false) Integer quantity,
+			Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		redirectAttributes.addFlashAttribute("showModal", true);
 		if (voucherCode == null || voucherCode.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Vui lòng nhập mã voucher"));
@@ -151,7 +152,6 @@ public class CustomerCartController {
 				redirectAttributes.addFlashAttribute("result",
 						new ViewMessage("danger", "Voucher áp dụng không thành công!"));
 			} else {
-//				customerService.addVoucherToCustomer(userId, voucherCode);
 				redirectAttributes.addFlashAttribute("result",
 						new ViewMessage("success", "Voucher áp dụng thành công!"));
 				redirectAttributes.addFlashAttribute("showModal", false);
@@ -168,6 +168,7 @@ public class CustomerCartController {
 			}
 		}
 		redirectAttributes.addFlashAttribute("productId", productId);
+		redirectAttributes.addFlashAttribute("quantity", quantity);
 		redirectAttributes.addFlashAttribute("selectedProductLineIds", selectedProductLineIds);
 
 		String referrer = request.getHeader("Referer");

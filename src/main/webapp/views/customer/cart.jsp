@@ -4,9 +4,9 @@
 
 <title>Carts</title>
 
-<%@include file="/common/toast-message.jsp"%>
 
 <body>
+<%@include file="/common/toast-message.jsp"%>
 
 	<nav class="navbar navbar-main navbar-expand-lg border__bottom">
 		<div class="container my-3 mx-0 d-flex justify-content-between"

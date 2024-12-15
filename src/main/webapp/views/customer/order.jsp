@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
+<body>
+
 <div class="container my-4">
 	<!-- Header Section -->
 	<div class="row">
@@ -20,8 +22,7 @@
 				<p>
 					<strong>${order.address.houseNumber}
 						${order.address.street}</strong><br> ${order.address.ward},
-					${order.address.district}, ${order.address.city}<br> Phone:
-					${order.customer.phoneNumber}
+					${order.address.district}, ${order.address.city}
 				</p>
 				<div>
 					<span class="badge badge-danger">Mặc Định</span> <a href="#"
@@ -120,6 +121,16 @@
 					<a type="button" class="text-primary" id="voucherButton"
 						onclick="checkAndToggleVoucherInputs()">Chọn Voucher</a>
 				</div>
+				
+				<div id="selectedVoucher" class="text-muted mt-2">
+			        <c:if test="${not empty order.voucherCode}">
+			            <i class="fas fa-tag"></i><strong>${order.getVoucherName()}</strong>
+			        </c:if>
+			        <c:if test="${empty order.voucherCode}">
+			            <i class="fas fa-info-circle"></i> Chưa áp dụng voucher
+			        </c:if>
+			    </div>
+				
 			</div>
 			<!-- Voucher Modal -->
 			<%@include file="/views/customer/vouchers.jsp"%>
@@ -128,10 +139,19 @@
 			<div class="bg-white p-3 border rounded">
 			    <div class="form-group">
 			        <label for="paymentMethod">Chọn phương thức thanh toán:</label>
-			        <select id="paymentMethod" class="form-control">
-			            <option value="cod" selected>Thanh toán khi nhận hàng</option>
-			            <option value="bank">Thanh toán qua ngân hàng</option>
+			        <select id="paymentMethod" name="payMethod" class="form-control">
+			            <option value="CASH" selected>Thanh toán khi nhận hàng</option>
+			            <option value="VNPAY">Thanh toán qua VNPAY</option>
 			        </select>
+			    </div>
+			</div>
+
+			
+			<!-- Note Section -->
+			<div class="bg-white p-3 border rounded mt-3 bg-light">
+			    <div class="form-group">
+			        <label for="orderNote">Lời nhắn:</label>
+			        <textarea id="orderNote" name="note" class="form-control" rows="3" placeholder="Lưu ý cho cửa hàng..."></textarea>
 			    </div>
 			</div>
 			
@@ -139,7 +159,7 @@
 		</div>
 
 		<!-- Total Section -->
-		<div class="col-md-6" style="position: relative; z-index: -1;">
+		<div class="col-md-6 bg-light p-3">
 			<div class="bg-white p-3 border rounded">
 				<table class="table table-borderless">
 					<tbody>
@@ -166,16 +186,22 @@
 					</tbody>
 				</table>
 			</div>
+			
+			<!-- Place Order Section -->
+			<div class="mt-4 d-flex justify-content-end">
+				<form action="/customer/order/submit" method="POST" class="orderForm">
+				    <input type="hidden" id="finalTotal" name="finalTotal" value="${order.getFinalPrice()}">
+				    <input type="hidden" id="isPayed" name="isPayed" value="false">
+				    <input type="hidden" id="shippingFee" name="shippingFee" value="${order.getShippingFee()}">
+				    <input type="hidden" id="voucherCode" name="voucherCode" value="${order.getVoucherCode()}">
+				    <input type="hidden" id="payMethodHidden" name="payMethod" value="">
+				    <input type="hidden" id="noteHidden" name="note" value="">
+				    <input type="hidden" id="selectedProductLineIds" name="selectedProductLineIds" value="${selectedProductLineIds}">
+				    <button type="submit" class="btn btn-danger">Đặt Hàng</button>
+			</form>
+			</div>
+			
 		</div>
-	</div>
-
-	<!-- Place Order Section -->
-	<div class="mt-4 d-flex justify-content-end">
-
-		<form action="/customer/order/submit" method="POST">
-			<button type="submit" class="btn btn-danger">Đặt
-				Hàng</button>
-		</form>
 	</div>
 </div>
 
@@ -222,8 +248,8 @@
 	function minPriceCondition() {
 	    // Lấy giá trị totalPrice từ input
 	   // Lấy giá trị từ nội dung text của phần tử
-		const finalPrice = parseFloat(document.getElementById('finalPrice').textContent.replace(/[^\d.-]/g, ''));
-		document.getElementById('totalPriceNotVoucher').value = finalPrice;
+		const finalPrice = ${order.getFinalPrice()} - ${order.getShippingFee()};
+		document.getElementById('totalPriceNotVoucher').value = finalPrice ;
 	    
 	    // Lặp qua từng voucher để xử lý thông báo
 	    for (let i = 0; i < vouchers.length; i++) {
@@ -271,4 +297,18 @@
         }
     });
 </script>
+
+<script>
+document.querySelector(".orderForm").addEventListener("submit", function (e) {
+    const payMethod = document.getElementById("paymentMethod").value;
+    const note = document.getElementById("orderNote").value;
+
+    // Đặt giá trị vào các trường ẩn
+    document.getElementById("payMethodHidden").value = payMethod;
+    document.getElementById("noteHidden").value = note;
+
+});
+</script>
+
+</body>
 
