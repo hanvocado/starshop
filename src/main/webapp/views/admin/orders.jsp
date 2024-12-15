@@ -159,7 +159,7 @@
                 	</c:choose>
                 </td>
 				                	
-				<c:if test="${not empty order.shipper }"><th>${order.shipper.userName }</th></c:if>               				
+				<c:if test="${not empty order.shipper }"><th>${order.shipper.getFullName() }</th></c:if>               				
 				<td class="text-end">
 				  <c:choose>
 					<c:when test="${status == 'pending' }">
@@ -259,9 +259,9 @@
 				<input name="orderId" id="orderId" type="hidden" />
 				<!-- Dropdown -->
 				<div class="btn-group">
-				  <select name="shipperId" class="form-control">
+				  <select name="shipperId" class="form-control mb-3">
 				  	<c:forEach var="shipper" items="${shippers }">
-				  		 <option value="${shipper.id}">${shipper.userName }</option>
+				  		 <option value="${shipper.id}">${shipper.getFullName() }</option>
 				  	</c:forEach>
 				  </select>
 				</div>

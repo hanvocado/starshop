@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Basic Sign In | Front - Admin &amp; Dashboard Template</title>
+    <title>Đăng nhập</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">

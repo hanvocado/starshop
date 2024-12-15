@@ -113,9 +113,10 @@
                <th class="table-column-pr-0">Đơn đặt hàng</th>
                <th>Ngày đặt hàng</th>
                <th class="text-center">Khách hàng</th>
-               <th class="text-center">Số tiền</th>
+               <th class="text-center">Số điện thoại</th>
+               <th class="text-center">Phải thu</th>
                               
-               <th>Hành động</th>
+               <th></th>
              </tr>
            </thead>
 
@@ -130,23 +131,21 @@
                 
                 <td>${order.formattedOrderDate }</td>
                 
-				<td class="text-center">${order.user.userName }</td>
+				<td class="text-center">${order.user.getFullName() }</td>
+				
+				<td class="text-center">${order.user.phoneNumber }</td>
 								
-                <td><fmt:formatNumber value = "${order.finalTotal }" type = "currency"/>
+                <td>
                 	<c:choose>
                 		<c:when test="${order.isPayed()}">
-		                	<span class="badge badge-soft-success">
-		                      <span class="legend-indicator bg-success"></span>Paid
-		                    </span>
+		                	0
                 		</c:when>
                 		<c:otherwise>
-                			<span class="badge badge-soft-warning">
-		                      <span class="legend-indicator bg-warning"></span>Pending
-		                    </span>
+                			<fmt:formatNumber value = "${order.finalTotal }" type = "currency"/>
                 		</c:otherwise>
                 	</c:choose>
                 </td>
-				                	
+                				                	
 				<td class="text-end">
 				  <c:choose>
 					<c:when test="${status == 'ready_for_ship' }">

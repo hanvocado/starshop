@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
-<title>index page</title>
+<title>Trang chủ</title>
  
 <body>
  <!-- Toast message -->
