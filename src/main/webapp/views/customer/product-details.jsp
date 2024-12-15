@@ -44,24 +44,19 @@
                     <p><strong>Trọng lượng:</strong> ${product.weight} kg</p>
 
                     <!-- Delivery Section -->
-                    <!-- <p class="mt-3"><strong>Vận chuyển:</strong> Miễn phí giao hàng khu vực nội thành TP.HCM & Hà Nội</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="city">Chọn thành phố:</label>
-                            <select id="city" class="form-control">
-                                <option value="Hà Nội">Hà Nội</option>
-                                <option value="TP.HCM">TP.HCM</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="district">Chọn quận:</label>
-                            <select id="district" class="form-control">
-                                <option value="Ba Đình">Ba Đình</option>
-                                <option value="Cầu Giấy">Cầu Giấy</option>
-                            </select>
-                        </div>
-                    </div> -->
-
+				        <div class="mt-3 mx-0">
+				                <strong>Vận Chuyển Tới:</strong>
+				                    <span class="text-primary "><i class="fas fa-shipping-fast mr-1"></i>${defaultAddress}</span>
+				          
+				        </div>
+				        
+				        <div class="mt-3 mx-0">
+				                <strong>Phí Vận Chuyển:</strong>
+				                    <span class="text-danger">${shippingFee}₫</span>
+				          
+				        </div>
+				        
+				        
                     <!-- Quantity Section -->
                     <div class="mt-3 row mx-0" >
                     	<p ><strong>Số lượng:</strong></p>
@@ -105,7 +100,7 @@
 
     <!-- section__review .// -->
 
-    <section class="section__feature mb-5">
+   <%--  <section class="section__feature mb-5">
         <div class="container">
             <div class="product-top-bar section-border mb-2rem">
                 <div class="section-title-wrap">
@@ -136,7 +131,7 @@
                 </c:forEach>
             </div>
         </div>
-    </section>
+    </section> --%>
     <!-- section__feature.// -->
 
 <!-- Update quantity and hidden input quantity-->

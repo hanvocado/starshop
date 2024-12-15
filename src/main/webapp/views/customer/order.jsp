@@ -126,12 +126,16 @@
 			
 			<!-- Payment Method Section -->
 			<div class="bg-white p-3 border rounded">
-				<div class="d-flex justify-content-between">
-					<h5>Phương thức thanh toán</h5>
-					<a href="#" class="text-primary">Thay Đổi</a>
-				</div>
-				<p class="text-muted">Thanh toán khi nhận hàng</p>
+			    <div class="form-group">
+			        <label for="paymentMethod">Chọn phương thức thanh toán:</label>
+			        <select id="paymentMethod" class="form-control">
+			            <option value="cod" selected>Thanh toán khi nhận hàng</option>
+			            <option value="bank">Thanh toán qua ngân hàng</option>
+			        </select>
+			    </div>
 			</div>
+			
+
 		</div>
 
 		<!-- Total Section -->
@@ -142,6 +146,10 @@
 						<tr>
 							<td>Tổng tiền hàng</td>
 							<td class="text-right">${order.getSubtotal()}₫</td>
+						</tr>
+						<tr>
+							<td>Phí vận chuyển</td>
+							<td class="text-right">${order.getShippingFee()}₫</td>
 						</tr>
 						<tr>
 							<td>Phiếu giảm giá của cửa hàng</td>
@@ -251,5 +259,16 @@
 	    
 	}
 
+</script>
+
+<!-- JavaScript for handling selection -->
+<script>
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+        const selectedMethod = this.value;
+        if (selectedMethod === 'bank') {
+            // Điều hướng sang trang thanh toán
+            window.location.href = '<c:url value="/customer/payment"/>';
+        }
+    });
 </script>
 

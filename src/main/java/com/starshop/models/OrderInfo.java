@@ -23,6 +23,7 @@ public class OrderInfo implements Serializable {
 	private double freeShip;
 	private double discount;
 	private double finalPrice;
+	private int shippingFee;
 
 	@Transient
 	private List<ProductLine> selectedProductLines;
