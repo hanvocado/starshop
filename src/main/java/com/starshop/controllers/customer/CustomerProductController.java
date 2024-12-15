@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.starshop.entities.Address;
+import com.starshop.entities.Customer;
 import com.starshop.entities.Product;
 import com.starshop.entities.User;
 import com.starshop.models.ViewMessage;
+import com.starshop.services.CustomerService;
+import com.starshop.services.FeeService;
 import com.starshop.services.JwtService;
 import com.starshop.services.ProductService;
 import com.starshop.services.UserService;
@@ -44,6 +48,12 @@ public class CustomerProductController {
 
 	@Autowired
 	private JwtService jwtService;
+	
+	@Autowired
+	private FeeService feeService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	@GetMapping("/products")
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, String search,
@@ -78,9 +88,16 @@ public class CustomerProductController {
 	@GetMapping("/products/details/{product-id}")
 	public String getProductDetails(@PathVariable("product-id") Long id, Model model, Principal principal) {
 		User user = jwtService.getUserFromPrincipal(principal);
+		Customer customer = jwtService.getCustomerFromPrincipal(principal);
 		Product product = productService.getById(id);
+		Optional<Address> optionalAddress  = customerService.getDefaultAddress(customer);
+		Address defaultAddress = optionalAddress.orElse(null); 
+		int shippingFee = feeService.getShippingFeeVND(defaultAddress);
 		model.addAttribute("product", product);
 		model.addAttribute("user", user);
+		model.addAttribute("customer", customer);
+		model.addAttribute("shippingFee", shippingFee);
+		model.addAttribute("defaultAddress", defaultAddress);
 		return "customer/product-details";
 	}
 	

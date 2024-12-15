@@ -93,6 +93,12 @@ public class SecurityConfig {
 	                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) 
 	                .userDetailsService(userDetailsService) 
 	                .httpBasic(Customizer.withDefaults()) 
+	                .logout(logout -> logout
+	                        .logoutUrl("/auth/logout")
+	                        .logoutSuccessUrl("/auth/login")
+	                        .deleteCookies("jwt") 
+	                        .invalidateHttpSession(true)
+	                    )
 	                .build();
 	    }
 	    

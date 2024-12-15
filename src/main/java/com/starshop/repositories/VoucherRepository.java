@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.starshop.entities.Voucher;
@@ -31,7 +33,12 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     
     Voucher findByCode(String code);
     
-    List<Voucher> findByExpiredAtAfterAndIsFreeshipTrue(LocalDateTime now);
+    @Query("SELECT v FROM Voucher v WHERE v.expiredAt > :now AND v.isFreeship = false AND v NOT IN :usedVouchers")
+    List<Voucher> findAvailableDiscountVouchers(@Param("now") LocalDateTime now, @Param("usedVouchers") List<Voucher> usedVouchers);
     
-    List<Voucher> findByExpiredAtAfterAndIsFreeshipFalse(LocalDateTime now);
+    @Query("SELECT v FROM Voucher v WHERE v.expiredAt > :now AND v.isFreeship = true AND v NOT IN :usedVouchers")
+    List<Voucher> findAvailableFreeShipVouchers(@Param("now") LocalDateTime now, @Param("usedVouchers") List<Voucher> usedVouchers);
+
+
+
 }

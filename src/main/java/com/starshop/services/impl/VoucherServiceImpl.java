@@ -6,16 +6,23 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.starshop.entities.Customer;
+import com.starshop.entities.User;
 import com.starshop.entities.Voucher;
+import com.starshop.repositories.CustomerRepository;
 import com.starshop.repositories.VoucherRepository;
 import com.starshop.services.VoucherService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VoucherServiceImpl implements VoucherService {
 	@Autowired
 	private VoucherRepository voucherRepo;
+	
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	@Override
 	public Page<Voucher> getAll(Integer pageNo, Integer pageSize, String search) {
@@ -57,14 +64,23 @@ public class VoucherServiceImpl implements VoucherService {
 			voucherRepo.delete(voucher);
 	}
 	
-	public List<Voucher> getDiscountVoucher() {
-        LocalDateTime now = LocalDateTime.now();
-        return voucherRepo.findByExpiredAtAfterAndIsFreeshipFalse(now);
-    }
-    
-    @Override
-	public List<Voucher> getFreeshipVoucher() {
-        LocalDateTime now = LocalDateTime.now();
-        return voucherRepo.findByExpiredAtAfterAndIsFreeshipTrue(now); 
-    }
+	@Override
+	public List<Voucher> getAvailableDiscountVouchers(UUID customerId) {
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+	    List<Voucher> usedVouchers = customer.getUsedVouchers();
+	    LocalDateTime now = LocalDateTime.now();
+	    return voucherRepo.findAvailableDiscountVouchers(now, usedVouchers);
+	}
+
+	@Override
+	public List<Voucher> getAvailableFreeShipVouchers(UUID customerId) {
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+	    List<Voucher> usedVouchers = customer.getUsedVouchers();
+	    LocalDateTime now = LocalDateTime.now();
+	    return voucherRepo.findAvailableFreeShipVouchers(now, usedVouchers);
+	}
+
+
 }

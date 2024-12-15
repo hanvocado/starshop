@@ -1,7 +1,10 @@
 package com.starshop.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.starshop.entities.*;
@@ -114,6 +118,33 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order findByOrderId(Long orderId) {
 		return orderRepo.findById(orderId).orElse(null);
+	}
+	
+	@Override
+	public Page<Order> findOrdersByCustomerAndStatus(Customer customer, OrderStatus status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate").descending());
+
+        if (status == null) {
+            return orderRepo.findByUser(customer, pageable);
+        } else {
+            return orderRepo.findByUserAndCurrentStatus(customer, status, pageable);
+        }
+    }
+	
+	@Override
+	public Map<String, Long> getOrderCountsByStatus(Customer customer) {
+	    // Use a general Map<String, Long> instead of EnumMap
+	    Map<String, Long> counts = new LinkedHashMap<>();
+
+	    // Count orders for each status
+	    for (OrderStatus status : OrderStatus.values()) {
+	        counts.put(status.name(), orderRepo.countByUserAndCurrentStatus(customer, status));
+	    }
+
+	    // Add "ALL" key to count all orders
+	    counts.put("ALL", orderRepo.countByUser(customer));
+
+	    return counts;
 	}
 
 }
