@@ -1,5 +1,6 @@
 package com.starshop.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,10 @@ public class Address {
     private String district;
     private String city;
     
+    @Nullable
     private Double latitude;
+    
+    @Nullable
     private Double longitude;
     
 	@Override
