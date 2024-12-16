@@ -13,4 +13,5 @@ public interface CategoryService {
 	void deleteById(Long id);
 	void publishById(Long id);
 	void archiveById(Long id);
+	List<Category> getPublishedCategories();
 }

@@ -150,7 +150,7 @@ public class AuthController {
 	}
 
 
-	@PostMapping("/logout")
+	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
 		Cookie cookie = new Cookie("jwt", null);
 		cookie.setHttpOnly(true);

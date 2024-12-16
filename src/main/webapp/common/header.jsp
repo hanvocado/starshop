@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@include file="/common/taglibs.jsp"%>
 
+ 
 <header class="section__header">
 	<section class="header_main border_bottom">
 		<div class="container">
@@ -24,11 +25,11 @@
 
 				<!-- Search Bar -->
 				<div class="col-xl-6 col-lg-5 col-md-6">
-					<form action="${basePath}/search" class="fs__form search--header">
+					<form action="${basePath}/customer/products" class="fs__form search--header">
 						<div class="input-group w-100">
 							<i class="fa fa-search"></i> <input type="text"
 								class="form-control" placeholder="What are you looking for?"
-								name="query">
+								name="search">
 						</div>
 					</form>
 				</div>
@@ -62,14 +63,15 @@
 						</div>
 
 						<!-- Account -->
-						<div class="widget__header mr-2 dropdown">
+						<div class="widget__header mr-2 nav-item dropdown">
 							<c:choose>
 								<c:when
 									test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
-									<a
-										class="nav-link widget__view text-decoration-none dropdown-toggle d-flex align-items-center"
-										href="#" role="button" id="accountDropdown"
-										data-toggle="dropdown" aria-expanded="false"> <c:choose>
+									<!-- Account Dropdown -->
+									<div class="widget__header mr-2 nav-item dropdown">
+									    <a class="nav-link widget__view text-decoration-none dropdown-toggle d-flex align-items-center"
+									       href="#" id="accountDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									        <c:choose>
 											<c:when test="${not empty user.profileImg}">
 												<img src="${user.profileImg}" alt="Avatar"
 													class="rounded-circle" style="width: 40px; height: 40px;">
@@ -80,28 +82,20 @@
 													style="width: 40px; height: 40px;">
 											</c:otherwise>
 										</c:choose> <small class="text ml-1">${user.getUserName()}</small>
-									</a>
-									<ul class="dropdown-menu dropdown-menu-right shadow"
-										aria-labelledby="accountDropdown">
-										<li><a class="dropdown-item"
-											href="${basePath}/customer/account/profile"> <i
-												class="fas fa-user me-2 mx-1"></i>Hồ sơ cá nhân
-										</a></li>
-										<li><a class="dropdown-item" href="${basePath}/settings">
-												<i class="fas fa-shipping-fast me-2 mx-1"></i>Đơn mua
-										</a></li>
-										<li>
-											<hr class="dropdown-divider">
-										</li>
-										<li>
-											<form action="${basePath}/auth/logout" method="post"
-												style="margin: 0;">
-												<button class="dropdown-item" type="submit">
-													<i class="fas fa-sign-out-alt me-2 mx-1"></i>Logout
-												</button>
-											</form>
-										</li>
-									</ul>
+									    </a>
+									    <ul class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="accountDropdown">
+									        <li><a class="dropdown-item" href="${basePath}/customer/account/profile">Hồ sơ cá nhân</a></li>
+									        <li><a class="dropdown-item" href="${basePath}/settings">Đơn mua</a></li>
+									        <li>
+									            <hr class="dropdown-divider">
+									        </li>
+									        <li>
+									            <form action="${basePath}/auth/logout" method="post" style="margin: 0;">
+									                <button class="dropdown-item" type="submit">Logout</button>
+									            </form>
+									        </li>
+									    </ul>
+									</div>
 
 								</c:when>
 								<c:otherwise>
@@ -132,39 +126,60 @@
 				<span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
 			</button>
 			<div class="collapse navbar-collapse" id="main_nav">
-				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link"
-						href="${basePath}/home">Home</a></li>
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false"> Categories </a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/birthday-flowers">Birthday
-									Flowers</a></li>
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/valentine-flowers">Valentine
-									Day Flowers</a></li>
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/marriage-flowers">Marriage
-									Flowers</a></li>
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/anniversary-flowers">Anniversary
-									Flowers</a></li>
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/puja-flowers">Puja Flowers</a></li>
-							<li><a class="dropdown-item"
-								href="${basePath}/categories/plants">Plants & Greenery</a></li>
-						</ul></li>
-					<li class="nav-item"><a class="nav-link"
-						href="${basePath}/categories/cactus">Cactus</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="${basePath}/products">All Products</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="${basePath}/about">About</a></li>
-				</ul>
+			    <ul class="navbar-nav">
+			        <c:choose>
+			            <c:when test="${not empty user and fn:contains(user.getRole(), 'CUSTOMER')}">
+			                <li class="nav-item">
+			                    <a class="nav-link" href="${basePath}/customer/products">Home</a>
+			                </li>
+			            </c:when>
+			            <c:otherwise>
+			                <li class="nav-item">
+			                    <a class="nav-link" href="${basePath}/">Home</a>
+			                </li>
+			            </c:otherwise>
+			        </c:choose>
+			
+			        <li class="nav-item dropdown">
+					    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					        Categories
+					    </a>
+					    <ul class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="navbarDropdown">
+					        <c:forEach var="category" items="${categories}">
+					            <li><a class="dropdown-item" href="${basePath}/categories/${category.name}">${category.name}</a></li>
+					        </c:forEach>
+					    </ul>
+					</li>
+			
+			        <li class="nav-item">
+			            <a class="nav-link" href="${basePath}/categories/cactus">Cactus</a>
+			        </li>
+			        <li class="nav-item">
+			            <a class="nav-link" href="${basePath}/products">All Products</a>
+			        </li>
+			        <li class="nav-item">
+			            <a class="nav-link" href="${basePath}/about">About</a>
+			        </li>
+			    </ul>
 			</div>
+
 		</div>
 	</nav>
 </header>
+
+<script>
+    $(document).on('click', '.dropdown', function (event) {
+        event.stopPropagation();
+    });
+</script>
+
+<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<!-- Popper.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+	
+	<!-- Bootstrap 4 JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+

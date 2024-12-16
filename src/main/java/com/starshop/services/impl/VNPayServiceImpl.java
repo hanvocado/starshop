@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,9 +18,9 @@ import java.util.*;
 public class VNPayServiceImpl implements VNPayService {
 	
 	@Override
-	public String createOrder(int total, String orderInfor, String urlReturn) {
+	public String createOrder(int total, String orderInfor, String urlReturn, HttpServletRequest request) {
 		String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
-		String vnp_IpAddr = "127.0.0.1";
+		String vnp_IpAddr = VNPayConfig.getIpAddress(request);
 		String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
 		String orderType = "order-type";
 
@@ -27,7 +28,7 @@ public class VNPayServiceImpl implements VNPayService {
 		vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
 		vnp_Params.put("vnp_Command", VNPayConfig.vnp_Command);
 		vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-		vnp_Params.put("vnp_Amount", String.valueOf(total));
+		vnp_Params.put("vnp_Amount", String.valueOf(total*100));
 		vnp_Params.put("vnp_CurrCode", "VND");
 		vnp_Params.put("vnp_BankCode", "NCB");	
 
@@ -38,8 +39,8 @@ public class VNPayServiceImpl implements VNPayService {
 		String locate = "vn";
 		vnp_Params.put("vnp_Locale", locate);
 
-//		urlReturn += VNPayConfig.vnp_Returnurl;
-//		vnp_Params.put("vnp_ReturnUrl", urlReturn);
+		urlReturn += VNPayConfig.vnp_Returnurl;
+		vnp_Params.put("vnp_ReturnUrl", urlReturn);
 		vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
 		Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
