@@ -104,4 +104,16 @@ public class ProductServiceImpl implements ProductService {
 		} else
 			return productRepo.findByIsPublishedFalse(pageable);
 	}
+	
+	@Override
+	public Page<Product> getPublishedProductsByCategory(String categoryName, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return productRepo.findByCategoriesNameAndIsPublishedTrue(categoryName, pageable);
+    }
+
+    @Override
+	public Page<Product> searchPublishedProductsByCategoryAndName(String name, String categoryName, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return productRepo.findByNameContainingIgnoreCaseAndCategoriesNameAndIsPublishedTrue(name, categoryName, pageable);
+    }
 }

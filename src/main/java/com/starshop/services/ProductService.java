@@ -19,4 +19,6 @@ public interface ProductService {
 	
 	Page<Product> getUnpublishedProductsPagination(Integer pageNo, Integer pageSize, String search);
 	void save(Product product, List<Long> categoryIds);
+	Page<Product> searchPublishedProductsByCategoryAndName(String name, String categoryName, int pageNo, int pageSize);
+	Page<Product> getPublishedProductsByCategory(String categoryName, int pageNo, int pageSize);
 }

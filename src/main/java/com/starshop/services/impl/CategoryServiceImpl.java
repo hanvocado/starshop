@@ -75,4 +75,9 @@ public class CategoryServiceImpl implements CategoryService {
 			categoryRepo.save(cate);
 		}
 	}
+	
+	@Override
+	public List<Category> getPublishedCategories() {
+        return categoryRepo.findByIsPublishedTrue();
+    }
 }
