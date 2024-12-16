@@ -5,26 +5,8 @@
 <title>Orders</title>
 
 <body>	
-	<!-- Display Flash Messages -->
-	<c:if test="${not empty message }">
-	
-		<c:if test="${message.type == 'success'}">	
-		    <c:set var="icon_class" value="tio-checkmark-circle-outlined" />
-		</c:if>
-		<c:if test="${message.type == 'danger'}">
-		    <c:set var="icon_class" value="tio-message-failed-outlined" />
-		</c:if>
-		
-		<!-- ALERT -->
-		<div id="message-alert" class="alert alert-soft-${message.type} alert-dismissible fade show" role="alert" style="position:fixed; top:50px; right:70px; z-index:9999;">
-			  <i class="${icon_class }"></i>
-		  <strong>${message.content }</strong> 
-		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		    <i class="tio-clear tio-lg"></i>
-		  </button>
-		</div>
-
-	</c:if>
+	<!-- Flash message -->
+  <%@include file="/common/flash-message.jsp"%>
 	
 	<!-- Page Header -->
     <div class="page-header">
@@ -157,7 +139,10 @@
 					          	<i class="tio-archive"></i> Đã giao</a> 					
 					</c:when>
 					
-				  </c:choose>	          
+				  </c:choose>
+				  <a class="btn btn-sm btn-white" href="<c:url value="/shipper/orders/details/${order.id}"/>">
+                        <i class="tio-visible-outlined"></i> Chi tiết
+                      </a>	          
 	            </td>
 			
               </tr>

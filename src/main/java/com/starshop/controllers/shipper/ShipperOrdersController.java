@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.starshop.entities.Address;
 import com.starshop.entities.Order;
 import com.starshop.entities.Shipper;
 import com.starshop.models.ViewMessage;
 import com.starshop.services.OrderService;
 import com.starshop.utils.Constants;
 import com.starshop.utils.OrderStatus;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/shipper/orders")
@@ -66,5 +69,20 @@ public class ShipperOrdersController {
 		}
 
 		return "redirect:/shipper/orders?status=" + newOrderStatus.name().toLowerCase();
+	}
+	
+	@GetMapping("/details/{id}")
+	public String details(@PathVariable("id") Long orderId, String status, Model model, RedirectAttributes attributes, HttpServletRequest request) {
+		Order order = orderService.findByOrderId(orderId);
+		if (order != null) {
+			Address address = orderService.getAddress(order);
+			model.addAttribute("order", order);
+			model.addAttribute("address", address);
+			return "shipper/order-details";			
+		} else {
+			attributes.addFlashAttribute("result", new ViewMessage("danger", Constants.notFound));
+			String referer = request.getHeader("Referer"); 
+			return "redirect:" + referer;
+		}
 	}
 }
