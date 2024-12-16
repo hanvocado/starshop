@@ -33,8 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-	private final String[] PUBLIC_ENDPOINTS = { "", "/", "/error", "/auth/login/**", "/auth/register/**", 
-			"/products/**", "categories/**", "/exec/**", "/img/**", "/shop/**" };
+	private final String[] PUBLIC_ENDPOINTS = { "/auth/login/**", "/auth/register/**", 
+			"/products/**", "/exec/**", "/img/**", "/shop/**" };
 	
     @Autowired
     private JwtService jwtService;
