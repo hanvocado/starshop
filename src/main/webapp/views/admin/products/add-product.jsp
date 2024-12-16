@@ -221,7 +221,7 @@
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-auto">
-                  <a type="button" href="<c:url value="/admin/product"/>" class="btn btn-ghost-light mr-2">Discard</a>
+                  <a type="button" href="<c:url value="/admin/products/add"/>" class="btn btn-ghost-light mr-2">Làm mới</a>
                 </div>
               </div>
               <!-- End Row -->

@@ -54,7 +54,7 @@ public class ApplicationInitConfig {
 			long orderCount = orderService.count();
 			long productCount = productRepository.count();
 
-            if (orderCount < 10 && productCount >= 10) {
+            if (orderCount < 30 && productCount >= 10) {
                 Customer user = createTestBuyerIfNotExists();
 
                 createOrdersForUser(user, 10);
@@ -88,7 +88,7 @@ public class ApplicationInitConfig {
 	
 	@Transactional
 	private Customer createTestBuyerIfNotExists() {
-	    if (userRepository.findByUserName("testbuyer").isEmpty()) {
+	    if (userRepository.findByEmail("testbuyer@gmail.com").isEmpty()) {
 	        Customer user = Customer.builder()
 	                .userName("testbuyer")
 	                .email("testbuyer@gmail.com")
@@ -118,6 +118,7 @@ public class ApplicationInitConfig {
             Product product = productRepository.findById((long) i).get();
             order.addProductLine(new ProductLine(product, order, 2));
             order.setShippingFee(i*2000);
+            order.setAddressId(user.getDefaultAddressId());
             orderService.add(order);        
         });
     }

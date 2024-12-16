@@ -25,9 +25,6 @@
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="/exec/css/theme.min.css?v=1.0">
   </head>
-  <!-- Flash message -->
-  <%@include file="/common/flash-message.jsp"%>
-  
     <body>
      <!-- Flash message -->
   <%@include file="/common/flash-message.jsp"%>

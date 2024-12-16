@@ -137,7 +137,7 @@
 								
                 <td>
                 	<c:choose>
-                		<c:when test="${order.isPayed()}">
+                		<c:when test="${order.payMethod != 'CASH'}">
 		                	0
                 		</c:when>
                 		<c:otherwise>

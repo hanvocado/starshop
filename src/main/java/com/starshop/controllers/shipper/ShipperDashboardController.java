@@ -2,6 +2,7 @@ package com.starshop.controllers.shipper;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.starshop.entities.Shipper;
 import com.starshop.models.MonthlyShipperRecord;
 import com.starshop.models.ShipperRecord;
 import com.starshop.services.ShipperService;
@@ -23,6 +25,8 @@ public class ShipperDashboardController {
 	@GetMapping("")
 	public String index(Model model, Integer year) {
 		String shipperUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+		Shipper shipper = shipperService.findByUserName(shipperUsername).orElseThrow();
+		
 		ShipperRecord shipperRecord = shipperService.getRecordByShipperUsername(shipperUsername);
 		model.addAttribute("record", shipperRecord);
 		
@@ -44,6 +48,7 @@ public class ShipperDashboardController {
 		model.addAttribute("labels", labels);
 		model.addAttribute("totalCounts", totalCounts);
 		model.addAttribute("successCounts", successCounts);
+		model.addAttribute("successRate", shipper.getSuccessRate());
 		
 		return "shipper/dashboard";
 	}

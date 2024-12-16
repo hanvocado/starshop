@@ -166,8 +166,6 @@
 				<!-- End Status -->
 			
 			<td>
-		       <a class="btn btn-soft-danger btn-xs" data-toggle="modal" data-target="#voucherModal" onclick="deleteVoucher(${voucher.code})">
-		          	<i class="tio-delete-outlined"></i> Xóa</a>
 		       <a href="<c:url value="/admin/vouchers/update/${voucher.code }"/>" class="btn btn-soft-warning btn-xs">
 			          	<i class="tio-archive"></i> Cập nhật</a> 
 		          

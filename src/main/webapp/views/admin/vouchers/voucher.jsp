@@ -56,14 +56,14 @@
 	                <!-- Form Group -->
 	                <div class="form-group">
 	                	<label for="voucherNameLabel" class="input-label">Hết hạn vào</label>
-						<input name="expiredAt" value="${voucher.formattedExpiredAt }" type="text" class="form-control" placeholder="31/12/2024 23:59:59" pattern="\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}" required/>	                
+						<input name="expiredAt" value="${voucher.formattedExpiredAt }" type="text" class="form-control" placeholder="31/12/2024 23:59:59" data-msg="Vui lòng điền vui định dạng dd/MM/yyyy HH:mm:ss" pattern="\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}" required=""/>	                
 					</div>
 	                <!-- End Form Group -->
 	               </div>
 	             </div>
                 
                 <label class="input-label">Mô tả <span class="input-label-secondary">(Optional)</span></label>
- 				<textarea class="form-control" name="description" value="${voucher.description }" aria-label="With textarea"></textarea>
+ 				<textarea class="form-control" name="description" aria-label="With textarea">${voucher.description }</textarea>
               </div>
               <!-- Body -->
             </div>
@@ -151,7 +151,7 @@
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-auto">
-                  <a type="button" href="<c:url value="/admin/voucher"/>" class="btn btn-ghost-light mr-2">Discard</a>
+                  <a href="<c:url value="/admin/vouchers"/>" class="btn btn-ghost-light mr-2">Hủy</a>
                 </div>
               </div>
               <!-- End Row -->

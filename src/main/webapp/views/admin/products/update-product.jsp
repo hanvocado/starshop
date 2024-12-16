@@ -236,7 +236,7 @@
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-auto">
-                  <a type="button" href="<c:url value="/admin/products"/>" class="btn btn-ghost-light mr-2">Discard</a>
+                  <a type="button" href="<c:url value="/admin/products/update/${product.id}"/>" class="btn btn-ghost-light mr-2">Discard</a>
                 </div>
               </div>
               <!-- End Row -->
