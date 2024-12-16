@@ -142,7 +142,7 @@
                 
                 <td>${order.formattedOrderDate }</td>
                 
-				<td class="text-center">${order.user.userName }</td>
+				<td class="text-center">${order.user.getFullName() }</td>
 								
                 <td><fmt:formatNumber value = "${order.finalTotal }" type = "currency"/>
                 	<c:choose>

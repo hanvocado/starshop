@@ -116,16 +116,17 @@
                 <div class="row justify-content-md-end mb-3">
                   <div class="col-md-8 col-lg-7">
                     <dl class="row text-sm-right">
-                      <dt class="col-sm-6">Tổng sản phẩm:</dt>
-                      <dd class="col-sm-6">${order.productsTotal }</dd>
-                      <dt class="col-sm-6">Phí vận chuyển:</dt>
-                      <dd class="col-sm-6">${order.shippingFee }</dd>
-                      <c:if test="${order.discountTotal > 0}">
-	                      <dt class="col-sm-6">Voucher:</dt>
-	                      <dd class="col-sm-6">- ${order.discountTotal }</dd>
-                      </c:if>
-                      <dt class="col-sm-6">Tổng cộng:</dt>
-                      <dd class="col-sm-6">${order.finalTotal }</dd>
+                      <dt class="col-sm-6">Phải thu:</dt>
+                      <dd class="col-sm-6">
+                      	<c:choose>
+                		<c:when test="${order.payMethod != 'CASH'}">
+		                	0
+                		</c:when>
+                		<c:otherwise>
+                			<fmt:formatNumber value = "${order.finalTotal }" type = "currency"/>
+                		</c:otherwise>
+                		</c:choose>
+                      </dd>
                     </dl>
                     <!-- End Row -->
                   </div>

@@ -2,6 +2,7 @@ package com.starshop.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class ShipperServiceImpl implements ShipperService {
 	@Autowired
 	private OrderRepository orderRepository;
 
+	@Override
+	public List<Shipper> findAllActiveShippers() {
+		return shipperRepository.findByIsActiveTrue();
+	}
+	
 	@Override
 	public List<Shipper> findAllShippers() {
 		return shipperRepository.findByOrderByIsActiveDesc();
@@ -71,5 +77,10 @@ public class ShipperServiceImpl implements ShipperService {
 	@Override
 	public List<MonthlyShipperRecord> getMonthlyRecordByShipperUsername(String username, int year) {
 		return orderRepository.getMonthlyRecordByUsername(username, year);
+	}
+	
+	@Override
+	public Optional<Shipper> findByUserName(String username) {
+		return shipperRepository.findByUserName(username);
 	}
 }

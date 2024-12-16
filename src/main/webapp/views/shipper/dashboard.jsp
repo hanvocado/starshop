@@ -82,11 +82,11 @@
                     <!-- Card -->
                     <a class="card card-hover-shadow h-100" href="#">
                         <div class="card-body">
-                            <h6 class="card-subtitle">Giao thất bại</h6>
+                            <h6 class="card-subtitle">Tỷ lệ thành công</h6>
 
                             <div class="row align-items-center gx-2 mb-1">
                                 <div>
-                                    <span class="card-title h2">${record.failedCount }</span>
+                                    <span class="card-title h2">${successRate } %</span>
                                 </div>
 
                             </div>

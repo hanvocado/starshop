@@ -50,7 +50,7 @@ public class OrderController {
 			orderStatus = OrderStatus.valueOf(status.toUpperCase());
 
 		if (orderStatus == OrderStatus.PREPARING) {
-			List<Shipper> shippers = shipperService.findAllShippers();
+			List<Shipper> shippers = shipperService.findAllActiveShippers();
 			model.addAttribute("shippers", shippers);
 		}
 		
