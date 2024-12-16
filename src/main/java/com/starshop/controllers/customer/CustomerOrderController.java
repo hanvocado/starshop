@@ -189,11 +189,13 @@ public class CustomerOrderController {
 		redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Đơn hàng được tạo thành công"));
 
 		if (order.getPayMethod() != null && "VNPAY".equals(order.getPayMethod().name())) {
-			String orderInfo = "THANH TOAN DON HANG " + order.getOrderDate().toLocalDate();
+			String orderInfo = "THANH TOAN DON HANG " + order.getOrderDate().toLocalDate() + " - OrderID: " + order.getId();
 			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-	        String vnpayUrl = vnPayService.createOrder((int) order.getFinalTotal(), orderInfo, baseUrl, request);
+			String vnpayUrl = vnPayService.createOrder((int) order.getFinalTotal(), orderInfo, order.getId() , baseUrl, request);
 	        return "redirect:" + vnpayUrl;
-		}
+		} 
+			
+		
 
 		return "redirect:/customer/orders";
 	}

@@ -31,7 +31,7 @@
 	<p>
 		<i class="fa fa-map-marker text-muted"></i>&nbsp; 
 				Địa chỉ: ${defaultAddress.toString()}&nbsp; <a
-			href="${pageContext.request.contextPath}/customer/account/address/edit/${customer.id}">Chỉnh sửa</a>
+			href="${pageContext.request.contextPath}/customer/account/addresses">Chỉnh sửa</a>
 	</p>
 	<article class="card-group card-stat">
 		<figure class="card bg-light">
@@ -48,13 +48,13 @@
 		</figure>
 		<figure class="card bg-light">
 			<div class="p-3 text-center">
-				<h4 class="title">abc</h4>
+				<h4 class="title">0</h4>
 				<span>Đang giao</span>
 			</div>
 		</figure>
 		<figure class="card bg-light">
 			<div class="p-3 text-center">
-				<h4 class="title">abc</h4>
+				<h4 class="title">0</h4>
 				<span>Đã nhận</span>
 			</div>
 		</figure>
@@ -65,25 +65,38 @@
         <h5 class="card-title mb-4">Recent Orders</h5>
         <div class="row">
             <c:forEach items="${customer.orders}" var="order" varStatus="status">
-                <div class="col-md-6">
-                    <figure class="itemside mb-3">
-                        <div class="aside">
-                            <img src="${pageContext.request.contextPath}/img/product-${status.index + 1}.jpg" class="border img-sm" alt="Product Image">
+    <div class="col-md-6 row ">
+        <figure class="itemside mb-3 col-6">
+            <div class="aside">
+                <c:forEach items="${order.lines}" var="line">
+                    <c:set var="imgUrl">
+                        <c:choose>
+                            <c:when test="${line.product.image.startsWith('https')}">
+                                ${line.product.image}
+                            </c:when>
+                            <c:otherwise>
+                                <c:url value="/img/${line.product.image}" />
+                            </c:otherwise>
+                        </c:choose>
+                    </c:set>
+                    <img class="img-fluid mr-2 rounded" src="${imgUrl}" alt="${line.product.name}" style="width: 80px; height: 80px;">
+                </c:forEach>
+            <figcaption class="info">
+                <time class="text-muted">
+                    <i class="fa fa-calendar-alt"></i>
+                    ${order.formattedOrderDate}
+                </time>
+                <p>${order.totalItems} sản phẩm</p>
+                <span class="text-success">
+                    ${order.currentStatus.name()}
+                </span>
+            </figcaption>
                         </div>
-                        <figcaption class="info">
-                            <time class="text-muted">
-                                <i class="fa fa-calendar-alt"></i>
-                                ${order.formattedOrderDate}
-                            </time>
-                            <p>${order.totalItems} sản phẩm</p>
-                            <span class="text-success">
-                                <!-- Hiển thị trạng thái đơn hàng -->
-                                ${order.currentStatus != null ? order.currentStatus.name() : 'Chưa xác định'}
-                            </span>
-                        </figcaption>
-                    </figure>
-                </div>
-            </c:forEach>
+            
+        </figure>
+    </div>
+</c:forEach>
+
         </div>
         <a href="${pageContext.request.contextPath}/customer/orders" class="btn btn-block btn-outline-primary">View All Orders <i class="fa fa-chevron-down"></i></a>
     </div>

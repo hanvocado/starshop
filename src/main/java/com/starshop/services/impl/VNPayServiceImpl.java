@@ -18,8 +18,8 @@ import java.util.*;
 public class VNPayServiceImpl implements VNPayService {
 	
 	@Override
-	public String createOrder(int total, String orderInfor, String urlReturn, HttpServletRequest request) {
-		String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
+	public String createOrder(int total, String orderInfor, Long orderId, String urlReturn, HttpServletRequest request) {
+//		String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
 		String vnp_IpAddr = VNPayConfig.getIpAddress(request);
 		String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
 		String orderType = "order-type";
@@ -32,7 +32,7 @@ public class VNPayServiceImpl implements VNPayService {
 		vnp_Params.put("vnp_CurrCode", "VND");
 		vnp_Params.put("vnp_BankCode", "NCB");	
 
-		vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+		vnp_Params.put("vnp_TxnRef", String.valueOf(orderId));
 		vnp_Params.put("vnp_OrderInfo", orderInfor);
 		vnp_Params.put("vnp_OrderType", orderType);
 

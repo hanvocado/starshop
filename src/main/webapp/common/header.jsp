@@ -81,11 +81,11 @@
 													alt="Default Avatar" class="rounded-circle"
 													style="width: 40px; height: 40px;">
 											</c:otherwise>
-										</c:choose> <small class="text ml-1">${user.getUserName()}</small>
+										</c:choose> <small class="text ml-1 container">${user.getUserName()}</small>
 									    </a>
 									    <ul class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="accountDropdown">
 									        <li><a class="dropdown-item" href="${basePath}/customer/account/profile">Hồ sơ cá nhân</a></li>
-									        <li><a class="dropdown-item" href="${basePath}/settings">Đơn mua</a></li>
+									        <li><a class="dropdown-item" href="${basePath}/customer/orders">Đơn mua</a></li>
 									        <li>
 									            <hr class="dropdown-divider">
 									        </li>
@@ -167,19 +167,14 @@
 	</nav>
 </header>
 
+
+
 <script>
     $(document).on('click', '.dropdown', function (event) {
         event.stopPropagation();
     });
 </script>
 
-<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	
-	<!-- Popper.js -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-	
-	<!-- Bootstrap 4 JS -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 

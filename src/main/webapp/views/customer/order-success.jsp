@@ -23,7 +23,7 @@
                         <tbody>
                             <tr>
                                 <td><strong>Thông tin đơn hàng:</strong></td>
-                                <td><c:out value="${orderId}" /></td>
+                                <td><c:out value="${orderInfo}" /></td>
                             </tr>
                             <tr>
                                 <td><strong>Tổng tiền:</strong></td>

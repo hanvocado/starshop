@@ -80,12 +80,14 @@ public class JwtFilter extends OncePerRequestFilter {
                         return;
                     }
                 }
-            } else {
+            } 
+            else {
                 // Nếu không tìm thấy JWT, chuyển hướng đến trang login
                 response.sendRedirect("/auth/login");
                 return;
             }
-        } catch (Exception e) {
+        } 
+            catch (Exception e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
             response.sendRedirect("/auth/login");
             return;

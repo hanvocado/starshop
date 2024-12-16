@@ -54,8 +54,8 @@
                     <aside class="col-md-2">
                         <nav class="list-group">
                             <a class="list-group-item active" href="${pageContext.request.contextPath}/customer/account/profile"> Hồ sơ cá nhân </a>
-                            <a class="list-group-item" href="${pageContext.request.contextPath}/customer/addresses">Địa chỉ của tôi</a>
-                            <a class="list-group-item" href="${pageContext.request.contextPath}/customer/tracking-order"> Đơn mua </a>
+                            <a class="list-group-item" href="${pageContext.request.contextPath}/customer/account/addresses">Địa chỉ của tôi</a>
+                            <a class="list-group-item" href="${pageContext.request.contextPath}/customer/orders"> Đơn mua </a>
                             <a class="list-group-item" href="${pageContext.request.contextPath}/customer/"> Yêu thích </a>
                             <a class="list-group-item" href="setting.html"> Thay đổi mật khẩu</a>
                             <a class="list-group-item" href="home.html"> Đăng xuất </a>

@@ -13,6 +13,7 @@ public class CustomSiteMeshFilter extends ConfigurableSiteMeshFilter {
 				// Exclude few paths from decoration.
 				.addExcludedPath("/chat")
 				.addExcludedPath("/auth/login")
-				.addExcludedPath("/auth/register");
+				.addExcludedPath("/auth/register")
+				.addExcludedPath("/auth/forgot-password");
 	}
 }

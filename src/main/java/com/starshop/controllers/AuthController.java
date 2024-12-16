@@ -159,6 +159,19 @@ public class AuthController {
 		response.addCookie(cookie);
 
 		return "redirect:/auth/login";
+		
 	}
-
+	
+	@GetMapping("/forgot-password")
+	public String forgotPassword(Model model) {
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		model.addAttribute("message", message);
+		return "forgot-password";
+	}
+	
+	@PostMapping("/validate-email")
+	public String validate(@Valid @ModelAttribute String email) {
+		
+		return "forgot-password";
+	}
 }

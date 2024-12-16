@@ -194,9 +194,11 @@ public class CustomerCartController {
 	}
 
 	@RequestMapping("/delete/{productline-id}")
-	public String removeFromCart(@PathVariable("productline-id") Long productLineId, Principal principal) {
+	public String removeFromCart(@PathVariable("productline-id") Long productLineId, Principal principal, RedirectAttributes redirectAttributes) {
 		UUID userId = jwtService.getUserIdFromPrincipal(principal);
 		cartService.removeFromCart(userId, productLineId);
+		redirectAttributes.addFlashAttribute("result",
+				new ViewMessage("success", "Đã xóa sản phẩm khỏi giỏ hàng!"));
 		return "redirect:/customer/cart";
 	}
 

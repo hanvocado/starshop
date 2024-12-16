@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.starshop.entities.Order;
 import com.starshop.entities.User;
 import com.starshop.services.JwtService;
+import com.starshop.services.OrderService;
 import com.starshop.services.VNPayService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,9 @@ public class CustomerCheckoutController {
 	private VNPayService vnPayService;
 	
 	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
 	private JwtService jwtService;
 	
 	 @GetMapping("/vnpay-payment")
@@ -33,9 +38,18 @@ public class CustomerCheckoutController {
 	        String orderInfo = request.getParameter("vnp_OrderInfo");
 	        String paymentTime = request.getParameter("vnp_PayDate");
 	        String transactionId = request.getParameter("vnp_TransactionNo");
-	        String totalPrice = request.getParameter("vnp_Amount");
+	        String totalPrice = request.getParameter("vnp_Amount");	
 
-	        model.addAttribute("orderId", orderInfo);
+	        String orderIdParam = request.getParameter("vnp_TxnRef");
+	        Long orderId = Long.parseLong(orderIdParam);
+	        
+	        Order order = orderService.findByOrderId(orderId);
+	        if (order != null) {
+	            order.setPayed(true); 
+	            orderService.add(order);
+	        }
+	        
+	        model.addAttribute("orderInfo", orderInfo);
 	        model.addAttribute("totalPrice", totalPrice);
 	        model.addAttribute("paymentTime", paymentTime);
 	        model.addAttribute("transactionId", transactionId);

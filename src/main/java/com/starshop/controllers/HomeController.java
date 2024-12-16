@@ -53,7 +53,7 @@ public class HomeController {
 		if (pageNo == null)
 			pageNo = 0;
 		if (pageSize == null)
-			pageSize = 21;
+			pageSize = 10;
 		
 		if (categoryName != null) {
 	        if (search != null && !search.isEmpty()) {

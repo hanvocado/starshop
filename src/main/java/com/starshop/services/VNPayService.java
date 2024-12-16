@@ -8,6 +8,6 @@ public interface VNPayService {
 
 	int orderReturn(HttpServletRequest request);
 
-	String createOrder(int total, String orderInfor, String urlReturn, HttpServletRequest request);
+	String createOrder(int total, String orderInfor, Long orderId, String urlReturn, HttpServletRequest request);
 
 }
