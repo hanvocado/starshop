@@ -44,4 +44,17 @@ public class AddressServiceImpl implements AddressService{
 	public Address getDefaultAddress(Customer customer) {
         return addressRepository.findById(customer.getDefaultAddressId()).orElse(null);
     }
+	
+	@Override
+	public Address getAddressByIdAndCustomer(Long addressId, Customer customer) {
+	    return addressRepository.findByIdAndCustomer(addressId, customer)
+	            .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy địa chỉ thuộc về khách hàng này."));
+	}
+	
+	@Override
+	public void deleteAddress(Long addressId, Customer customer) {
+        Address address = addressRepository.findByIdAndCustomer(addressId, customer)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy địa chỉ hoặc không thuộc quyền sở hữu của bạn."));
+        addressRepository.delete(address);
+    }
 }

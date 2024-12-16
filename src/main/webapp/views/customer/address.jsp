@@ -4,7 +4,6 @@
     
 <title>Địa chỉ của tôi</title>
     
-<%@include file="/common/flash-message.jsp"%>
 <body>
 <div class="container">
     <div class="row">
@@ -93,7 +92,7 @@
 	                <div class="col-sm-4 text-right">
 	                  <div>
 	                    <p>
-	                        <a href="<c:url value='/customer/address/edit?id=${address.id}' />" class="btn btn-link">Cập nhật</a>
+                           <a href="#" class="btn btn-link" onclick="openEditAddressModal(${address.id}, '${address.houseNumber}', '${address.street}', '${address.ward}', '${address.district}', '${address.city}')">Cập nhật</a>
 	                    </p>
 	                    </div>
 	                    
@@ -120,8 +119,8 @@
                     <div class="col-sm-4 text-right">
                     	<div>
                         <p>
-                            <a href="<c:url value='/customer/address/edit?id=${address.id}' />" class="btn btn-link">Cập nhật</a>
-                            <a href="<c:url value='/customer/address/delete?id=${address.id}' />" class="btn btn-link text-danger">Xóa</a>
+                           <a href="#" class="btn btn-link" onclick="openEditAddressModal(${address.id}, '${address.houseNumber}', '${address.street}', '${address.ward}', '${address.district}', '${address.city}')">Cập nhật</a>
+                            <a href="#" onclick="confirmDelete('${address.id}')" class="btn btn-link text-danger">Xóa</a>
                         </p>
                         </div>
 						<form action="<c:url value='/customer/account/addresses/set-default' />" method="post" style="display: inline;">
@@ -136,6 +135,92 @@
     </div>
 </c:if>
 
+<!-- Modal cập nhật địa chỉ -->
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Cập nhật địa chỉ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAddressForm" action="<c:url value='/customer/account/addresses/update' />" method="post">
+                    <input type="hidden" id="editAddressId" name="id">
+
+                    <!-- Trường Số nhà -->
+                    <div class="form-group">
+                        <label for="editHouseNumber">Số nhà</label>
+                        <input type="text" class="form-control" id="editHouseNumber" name="houseNumber" placeholder="Nhập số nhà">
+                    </div>
+
+                    <!-- Trường Tên đường -->
+                    <div class="form-group">
+                        <label for="editStreet">Tên đường</label>
+                        <input type="text" class="form-control" id="editStreet" name="street" placeholder="Nhập tên đường">
+                    </div>
+
+                    <!-- Trường Phường/Xã -->
+                    <div class="form-group">
+                        <label for="editWard">Phường/Xã</label>
+                        <input type="text" class="form-control" id="editWard" name="ward" placeholder="Nhập phường/xã">
+                    </div>
+
+                    <!-- Trường Quận/Huyện -->
+                    <div class="form-group">
+                        <label for="editDistrict">Quận/Huyện</label>
+                        <input type="text" class="form-control" id="editDistrict" name="district" placeholder="Nhập quận/huyện">
+                    </div>
+
+                    <!-- Trường Tỉnh/Thành phố -->
+                    <div class="form-group">
+                        <label for="editCity">Tỉnh/Thành phố</label>
+                        <input type="text" class="form-control" id="editCity" name="city" placeholder="Nhập tỉnh/thành phố">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openEditAddressModal(id, houseNumber, street, ward, district, city) {
+        // Set giá trị vào form trong modal
+        document.getElementById('editAddressId').value = id;
+        document.getElementById('editHouseNumber').value = houseNumber;
+        document.getElementById('editStreet').value = street;
+        document.getElementById('editWard').value = ward;
+        document.getElementById('editDistrict').value = district;
+        document.getElementById('editCity').value = city;
+
+        // Hiển thị modal
+        $('#editAddressModal').modal('show');
+    }
+</script>
+
+<script>
+    function confirmDelete(addressId) {
+        if (confirm("Bạn có chắc chắn muốn xóa địa chỉ này không?")) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `<c:url value='/customer/account/addresses/delete' />`;
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = addressId;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 
 </div>
 </body>

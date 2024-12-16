@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.starshop.entities.Address;
@@ -54,6 +55,9 @@ public class CustomerProfileController {
 	public String getAddress(Principal principal, Model model) {
 		User user = jwtService.getUserFromPrincipal(principal);
 		model.addAttribute("user", user);
+		
+		ViewMessage message = (ViewMessage) model.asMap().get("result");
+		model.addAttribute("message", message);
 
 		Customer customer = getCustomer(principal);
 		Optional<Address> defaultAddress = customerService.getDefaultAddress(customer);
@@ -91,6 +95,44 @@ public class CustomerProfileController {
 
 		return "redirect:/customer/account/addresses";
 	}
+	
+	@PostMapping("/addresses/update")
+	public String updateAddress(@ModelAttribute Address address, Principal principal, RedirectAttributes redirectAttributes) {
+	    try {
+	        Customer customer = jwtService.getCustomerFromPrincipal(principal);
+
+	        Address existingAddress = addressService.getAddressByIdAndCustomer(address.getId(), customer);
+	        if (existingAddress != null) {
+	            existingAddress.setHouseNumber(address.getHouseNumber());
+	            existingAddress.setStreet(address.getStreet());
+	            existingAddress.setWard(address.getWard());
+	            existingAddress.setDistrict(address.getDistrict());
+	            existingAddress.setCity(address.getCity());
+	            
+	            addressService.save(existingAddress);
+	            redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Cập nhật địa chỉ thành công."));
+	        } else {
+	            redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Không thể cập nhật địa chỉ."));
+	        }
+	    } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Có lỗi xảy ra"));
+	    }
+	    return "redirect:/customer/account/addresses";
+	}
+	
+	@PostMapping("/addresses/delete")
+	public String deleteAddress(@RequestParam("id") Long addressId, Principal principal, RedirectAttributes redirectAttributes) {
+	    try {
+	        Customer customer = getCustomer(principal);
+	        addressService.deleteAddress(addressId, customer);
+	        redirectAttributes.addFlashAttribute("result", new ViewMessage("success", "Xóa địa chỉ thành công."));
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("result", new ViewMessage("danger", "Không thể xóa địa chỉ."));
+	    }
+	    return "redirect:/customer/account/addresses";
+	}
+
+
 
 	public Customer getCustomer(Principal principal) {
 		return jwtService.getCustomerFromPrincipal(principal);

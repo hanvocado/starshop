@@ -33,9 +33,9 @@
      <!-- Slick Slider -->
      <link rel="stylesheet" type="text/css" href="/shop/css/slick.css" />
      <script type="text/javascript" src="/shop/js/slick.min.js"></script>
-     <!-- Bootstrap Bundle JS (với Popper.js) -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+     
+        <!-- Toast Message Style -->
+	<link href="/shop/css/bootoast.min.css" type="text/css" rel="stylesheet">	
 	
 	<meta charset="UTF-8">
 	
@@ -45,6 +45,7 @@
 
 <body>
 	<%@include file="/common/header.jsp"%>
+	<%@include file="/common/toast-message.jsp"%>
 	
     <div class="bg-light">
         <section>
