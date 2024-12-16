@@ -42,12 +42,15 @@ public class HomeController {
 	@Autowired
 	private JwtService jwtService;
 	
-	@GetMapping(value = {"/", "/products", "/categories/{categoryName}"})
+	@GetMapping(value = {"", "/", "/products", "/categories/{categoryName}"})
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, @RequestParam(value = "search", required = false) String search,
 			@RequestParam(required = false) UUID userId, Principal principal,
 			@PathVariable(value = "categoryName", required = false) String categoryName)
 			throws AuthenticationException {
-		User user = jwtService.getUserFromPrincipal(principal);
+		if (principal != null) {
+			User user = jwtService.getUserFromPrincipal(principal);
+			model.addAttribute("user", user);			
+		}
 
 		Page<Product> page = null;
 		if (pageNo == null)
@@ -69,7 +72,6 @@ public class HomeController {
 		ViewMessage message = (ViewMessage) model.asMap().get("result");
 		
 		model.addAttribute("message", message);
-		model.addAttribute("user", user);
 		model.addAttribute("products", page.getContent());
 		model.addAttribute("pageNo", page.getNumber());
 		model.addAttribute("pageSize", pageSize);

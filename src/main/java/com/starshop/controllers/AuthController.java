@@ -159,7 +159,7 @@ public class AuthController {
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
 
-		return "redirect:/auth/login";
+		return "redirect:/";
 	}
 
 }

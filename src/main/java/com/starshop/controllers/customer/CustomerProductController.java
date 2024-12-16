@@ -60,29 +60,27 @@ public class CustomerProductController {
 			@RequestParam(required = false) UUID userId, @AuthenticationPrincipal UserDetails userDetails)
 			throws AuthenticationException {
 
-		String userName = userDetails.getUsername();
-		User user = userService.getUserByUserName(userName);
-
-		Page<Product> page = null;
-		if (pageNo == null)
-			pageNo = 0;
-		if (pageSize == null)
-			pageSize = 21;
-
-		page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
-		ViewMessage message = (ViewMessage) model.asMap().get("result");
-		
-		model.addAttribute("message", message);
-		model.addAttribute("user", user);
-		model.addAttribute("products", page.getContent());
-		model.addAttribute("pageNo", page.getNumber());
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("count", page.getTotalElements());
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("isFirst", page.isFirst());
-		model.addAttribute("isLast", page.isLast());
-
-		return "index";
+		return "redirect:/";
+		/*
+		 * String userName = userDetails.getUsername(); User user =
+		 * userService.getUserByUserName(userName);
+		 * 
+		 * Page<Product> page = null; if (pageNo == null) pageNo = 0; if (pageSize ==
+		 * null) pageSize = 21;
+		 * 
+		 * page = productService.getPublishedProductsPagination(pageNo, pageSize, null);
+		 * ViewMessage message = (ViewMessage) model.asMap().get("result");
+		 * 
+		 * model.addAttribute("message", message); model.addAttribute("user", user);
+		 * model.addAttribute("products", page.getContent());
+		 * model.addAttribute("pageNo", page.getNumber());
+		 * model.addAttribute("pageSize", pageSize); model.addAttribute("count",
+		 * page.getTotalElements()); model.addAttribute("totalPages",
+		 * page.getTotalPages()); model.addAttribute("isFirst", page.isFirst());
+		 * model.addAttribute("isLast", page.isLast());
+		 * 
+		 * return "index";
+		 */
 	}
 	
 	@GetMapping("/products/details/{product-id}")

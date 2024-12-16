@@ -157,7 +157,10 @@
 					          	<i class="tio-archive"></i> Đã giao</a> 					
 					</c:when>
 					
-				  </c:choose>	          
+				  </c:choose>
+				  <a class="btn btn-sm btn-white" href="<c:url value="/shipper/orders/details/${order.id}"/>">
+                        <i class="tio-visible-outlined"></i> Chi tiết
+                      </a>	          
 	            </td>
 			
               </tr>

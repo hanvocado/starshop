@@ -1,7 +1,7 @@
 package com.starshop.utils;
 
 public enum OrderStatus {
-	WAITING_PAYMENT("Chưa thanh toán"),
+	WAITING_PAYMENT("Đặt hàng thành công, chưa thanh toán"),
 	PENDING("Đặt hàng thành công"),
 	PREPARING("Shop đang chuẩn bị hàng"),
 	READY_FOR_SHIP("Chờ shipper lấy hàng"),
