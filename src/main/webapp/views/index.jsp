@@ -56,11 +56,19 @@
 
     <section class="section__deal my-5">
         <div class="container">
-            <div class="product-top-bar section-border mb-5">
-                <div class="section-title-wrap">
-                    <h3 class="section-title section-bg-gray">Our main products</h3>
-                </div>
-            </div>
+           <div class="product-top-bar section-border mb-5">
+			    <div class="section-title-wrap">
+			        <c:choose>
+			            <c:when test="${not empty categoryName}">
+			                <h3 class="section-title section-bg-gray">${categoryName}</h3>
+			            </c:when>
+			            <c:otherwise>
+			                <h3 class="section-title section-bg-gray">Our main products</h3>
+			            </c:otherwise>
+			        </c:choose>
+			    </div>
+			</div>
+
             <div class="single-best-selling">
           <div class="row">
     <c:forEach var="product" items="${products}">

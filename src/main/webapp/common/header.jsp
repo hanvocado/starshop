@@ -25,11 +25,11 @@
 
 				<!-- Search Bar -->
 				<div class="col-xl-6 col-lg-5 col-md-6">
-					<form action="${basePath}/search" class="fs__form search--header">
+					<form action="${basePath}/customer/products" class="fs__form search--header">
 						<div class="input-group w-100">
 							<i class="fa fa-search"></i> <input type="text"
 								class="form-control" placeholder="What are you looking for?"
-								name="query">
+								name="search">
 						</div>
 					</form>
 				</div>
@@ -172,5 +172,14 @@
         event.stopPropagation();
     });
 </script>
+
+<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<!-- Popper.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+	
+	<!-- Bootstrap 4 JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 

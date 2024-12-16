@@ -42,7 +42,7 @@ public class HomeController {
 	@Autowired
 	private JwtService jwtService;
 	
-	@GetMapping(value = {"/", "/categories/{categoryName}"})
+	@GetMapping(value = {"/", "/products", "/categories/{categoryName}"})
 	public String publishedProducts(Model model, Integer pageNo, Integer pageSize, @RequestParam(value = "search", required = false) String search,
 			@RequestParam(required = false) UUID userId, Principal principal,
 			@PathVariable(value = "categoryName", required = false) String categoryName)
@@ -77,6 +77,7 @@ public class HomeController {
 		model.addAttribute("totalPages", page.getTotalPages());
 		model.addAttribute("isFirst", page.isFirst());
 		model.addAttribute("isLast", page.isLast());
+		model.addAttribute("categoryName", categoryName);
 
 		return "index";
 	}
@@ -86,4 +87,11 @@ public class HomeController {
         return categoryService.getPublishedCategories(); 
     }
 	
+	 @ModelAttribute("user")
+	    public User populateUser(Principal principal) {
+	        if (principal != null) {
+	            return jwtService.getUserFromPrincipal(principal);
+	        }
+	        return null; 
+	    }
 }
